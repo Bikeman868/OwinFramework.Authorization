@@ -107,7 +107,7 @@ namespace OwinFramework.Authorization
                 case DocumentationTypes.Configuration:
                     return new Uri(_configuration.DocumentationRootUrl, UriKind.Relative);
                 case DocumentationTypes.Overview:
-                    return new Uri("https://github.com/Bikeman868/OwinFramework.Authorization", UriKind.Absolute);
+                    return new Uri("https://github.com/Bikeman868/OwinFramework.Authorization/blob/master/README.md", UriKind.Absolute);
                 case DocumentationTypes.SourceCode:
                     return new Uri("https://github.com/Bikeman868/OwinFramework.Authorization/tree/master/OwinFramework.Authorization", UriKind.Absolute);
             }

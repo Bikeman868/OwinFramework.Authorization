@@ -1,0 +1,65 @@
+﻿{
+    "middleware": {
+         "staticFiles": {
+            "staticFilesRootUrl": "/",
+            "documentationRootUrl": "/owin/staticFiles",
+            "rootDirectory": "~\\content\\",
+            "enabled": true,
+            "includeSubFolders": true,
+            "fileExtensions": [
+                { "extension": ".html", "mimeType": "text/html" },
+                { "extension": ".ico", "mimeType": "image/ico" },
+                { "extension": ".js", "mimeType": "application/javascript" },
+                { "extension": ".dart", "mimeType": "application/dart" }
+            ],
+            "maximumFileSizeToCache": 100000,
+            "totalCacheSize": 10000000,
+            "maximumCacheTime": "00:30:00",
+            "requiredPermission": ""
+        },
+        "less": {
+            "rootUrl": "/",
+            "documentationRootUrl": "/owin/less",
+            "rootDirectory": "~\\content\\",
+            "enabled": true
+        },
+        "defaultDocument": {
+            "defaultPage": "/index.html",
+            "documentationRootUrl": "/owin/defaultDocument"
+        },
+        "authorizationUi": {
+            "defaultDocument": "index.html",
+            "documentationRootUrl": "/owin/authorizationUi",
+            "uiRootUrl": "/authorizationUi",
+            "dartUiRootUrl": "/authorizationUi/web",
+            "compiledUiRootUrl": "/authorizationUi/build/web"
+        }
+    },
+    "OwinFramework": {
+        "Facility": {
+            "IdentityStore.Prius": {
+                "PriusRepositoryName": "IdentityStore"
+            }
+        }
+    },
+    "prius": { 
+        "databases":[
+            {
+                "name":"Identity", 
+                "type":"MySql", 
+                "connectionString":"Server=localhost;Database=identity;Uid=test;Pwd=;"
+            }
+        ],
+        "fallbackPolicies":[
+            {"name":"none", "allowedFailurePercent":100}
+        ],
+        "repositories":[
+            {
+                "name":"IdentityStore",
+                "clusters":[
+                    {"sequence":1, "databases":["Identity"], "fallbackPolicy":"none"}
+                ]
+            }
+        ]
+    }
+}
