@@ -7,5 +7,21 @@
 </head>
 <body>
     <h1>Authorization middleware test site</h1>
+    <p>
+        To run this test you need to have a database of user identities. If you have any other
+        web sites that use the <span class="code">Owin.Framework.Facilities.IdentityStore.Prius</span> NuGet
+        package then you can use this database for these tests.
+    </p>
+    <p>
+        This test site is set up with a custom implementation of <span class="code">IIdentification</span> middleware.
+        This implementation is for testing only, it expects you to pass a user id in the 
+        query string of your request, which it saves in a cookie for subsequent requests.
+        To start testing as a different user, make any request with a different user id in
+        the query string to update the cookie.
+    </p>
+    <p>
+        Note that this user identification mechanism is helpful for testing but is totally
+        non-secure and should not be used in real applications.
+    </p>
 </body>
 </html>
