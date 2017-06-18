@@ -62,13 +62,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Urchin.Client, Version=1.0.1.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Urchin.Client.1.0.1.2\lib\net45\Urchin.Client.dll</HintPath>
+      <HintPath>..\packages\Urchin.Client.1.0.1.2\lib\net40\Urchin.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
