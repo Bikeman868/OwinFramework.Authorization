@@ -61,11 +61,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="DataContracts\Group.cs" />
+    <Compile Include="DataContracts\Permission.cs" />
+    <Compile Include="DataContracts\Role.cs" />
+    <Compile Include="DataLayer\AuthorizationData.cs" />
+    <Compile Include="Exceptions\DataException.cs" />
+    <Compile Include="Exceptions\UpdateFailedException.cs" />
+    <Compile Include="Exceptions\DeleteFailedException.cs" />
+    <Compile Include="Exceptions\RecordNotFoundException.cs" />
+    <Compile Include="Interfaces\IAuthorizationData.cs" />
+    <Compile Include="Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.OwinFramework.Authorization.Data.Net40.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SQL\MySQL.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
