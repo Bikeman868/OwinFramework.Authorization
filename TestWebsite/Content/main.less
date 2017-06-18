@@ -1,6 +1,7 @@
 ﻿@tableBorder: solid thin black;
 @fontFamily: verdana,arial,sans-serif;
 @fontSize: 15px;
+@codeFontFamily: Courier New;
 
 .h() {
     font-family: arial,sans-serif,verdana;
@@ -50,12 +51,12 @@ tr.head {
 }
 
 span.code{
-    font-family: 'Courier New';
+    font-family: @codeFontFamily;
     font-weight: bolder;
     font-size: @fontSize * 1.1;
 }
 
 pre.code{
-    font-family: 'Courier New';
+    font-family: @codeFontFamily;
     font-size: @fontSize * 0.8;
 }

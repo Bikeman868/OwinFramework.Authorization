@@ -157,6 +157,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Middleware\CheckPermissionMiddleware.cs" />
     <Compile Include="Middleware\QueryStringIdentification.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="Prius\PriusErrorReporter.cs" />
@@ -178,6 +179,20 @@
   <ItemGroup>
     <Folder Include="Content\AuthorizationUI\build\web\" />
     <Folder Include="Content\AuthorizationUI\web\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OwinFramework.Authorization.Data\OwinFramework.Authorization.Data.Net40.csproj">
+      <Project>{b5860f84-9158-4177-81df-9497f0a4ea20}</Project>
+      <Name>OwinFramework.Authorization.Data.Net40</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OwinFramework.Authorization.UI\OwinFramework.Authorization.UI.Net40.csproj">
+      <Project>{3aca57e9-a406-41bc-b37e-641fe6342094}</Project>
+      <Name>OwinFramework.Authorization.UI.Net40</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OwinFramework.Authorization\OwinFramework.Authorization.Net40.csproj">
+      <Project>{4e4a8513-fcd5-4eff-8f19-109dcd8421e7}</Project>
+      <Name>OwinFramework.Authorization.Net40</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

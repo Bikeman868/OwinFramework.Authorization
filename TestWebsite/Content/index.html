@@ -12,6 +12,7 @@
         web sites that use the <span class="code">Owin.Framework.Facilities.IdentityStore.Prius</span> NuGet
         package then you can use this database for these tests.
     </p>
+    <h2>User Identification</h2>
     <p>
         This test site is set up with a custom implementation of <span class="code">IIdentification</span> middleware.
         This implementation is for testing only, it expects you to pass a user id in the 
@@ -20,8 +21,44 @@
         the query string to update the cookie.
     </p>
     <p>
+        To set the user you want to impersonate navigate to a url like this one.
+    </p>
+    <div>
+        <a href="/index.html?user=me@gmail.com">/index.html?user=me@gmail.com</a>
+    </div>
+    <p>
+        To test what happens for an anonymous user, visit this page to clear the cookie
+    </p>
+    <div>
+        <a href="/index.html?user=">/index.html?user=</a>
+    </div>
+    <p>
         Note that this user identification mechanism is helpful for testing but is totally
         non-secure and should not be used in real applications.
     </p>
+    <h2>Authorization UI</h2>
+    <p>
+        The authorization middleware is in two parts. <span class="code">Owin.Framework.Authorization</span>
+        is a NuGet package that implements <span class="code">IMiddleware&lt;IAuthorization></span> and 
+        checks that users have necessary permissions for the requested actions. You typically want to include
+        this in your web site. <span class="code">Owin.Framework.Authorization.UI</span>
+        is a NuGet package that provides a user interface for managing users, groups, roles and permissions,
+        and a set of REST endopints that support this UI. You can include this in your main web site if you want
+        to manage authorization there, or you can include it in another web site that connects to the same database.
+    </p>
+    <p>
+        Both authorization middlewares are built into this test web site, so you can test user permissions 
+        management and also test that the permissions are correctly applied. The UI is available here:
+    </p>
+    <div>
+        <a href="/authorizationUi/index.html">/authorizationUi/index.html</a>
+    </div>
+    <h2>Authorization Middleware</h2>
+    <p>
+        You can test the authorization middleware using urls like this one:
+    </p>
+    <div>
+        <a href="/check?user=me@gmail.com&permission=delete-order">/check?user=me@gmail.com&permission=delete-order</a>
+    </div>
 </body>
 </html>

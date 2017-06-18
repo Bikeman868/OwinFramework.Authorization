@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.Owin;
+using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
 using OwinFramework.InterfacesV1.Capability;
@@ -25,8 +28,16 @@ namespace OwinFramework.Authorization
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
         string IMiddleware.Name { get; set; }
 
+        public AuthorizationMiddleware()
+        {
+            this.RunAfter<IIdentification>();
+        }
+
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
+            var authorization = new Authorization();
+            context.SetFeature<IUpstreamAuthorization>(authorization);
+
             return next();
         }
 
@@ -37,7 +48,22 @@ namespace OwinFramework.Authorization
             {
                 return DocumentConfiguration(context);
             }
-            
+
+            var authorization = (Authorization)context.GetFeature<IUpstreamAuthorization>();
+            var identification = context.GetFeature<IIdentification>();
+
+            if (identification.IsAnonymous)
+            {
+                var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
+                if (upstreamIdentification != null && !upstreamIdentification.AllowAnonymous)
+                    throw new HttpException((int)HttpStatusCode.Forbidden, "Anonymous access is not permitted");
+            }
+
+            // TODO: Check required permissions
+            // TODO: Check required roles
+
+            context.SetFeature<IAuthorization>(authorization);
+
             return next();
         }
 
@@ -149,5 +175,29 @@ namespace OwinFramework.Authorization
         }
 
         #endregion
+
+        private class Authorization : IUpstreamAuthorization, IAuthorization
+        {
+            public List<string> Roles { get; set; }
+            public List<string> Permissions { get; set; }
+
+            public void AddRequiredPermission(string permissionName)
+            {
+            }
+
+            public void AddRequiredRole(string roleName)
+            {
+            }
+
+            public bool HasPermission(string permissionName)
+            {
+                return true;
+            }
+
+            public bool IsInRole(string roleName)
+            {
+                return false;
+            }
+        }
     }
 }

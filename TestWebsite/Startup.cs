@@ -5,6 +5,7 @@ using Ioc.Modules;
 using Microsoft.Owin;
 using Ninject;
 using Owin;
+using OwinFramework.Authorization;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Utility;
@@ -59,18 +60,28 @@ namespace TestWebsite
             // Get the Owin Framework builder registered with IoC
             var builder = ninject.Get<IBuilder>();
 
+            // This is the authorization middleware we want to test
+            builder.Register(ninject.Get<AuthorizationMiddleware>())
+                .As("Authorization");
+
+            /*
+            // This is the REST api that supportes the authorization Dart UI
+            builder.Register(ninject.Get<AuthorizationUiMiddleware>())
+                .As("Authorization UI");
+            */
+
             // The authorization user interface is written in the Dart programming language
             // This middleware will serve Dart files to browsers that natively support Dart
             // and compiled JavaScript to browsers that do not
             builder.Register(ninject.Get<OwinFramework.Dart.DartMiddleware>())
-                .As("Authorization UI")
+                .As("Authorization Dart")
                 .ConfigureWith(config, "/middleware/authorizationUi");
 
             // The Less middleware will compile LESS into CSS on the fly
             builder.Register(ninject.Get<OwinFramework.Less.LessMiddleware>())
                 .As("LESS compiler")
                 .ConfigureWith(config, "/middleware/less")
-                .RunAfter("Authorization UI");
+                .RunAfter("Authorization Dart");
 
             // The static files middleware will allow requests to retrieve files of certian types
             // Configuration options limit the files that can be retrieved this way. The ConfigureWith
@@ -79,13 +90,19 @@ namespace TestWebsite
                 .As("Static files")
                 .ConfigureWith(config, "/middleware/staticFiles")
                 .RunAfter("LESS compiler")
-                .RunAfter("Authorization UI");
+                .RunAfter("Authorization Dart");
 
             // To make it easy to test Authorization, the user making the call is identified by
             // simply passing the user id in a query string parameter. Do not do this in a real
             // application.
             builder.Register(ninject.Get<QueryStringIdentification>())
                 .As("Query string user identification");
+
+            // To make it easy to test Authorization, the user making the call is identified by
+            // simply passing the user id in a query string parameter. Do not do this in a real
+            // application.
+            builder.Register(ninject.Get<CheckPermissionMiddleware>())
+                .As("Check permissions");
 
             // The default document middleware will rewrite a request for the root document to a page on the site
             builder.Register(ninject.Get<OwinFramework.DefaultDocument.DefaultDocumentMiddleware>())
