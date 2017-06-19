@@ -25,16 +25,19 @@ namespace OwinFramework.Authorization.Data.Interfaces
         IEnumerable<Role> GetGroupRoles(long groupId);
         IEnumerable<Permission> GetRolePermissions(long roleId);
 
+        long? GetUserGroupId(string userId);
         Group GetUserGroup(string userId);
         IEnumerable<Role> GetUserRoles(string userId);
         IEnumerable<Permission> GetUserPermissions(string userId);
+        bool UserIsInRole(string userId, string roleCodeName);
+        bool UserHasPermission(string userId, string permissionCodeName);
 
         Group ChangeUserGroup(string userId, long groupId);
 
         void AddRoleToGroup(long roleId, long groupId);
-        void AddPermissionToRole(long permissionId, long groupId);
+        void AddPermissionToRole(long permissionId, long roleId);
 
         void RemoveRoleFromGroup(long roleId, long groupId);
-        void RemovePermissionFromRole(long permissionId, long groupId);
+        void RemovePermissionFromRole(long permissionId, long roleId);
     }
 }

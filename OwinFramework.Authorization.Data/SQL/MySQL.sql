@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `tbl_groups`
   `groupName` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `groupDescription` VARCHAR(400) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`groupId`),
-  KEY `ix_name` (`groupName`)
+  UNIQUE INDEX `ix_name` (`groupName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `tbl_roles`
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `tbl_roles`
   `roleDisplayName` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `roleDescription` VARCHAR(400) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`roleId`),
-  KEY `ix_name` (`roleCodeName`)
+  UNIQUE INDEX `ix_name` (`roleCodeName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `tbl_permissions`
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `tbl_permissions`
   `permissionDisplayName` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `permissionDescription` VARCHAR(400) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`permissionId`),
-  KEY `ix_name` (`permissionCodeName`)
+  UNIQUE INDEX `ix_name` (`permissionCodeName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `tbl_user_groups`
@@ -243,6 +243,8 @@ BEGIN
 		`groupId`,
 		`userId`
 	);
+	
+	CALL sp_GetGroup(`groupId`);	
 END//
 DELIMITER ;
 
@@ -541,7 +543,9 @@ DETERMINISTIC
 BEGIN
 	SELECT
 		p.`permissionId`,
-		p.`permissionCodeName`
+		p.`permissionCodeName`,
+		p.`permissionDisplayName`,
+		p.`permissionDescription`
 	FROM
 		`tbl_role_permissions` rp
 			JOIN
@@ -562,7 +566,9 @@ DETERMINISTIC
 BEGIN
 	SELECT
 		r.`roleId`,
-		r.`roleCodeName`
+		r.`roleCodeName`,
+		r.`roleDisplayName`,
+		r.`roleDescription`
 	FROM
 		`tbl_role_permissions` rp
 			JOIN
@@ -583,13 +589,38 @@ DETERMINISTIC
 BEGIN
 	SELECT DISTINCT
 		p.`permissionId`,
-		p.`permissionCodeName`
+		p.`permissionCodeName`,
+		p.`permissionDisplayName`,
+		p.`permissionDescription`
 	FROM
 		`tbl_group_roles` gr
 			JOIN
 		`tbl_role_permissions` rp ON gr.`roleId` = rp.`roleId`
 			JOIN
 		`tbl_permissions` p ON rp.`permissionId` = p.`permissionId`
+	WHERE
+		gr.`groupId` = `groupId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetGroupRoles`
+(
+	IN `groupId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	SELECT DISTINCT
+		r.`roleId`,
+		r.`roleCodeName`,
+		r.`roleDisplayName`,
+		r.`roleDescription`
+	FROM
+		`tbl_group_roles` gr
+			JOIN
+		`tbl_roles` r ON gr.`roleId` = r.`roleId`
 	WHERE
 		gr.`groupId` = `groupId`;
 END//
@@ -606,7 +637,9 @@ DETERMINISTIC
 BEGIN
 	SELECT DISTINCT
 		p.`permissionId`,
-		p.`permissionCodeName`
+		p.`permissionCodeName`,
+		p.`permissionDisplayName`,
+		p.`permissionDescription`
 	FROM
 		`tbl_user_groups` ug
 			JOIN 
@@ -631,13 +664,33 @@ DETERMINISTIC
 BEGIN
 	SELECT DISTINCT
 		r.`roleId`,
-		r.`roleCodeName`
+		r.`roleCodeName`,
+		r.`roleDisplayName`,
+		r.`roleDescription`
 	FROM
 		`tbl_user_groups` ug
 			JOIN 
 		`tbl_group_roles` gr ON ug.`groupId` = gr.`groupId`
 			JOIN
 		`tbl_roles` r ON gr.`roleId` = r.`roleId`
+	WHERE
+		ug.`userId` = `userId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetUserGroupId`
+(
+	IN `userId` VARCHAR(80)
+)
+DETERMINISTIC
+BEGIN
+	SELECT DISTINCT
+		ug.`groupId`
+	FROM
+		`tbl_user_groups` ug
 	WHERE
 		ug.`userId` = `userId`;
 END//

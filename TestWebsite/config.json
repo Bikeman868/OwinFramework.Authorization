@@ -1,6 +1,6 @@
 ﻿{
     "middleware": {
-         "staticFiles": {
+        "staticFiles": {
             "staticFilesRootUrl": "/",
             "documentationRootUrl": "/owin/staticFiles",
             "rootDirectory": "~\\content\\",
@@ -40,6 +40,12 @@
             "IdentityStore.Prius": {
                 "PriusRepositoryName": "IdentityStore"
             }
+        },
+        "Authorization": {
+            "Data": {
+                "PriusRepositoryName": "Authorization",
+                "DefaultUserGroup": "Users"
+            }
         }
     },
     "prius": { 
@@ -48,6 +54,11 @@
                 "name":"Identity", 
                 "type":"MySql", 
                 "connectionString":"Server=localhost;Database=identity;Uid=test;Pwd=;"
+            },
+            {
+                "name":"Authorization", 
+                "type":"MySql", 
+                "connectionString":"Server=localhost;Database=authorization;Uid=test;Pwd=;"
             }
         ],
         "fallbackPolicies":[
@@ -58,6 +69,12 @@
                 "name":"IdentityStore",
                 "clusters":[
                     {"sequence":1, "databases":["Identity"], "fallbackPolicy":"none"}
+                ]
+            },
+            {
+                "name":"Authorization",
+                "clusters":[
+                    {"sequence":1, "databases":["Authorization"], "fallbackPolicy":"none"}
                 ]
             }
         ]

@@ -7,9 +7,11 @@ CALL sp_AddPermission('user.resume', 'Resume user', 'Delete orders from the data
 
 CALL sp_AddRole('cs.manager', 'Customer service manager', 'Manages the customer service function');
 CALL sp_AddRole('cs.operator', 'Customer service operator', 'Helps customers with their issues');
+CALL sp_AddRole('user', 'User of the system', 'Public user of the system');
 
 CALL sp_AddGroup('Customer service manager', 'Manages the customer service team');
 CALL sp_AddGroup('Customer service', 'Take customer comlaints and deal with them');
+CALL sp_AddGroup('Users', 'Default group for all new users');
 
 CALL sp_AddRolePermission(1, 1);
 CALL sp_AddRolePermission(1, 2);
@@ -27,7 +29,7 @@ CALL sp_ChangeUserGroup('cs1@domain', 2);
 CALL sp_ChangeUserGroup('cs2@domain', 2);
 CALL sp_ChangeUserGroup('cs3@domain', 2);
 
----------------------------------------------------
+-- =================================================
 
 CALL sp_GetGroupPermissions(1);
 CALL sp_GetGroupPermissions(2);
@@ -51,7 +53,12 @@ CALL sp_GetUser('manager@domain');
 CALL sp_GetUser('cs1@domain');
 CALL sp_GetUser('cs2@domain');
 CALL sp_GetUser('cs3@domain');
+CALL sp_GetUser('annonymous@domain');
 
----------------------------------------------------
+-- =================================================
+
+/*
 
 CALL sp_DeletePermission(2);
+
+*/
