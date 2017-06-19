@@ -183,3 +183,514 @@ DELIMITER ;
 
 /********************************************************************/
 
+DELIMITER //
+CREATE PROCEDURE `sp_AddGroupRole`
+(
+	IN `groupId` BIGINT UNSIGNED,
+	IN `roleId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	INSERT IGNORE INTO 
+		`tbl_group_roles`
+	(
+		`groupId`,
+		`roleId`
+	) VALUES (
+		`groupId`,
+		`roleId`
+	);
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_DeleteGroupRole`
+(
+	IN `groupId` BIGINT UNSIGNED,
+	IN `roleId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	DELETE 
+		gr
+	FROM
+		`tbl_group_roles` gr
+	WHERE
+		gr.`groupId` = `groupId`
+			AND
+		gr.`roleId` = `roleId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_ChangeUserGroup`
+(
+	IN `userId` VARCHAR(80),
+	IN `groupId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	INSERT IGNORE INTO 
+		`tbl_user_groups`
+	(
+		`groupId`,
+		`userId`
+	) VALUES (
+		`groupId`,
+		`userId`
+	);
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetRoles`() DETERMINISTIC
+BEGIN
+	SELECT
+		r.`roleId`,
+		r.`roleCodeName`,
+		r.`roleDisplayName`,
+		r.`roleDescription`
+	FROM
+		`tbl_roles` r;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetRole`
+(
+	IN `roleId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		r.`roleId`,
+		r.`roleCodeName`,
+		r.`roleDisplayName`,
+		r.`roleDescription`
+	FROM
+		`tbl_roles` r
+	WHERE
+		r.`roleId` = `roleId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_AddRole`
+(
+	IN `roleCodeName` VARCHAR(30),
+	IN `roleDisplayName` VARCHAR(50),
+	IN `roleDescription` VARCHAR(400)
+)
+DETERMINISTIC
+BEGIN
+	DECLARE roleId BIGINT UNSIGNED;
+
+	INSERT INTO 
+		`tbl_roles`
+	(
+		`roleCodeName`,
+		`roleDisplayName`,
+		`roleDescription`
+	) VALUES (
+		`roleCodeName`,
+		`roleDisplayName`,
+		`roleDescription`
+	);
+		
+	SELECT LAST_INSERT_ID() INTO `roleId`;
+
+	CALL sp_GetRole(roleId);
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_UpdateRole`
+(
+	IN `roleId` BIGINT UNSIGNED,
+	IN `roleCodeName` VARCHAR(30),
+	IN `roleDisplayName` VARCHAR(50),
+	IN `roleDescription` VARCHAR(400)
+)
+DETERMINISTIC
+BEGIN
+	UPDATE
+		`tbl_roles` r
+	SET
+		`roleCodeName` = `roleCodeName`,
+		`roleDisplayName` = `roleDisplayName`,
+		`roleDescription` = `roleDescription`
+	WHERE
+		r.`roleId` = `roleId`;
+
+	CALL sp_GetRole(roleId);
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_DeleteRole`
+(
+	IN `roleId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	DELETE 
+		rp
+	FROM
+		`tbl_role_permissions` rp
+	WHERE
+		rp.`roleId` = `roleId`;
+
+	DELETE 
+		gr
+	FROM
+		`tbl_group_roles` gr
+	WHERE
+		gr.`roleId` = `roleId`;
+
+	DELETE 
+		r
+	FROM
+		`tbl_roles` r
+	WHERE
+		r.`roleId` = `roleId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_AddRolePermission`
+(
+	IN `roleId` BIGINT UNSIGNED,
+	IN `permissionId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	INSERT IGNORE INTO 
+		`tbl_role_permissions`
+	(
+		`roleId`,
+		`permissionId`
+	) VALUES (
+		`roleId`,
+		`permissionId`
+	);
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_DeleteRolePermission`
+(
+	IN `roleId` BIGINT UNSIGNED,
+	IN `permissionId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	DELETE 
+		gr
+	FROM
+		`tbl_role_permissions` gr
+	WHERE
+		gr.`permissionId` = `permissionId`
+			AND
+		gr.`roleId` = `roleId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetPermissions`() DETERMINISTIC
+BEGIN
+	SELECT
+		p.`permissionId`,
+		p.`permissionCodeName`,
+		p.`permissionDisplayName`,
+		p.`permissionDescription`
+	FROM
+		`tbl_permissions` p;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetPermission`
+(
+	IN `permissionId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		p.`permissionId`,
+		p.`permissionCodeName`,
+		p.`permissionDisplayName`,
+		p.`permissionDescription`
+	FROM
+		`tbl_permissions` p
+	WHERE
+		p.`permissionId` = `permissionId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_AddPermission`
+(
+	IN `permissionCodeName` VARCHAR(30),
+	IN `permissionDisplayName` VARCHAR(50),
+	IN `permissionDescription` VARCHAR(400)
+)
+DETERMINISTIC
+BEGIN
+	DECLARE permissionId BIGINT UNSIGNED;
+
+	INSERT INTO 
+		`tbl_permissions`
+	(
+		`permissionCodeName`,
+		`permissionDisplayName`,
+		`permissionDescription`
+	) VALUES (
+		`permissionCodeName`,
+		`permissionDisplayName`,
+		`permissionDescription`
+	);
+		
+	SELECT LAST_INSERT_ID() INTO `permissionId`;
+
+	CALL sp_GetPermission(permissionId);
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_UpdatePermission`
+(
+	IN `permissionId` BIGINT UNSIGNED,
+	IN `permissionCodeName` VARCHAR(30),
+	IN `permissionDisplayName` VARCHAR(50),
+	IN `permissionDescription` VARCHAR(400)
+)
+DETERMINISTIC
+BEGIN
+	UPDATE
+		`tbl_permissions` p
+	SET
+		`permissionCodeName` = `permissionCodeName`,
+		`permissionDisplayName` = `permissionDisplayName`,
+		`permissionDescription` = `permissionDescription`
+	WHERE
+		p.`permissionId` = `permissionId`;
+
+	CALL sp_GetPermission(permissionId);
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_DeletePermission`
+(
+	IN `permissionId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	DELETE 
+		rp
+	FROM
+		`tbl_role_permissions` rp
+	WHERE
+		rp.`permissionId` = `permissionId`;
+
+	DELETE 
+		p
+	FROM
+		`tbl_permissions` p
+	WHERE
+		p.`permissionId` = `permissionId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetRolePermissions`
+(
+	IN `roleId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		p.`permissionId`,
+		p.`permissionCodeName`
+	FROM
+		`tbl_role_permissions` rp
+			JOIN
+		`tbl_permissions` p ON rp.`permissionId` = p.`permissionId`
+	WHERE
+		rp.`roleId` = `roleId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetRolesWithPermission`
+(
+	IN `permissionId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		r.`roleId`,
+		r.`roleCodeName`
+	FROM
+		`tbl_role_permissions` rp
+			JOIN
+		`tbl_roles` r ON rp.`roleId` = r.`roleId`
+	WHERE
+		rp.`permissionId` = `permissionId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetGroupPermissions`
+(
+	IN `groupId` BIGINT UNSIGNED
+)
+DETERMINISTIC
+BEGIN
+	SELECT DISTINCT
+		p.`permissionId`,
+		p.`permissionCodeName`
+	FROM
+		`tbl_group_roles` gr
+			JOIN
+		`tbl_role_permissions` rp ON gr.`roleId` = rp.`roleId`
+			JOIN
+		`tbl_permissions` p ON rp.`permissionId` = p.`permissionId`
+	WHERE
+		gr.`groupId` = `groupId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetUserPermissions`
+(
+	IN `userId` VARCHAR(80)
+)
+DETERMINISTIC
+BEGIN
+	SELECT DISTINCT
+		p.`permissionId`,
+		p.`permissionCodeName`
+	FROM
+		`tbl_user_groups` ug
+			JOIN 
+		`tbl_group_roles` gr ON ug.`groupId` = gr.`groupId`
+			JOIN
+		`tbl_role_permissions` rp ON gr.`roleId` = rp.`roleId`
+			JOIN
+		`tbl_permissions` p ON rp.`permissionId` = p.`permissionId`
+	WHERE
+		ug.`userId` = `userId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetUserRoles`
+(
+	IN `userId` VARCHAR(80)
+)
+DETERMINISTIC
+BEGIN
+	SELECT DISTINCT
+		r.`roleId`,
+		r.`roleCodeName`
+	FROM
+		`tbl_user_groups` ug
+			JOIN 
+		`tbl_group_roles` gr ON ug.`groupId` = gr.`groupId`
+			JOIN
+		`tbl_roles` r ON gr.`roleId` = r.`roleId`
+	WHERE
+		ug.`userId` = `userId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetUser`
+(
+	IN `userId` VARCHAR(80)
+)
+DETERMINISTIC
+BEGIN
+	DECLARE groupId BIGINT UNSIGNED;
+
+	SELECT
+		ug.`groupId`
+	INTO
+		`groupId`
+	FROM
+		`tbl_user_groups` ug
+	WHERE
+		ug.`userId` = `userId`;
+
+	SELECT
+		g.`groupId`,
+		g.`groupName`
+	FROM
+		`tbl_groups` g
+	WHERE
+		g.`groupId` = `groupId`;
+
+	SELECT DISTINCT
+		r.`roleId`,
+		r.`roleCodeName`
+	FROM
+		`tbl_group_roles` gr
+			JOIN
+		`tbl_roles` r ON gr.`roleId` = r.`roleId`
+	WHERE
+		gr.`groupId` = `groupId`;
+
+	SELECT DISTINCT
+		p.`permissionId`,
+		p.`permissionCodeName`
+	FROM
+		`tbl_group_roles` gr
+			JOIN
+		`tbl_role_permissions` rp ON gr.`roleId` = rp.`roleId`
+			JOIN
+		`tbl_permissions` p ON rp.`permissionId` = p.`permissionId`
+	WHERE
+		gr.`groupId` = `groupId`;
+END//
+DELIMITER ;
