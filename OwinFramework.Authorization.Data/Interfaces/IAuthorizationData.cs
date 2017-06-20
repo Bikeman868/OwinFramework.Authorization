@@ -29,6 +29,7 @@ namespace OwinFramework.Authorization.Data.Interfaces
         Group GetUserGroup(string userId);
         IEnumerable<Role> GetUserRoles(string userId);
         IEnumerable<Permission> GetUserPermissions(string userId);
+
         bool UserIsInRole(string userId, string roleCodeName);
         bool UserHasPermission(string userId, string permissionCodeName);
 

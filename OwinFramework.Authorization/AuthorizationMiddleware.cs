@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Owin;
+using OwinFramework.Authorization.Data.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
@@ -24,18 +25,21 @@ namespace OwinFramework.Authorization
         IConfigurable,
         ISelfDocumenting
     {
+        private readonly IAuthorizationData _authorizationData;
         private readonly IList<IDependency> _dependencies = new List<IDependency>();
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
         string IMiddleware.Name { get; set; }
 
-        public AuthorizationMiddleware()
+        public AuthorizationMiddleware(IAuthorizationData authorizationData)
         {
+            _authorizationData = authorizationData;
+
             this.RunAfter<IIdentification>();
         }
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            var authorization = new Authorization();
+            var authorization = new Authorization(_authorizationData);
             context.SetFeature<IUpstreamAuthorization>(authorization);
 
             return next();
@@ -49,19 +53,25 @@ namespace OwinFramework.Authorization
                 return DocumentConfiguration(context);
             }
 
-            var authorization = (Authorization)context.GetFeature<IUpstreamAuthorization>();
+            var authorization = context.GetFeature<IUpstreamAuthorization>() as Authorization;
             var identification = context.GetFeature<IIdentification>();
+
+            if (identification == null || authorization == null)
+                throw new HttpException((int)HttpStatusCode.Forbidden, "User identification is missing");
 
             if (identification.IsAnonymous)
             {
                 var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
                 if (upstreamIdentification != null && !upstreamIdentification.AllowAnonymous)
-                    throw new HttpException((int)HttpStatusCode.Forbidden, "Anonymous access is not permitted");
+                    throw new HttpException((int) HttpStatusCode.Forbidden, "Anonymous access is not permitted");
             }
-
-            // TODO: Check required permissions
-            // TODO: Check required roles
-
+            else
+            {
+                authorization.UserId = identification.Identity;
+                if (!authorization.IsAllowed())
+                    throw new HttpException((int) HttpStatusCode.Forbidden,
+                        "You do not have permission to perform this operation");
+            }
             context.SetFeature<IAuthorization>(authorization);
 
             return next();
@@ -178,25 +188,47 @@ namespace OwinFramework.Authorization
 
         private class Authorization : IUpstreamAuthorization, IAuthorization
         {
-            public List<string> Roles { get; set; }
-            public List<string> Permissions { get; set; }
+            private IAuthorizationData _authorizationData;
+            public string UserId;
+
+            private readonly List<string> _requiredRoles = new List<string>();
+            private readonly List<string> _requiredPermissions = new List<string>();
+
+            public Authorization(IAuthorizationData authorizationData)
+            {
+                _authorizationData = authorizationData;
+            }
 
             public void AddRequiredPermission(string permissionName)
             {
+                permissionName = string.Intern(permissionName.ToLower());
+                if (_requiredPermissions.Any(p => ReferenceEquals(p, permissionName)))
+                    return;
+                _requiredPermissions.Add(permissionName);
             }
 
             public void AddRequiredRole(string roleName)
             {
+                roleName = string.Intern(roleName.ToLower());
+                if (_requiredRoles.Any(p => ReferenceEquals(p, roleName)))
+                    return;
+                _requiredRoles.Add(roleName);
             }
 
             public bool HasPermission(string permissionName)
             {
-                return true;
+                return _authorizationData.UserHasPermission(UserId, permissionName);
             }
 
             public bool IsInRole(string roleName)
             {
-                return false;
+                return _authorizationData.UserIsInRole(UserId, roleName);
+            }
+
+            public bool IsAllowed()
+            {
+                if (ReferenceEquals(UserId, null)) return false;
+                return _requiredRoles.All(IsInRole) && _requiredPermissions.All(HasPermission);
             }
         }
     }

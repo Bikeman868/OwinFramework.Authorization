@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS `tbl_groups`
   `groupId` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `groupName` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `groupDescription` VARCHAR(400) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `groupPermissionId` BIGINT(20),
   PRIMARY KEY (`groupId`),
   UNIQUE INDEX `ix_name` (`groupName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -42,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `tbl_user_groups`
   `userId` VARCHAR(80) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`groupId`, `userId`),
   KEY `ix_group` (`groupId`),
-  KEY `ix_user` (`userId`)
+  UNIQUE INDEX `ix_user` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `tbl_group_roles`
@@ -71,7 +72,8 @@ BEGIN
 	SELECT
 		g.`groupId`,
 		g.`groupName`,
-		g.`groupDescription`
+		g.`groupDescription`,
+		g.`groupPermissionId`
 	FROM
 		`tbl_groups` g;
 END//
@@ -89,7 +91,8 @@ BEGIN
 	SELECT
 		g.`groupId`,
 		g.`groupName`,
-		g.`groupDescription`
+		g.`groupDescription`,
+		g.`groupPermissionId`
 	FROM
 		`tbl_groups` g
 	WHERE
@@ -103,7 +106,8 @@ DELIMITER //
 CREATE PROCEDURE `sp_AddGroup`
 (
 	IN `groupName` VARCHAR(50),
-	IN `groupDescription` VARCHAR(400)
+	IN `groupDescription` VARCHAR(400),
+	IN `groupPermissionId` BIGINT UNSIGNED
 )
 DETERMINISTIC
 BEGIN
@@ -113,10 +117,12 @@ BEGIN
 		`tbl_groups`
 	(
 		`groupName`,
-		`groupDescription`
+		`groupDescription`,
+		`groupPermissionId`
 	) VALUES (
 		`groupName`,
-		`groupDescription`
+		`groupDescription`,
+		`groupPermissionId`
 	);
 		
 	SELECT LAST_INSERT_ID() INTO `groupId`;
@@ -132,7 +138,8 @@ CREATE PROCEDURE `sp_UpdateGroup`
 (
 	IN `groupId` BIGINT UNSIGNED,
 	IN `groupName` VARCHAR(50),
-	IN `groupDescription` VARCHAR(400)
+	IN `groupDescription` VARCHAR(400),
+	IN `groupPermissionId` BIGINT UNSIGNED
 )
 DETERMINISTIC
 BEGIN
@@ -234,7 +241,7 @@ CREATE PROCEDURE `sp_ChangeUserGroup`
 )
 DETERMINISTIC
 BEGIN
-	INSERT IGNORE INTO 
+	REPLACE INTO 
 		`tbl_user_groups`
 	(
 		`groupId`,

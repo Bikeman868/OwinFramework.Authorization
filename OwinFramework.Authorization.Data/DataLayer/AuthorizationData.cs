@@ -16,7 +16,9 @@ namespace OwinFramework.Authorization.Data.DataLayer
         private readonly IDisposable _configurationChangeRegistration;
         private string _repositoryName;
         private string _defaultGroupName;
+        private string _administratorsGroupName;
         private long? _defaultGroupId;
+        private long? _administratorsGroupId;
 
         private readonly Thread _reloadThread;
         private Dictionary<string, long> _userGroupIds;
@@ -37,7 +39,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
                         try
                         {
                             _repositoryName = c.PriusRepositoryName;
-                            _defaultGroupName = c.DefaultUserGroup;
+                            _defaultGroupName = string.Intern(c.DefaultUserGroup.ToLower());
+                            _administratorsGroupName = string.Intern(c.AdministratorUserGroup.ToLower());
                             Reload();
                         }
                         catch
@@ -53,7 +56,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 {
                     try
                     {
-                        Thread.Sleep(TimeSpan.FromMinutes(5));
+                        Thread.Sleep(TimeSpan.FromMinutes(1));
                         Reload();
                     }
                     catch (ThreadAbortException ex)
@@ -101,6 +104,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 };
                 if (string.Equals(group.Name, _defaultGroupName, StringComparison.InvariantCultureIgnoreCase))
                     _defaultGroupId = group.Id;
+                if (string.Equals(group.Name, _administratorsGroupName, StringComparison.InvariantCultureIgnoreCase))
+                    _administratorsGroupId = group.Id;
             }
 
             _groups = groups;
@@ -145,6 +150,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             var group = FindUserGroup(userId);
             if (group == null) return false;
+
+            if (group.GroupId == _administratorsGroupId) return true;
 
             var internedName = string.Intern(permissionCodeName.ToLower());
             return group.UserPermissions.Any(p => ReferenceEquals(p.CodeName, internedName));
@@ -210,6 +217,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 {
                     command.AddParameter("groupName", group.Name);
                     command.AddParameter("groupDescription", group.Description);
+                    command.AddParameter("groupPermissionId", group.PermissionId);
                     using (var results = context.ExecuteEnumerable<Group>(command))
                     {
                         return results.FirstOrDefault();
@@ -261,6 +269,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("groupId", group.Id);
                     command.AddParameter("groupName", group.Name);
                     command.AddParameter("groupDescription", group.Description);
+                    command.AddParameter("groupPermissionId", group.PermissionId);
                     using (var results = context.ExecuteEnumerable<Group>(command))
                     {
                         return results.FirstOrDefault();
