@@ -25,10 +25,11 @@ namespace OwinFramework.Authorization
         IConfigurable,
         ISelfDocumenting
     {
-        private readonly IAuthorizationData _authorizationData;
         private readonly IList<IDependency> _dependencies = new List<IDependency>();
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
         string IMiddleware.Name { get; set; }
+
+        private readonly IAuthorizationData _authorizationData;
 
         public AuthorizationMiddleware(IAuthorizationData authorizationData)
         {
