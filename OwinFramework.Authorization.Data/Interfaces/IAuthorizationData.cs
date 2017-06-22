@@ -31,7 +31,7 @@ namespace OwinFramework.Authorization.Data.Interfaces
         IEnumerable<Permission> GetUserPermissions(string userId);
 
         bool UserIsInRole(string userId, string roleCodeName);
-        bool UserHasPermission(string userId, string permissionCodeName);
+        bool UserHasPermission(string userId, string permissionCodeName, string resourceName);
 
         Group ChangeUserGroup(string userId, long groupId);
 

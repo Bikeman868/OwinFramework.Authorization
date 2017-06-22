@@ -216,9 +216,9 @@ namespace OwinFramework.Authorization
                 _requiredRoles.Add(roleName);
             }
 
-            public bool HasPermission(string permissionName)
+            public bool HasPermission(string permissionName, string resourceName)
             {
-                return _authorizationData.UserHasPermission(UserId, permissionName);
+                return _authorizationData.UserHasPermission(UserId, permissionName, resourceName);
             }
 
             public bool IsInRole(string roleName)
@@ -229,7 +229,7 @@ namespace OwinFramework.Authorization
             public bool IsAllowed()
             {
                 if (ReferenceEquals(UserId, null)) return false;
-                return _requiredRoles.All(IsInRole) && _requiredPermissions.All(HasPermission);
+                return _requiredRoles.All(IsInRole) && _requiredPermissions.All(r => HasPermission(r, null));
             }
         }
     }

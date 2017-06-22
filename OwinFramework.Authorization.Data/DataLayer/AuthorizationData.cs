@@ -149,7 +149,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             return group.UserRoles.Any(r => ReferenceEquals(r.CodeName, internedName));
         }
 
-        public bool UserHasPermission(string userId, string permissionCodeName)
+        public bool UserHasPermission(string userId, string permissionCodeName, string resourceName)
         {
             var group = FindUserGroup(userId);
             if (group == null) return false;

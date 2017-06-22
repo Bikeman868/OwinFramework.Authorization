@@ -78,16 +78,17 @@ namespace TestWebsite.Middleware
 
             if (!string.IsNullOrEmpty(permission))
             {
+                var hasPermission = authorization.HasPermission(permission, resource);
                 if (string.IsNullOrEmpty(resource))
                 {
-                    if (authorization.HasPermission(permission))
+                    if (hasPermission)
                         response.AppendLine("This user has permission to " + permission);
                     else
                         response.AppendLine("This user does not have permission to " + permission);
                 }
                 else
                 {
-                    if (authorization.HasPermission(permission))
+                    if (hasPermission)
                         response.AppendLine("This user has permission to " + permission + " on " + resource);
                     else
                         response.AppendLine("This user does not have permission to " + permission + " on " + resource);
