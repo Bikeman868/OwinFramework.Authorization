@@ -15,22 +15,22 @@
     <h2>User Identification</h2>
     <p>
         This test site is set up with a custom implementation of <span class="code">IIdentification</span> middleware.
-        This implementation is for testing only, it expects you to pass a user id in the 
+        This implementation is for testing only, it expects you to pass an identity in the 
         query string of your request, which it saves in a cookie for subsequent requests.
-        To start testing as a different user, make any request with a different user id in
+        To start testing as a different user, make any request with a different identity in
         the query string to update the cookie.
     </p>
     <p>
         To set the user you want to impersonate navigate to a url like this one.
     </p>
     <div>
-        <a href="/index.html?user=me@gmail.com">/index.html?user=me@gmail.com</a>
+        <a href="/index.html?identity=me@gmail.com">/index.html?identity=me@gmail.com</a>
     </div>
     <p>
         To test what happens for an anonymous user, visit this page to clear the cookie
     </p>
     <div>
-        <a href="/index.html?user=">/index.html?user=</a>
+        <a href="/index.html?identity=">/index.html?identity=</a>
     </div>
     <p>
         Note that this user identification mechanism is helpful for testing but is totally
@@ -42,12 +42,12 @@
         is a NuGet package that implements <span class="code">IMiddleware&lt;IAuthorization></span> and 
         checks that users have necessary permissions for the requested actions. You typically want to include
         this in your web site. <span class="code">Owin.Framework.Authorization.UI</span>
-        is a NuGet package that provides a user interface for managing users, groups, roles and permissions,
+        is a NuGet package that provides a user interface for managing identities, groups, roles and permissions,
         and a set of REST endopints that support this UI. You can include this in your main web site if you want
         to manage authorization there, or you can include it in another web site that connects to the same database.
     </p>
     <p>
-        Both authorization middlewares are built into this test web site, so you can test user permissions 
+        Both authorization middlewares are built into this test web site, so you can test permissions 
         management and also test that the permissions are correctly applied. The UI is available here:
     </p>
     <div>
@@ -67,10 +67,10 @@
         <a href="/check?role=user">/check?role=user</a>
     </div>
     <div>
-        <a href="/check?user=me@gmail.com&permission=auth:group.assign&resource=group:admins">/check?user=me@gmail.com&permission=auth:group.assign&resource=group:admins</a>
+        <a href="/check?identity=me@gmail.com&permission=auth:group.assign&resource=group:admins">/check?identity=me@gmail.com&permission=auth:group.assign&resource=group:admins</a>
     </div>
     <div>
-        <a href="/check?user=me@gmail.com&role=user">/check?user=me@gmail.com&role=user</a>
+        <a href="/check?identity=me@gmail.com&role=user">/check?identity=me@gmail.com&role=user</a>
     </div>
 </body>
 </html>

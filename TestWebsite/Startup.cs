@@ -103,15 +103,14 @@ namespace TestWebsite
                 .RunOnRoute("default");
 
             // To make it easy to test Authorization, the user making the call is identified by
-            // simply passing the user id in a query string parameter. Do not do this in a real
+            // simply passing the user's identity in a query string parameter. Do not do this in a real
             // application.
             builder.Register(ninject.Get<QueryStringIdentification>())
                 .As("Query string user identification")
                 .RunOnRoute("default");
 
-            // To make it easy to test Authorization, the user making the call is identified by
-            // simply passing the user id in a query string parameter. Do not do this in a real
-            // application.
+            // This middleware will check if the caller has certain permissions and return a page
+            // with the results of the permissions check
             builder.Register(ninject.Get<CheckPermissionMiddleware>())
                 .As("Check permissions")
                 .RunOnRoute("default");

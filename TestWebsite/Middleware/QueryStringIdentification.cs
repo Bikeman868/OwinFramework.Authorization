@@ -12,7 +12,7 @@ using OwinFramework.MiddlewareHelpers.Identification;
 namespace TestWebsite.Middleware
 {
     /// <summary>
-    /// For testing only. Identify user by adding &user=... to the query string
+    /// For testing only. Identify by adding &identity=... to the query string
     /// </summary>
     internal class QueryStringIdentification: 
         IMiddleware<IIdentification>,
@@ -33,29 +33,29 @@ namespace TestWebsite.Middleware
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            var user = context.Request.Query["user"];
+            var identity = context.Request.Query["identity"];
             var claims = new List<IIdentityClaim>();
 
-            if (user == null)
+            if (identity == null)
             {
-                user = context.Request.Cookies["user-id"];
+                identity = context.Request.Cookies["identity"];
             }
-            else if (user.Length == 0)
+            else if (identity.Length == 0)
             {
-                context.Response.Cookies.Delete("user-id");
+                context.Response.Cookies.Delete("identity");
             }
             else
             {
-                context.Response.Cookies.Append("user-id", user);
+                context.Response.Cookies.Append("identity", identity);
             }
 
-            if (!string.IsNullOrEmpty(user))
+            if (!string.IsNullOrEmpty(identity))
             {
                 claims.Add(new IdentityClaim(ClaimNames.Email, "someone@mailinator.com", ClaimStatus.Verified));
                 claims.Add(new IdentityClaim(ClaimNames.IpV4, context.Request.RemoteIpAddress, ClaimStatus.Verified));
             };
 
-            var identification = new Identification(user, claims);
+            var identification = new Identification(identity, claims);
             identification.AllowAnonymous = true;
             context.SetFeature<IUpstreamIdentification>(identification);
 
