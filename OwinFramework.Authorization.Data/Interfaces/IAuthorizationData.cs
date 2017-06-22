@@ -18,22 +18,22 @@ namespace OwinFramework.Authorization.Data.Interfaces
         Role UpdateRole(Role role);
         Permission UpdatePermission(Permission permission);
 
-        void DeleteGroup(long groupToDelete, long reassignUsersTo);
+        void DeleteGroup(long groupToDelete, long reassignIdentitiesTo);
         void DeleteRole(long roleToDelete);
         void DeletePermission(long permissionToDelete);
 
         IEnumerable<Role> GetGroupRoles(long groupId);
         IEnumerable<Permission> GetRolePermissions(long roleId);
 
-        long? GetUserGroupId(string userId);
-        Group GetUserGroup(string userId);
-        IEnumerable<Role> GetUserRoles(string userId);
-        IEnumerable<Permission> GetUserPermissions(string userId);
+        long? GetIdentityGroupId(string identity);
+        Group GetIdentityGroup(string identity);
+        IEnumerable<Role> GetIdentityRoles(string identity);
+        IEnumerable<Permission> GetIdentityPermissions(string identity);
 
-        bool UserIsInRole(string userId, string roleCodeName);
-        bool UserHasPermission(string userId, string permissionCodeName, string resourceName);
+        bool IdentityIsInRole(string identity, string roleCodeName);
+        bool IdentityHasPermission(string identity, string permissionCodeName, string resourceName);
 
-        Group ChangeUserGroup(string userId, long groupId);
+        Group ChangeIdentityGroup(string identity, long groupId);
 
         void AddRoleToGroup(long roleId, long groupId);
         void AddPermissionToRole(long permissionId, long roleId);

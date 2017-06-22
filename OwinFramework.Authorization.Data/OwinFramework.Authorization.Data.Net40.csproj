@@ -61,7 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataContracts\User.cs" />
+    <Compile Include="DataContracts\Identity.cs" />
     <Compile Include="DataContracts\Group.cs" />
     <Compile Include="DataContracts\Permission.cs" />
     <Compile Include="DataContracts\Role.cs" />

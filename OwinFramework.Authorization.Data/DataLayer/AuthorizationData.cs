@@ -21,8 +21,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
         private long? _administratorsGroupId;
 
         private readonly Thread _reloadThread;
-        private Dictionary<string, long> _userGroupIds;
-        private Dictionary<long, UserGroup> _groups;
+        private Dictionary<string, long> _identityGroupIds;
+        private Dictionary<long, IdentityGroup> _groups;
 
         public AuthorizationData(
             IConfigurationStore configurationStore,
@@ -39,8 +39,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
                         try
                         {
                             _repositoryName = c.PriusRepositoryName;
-                            _defaultGroupName = string.Intern(c.DefaultUserGroup.ToLower());
-                            _administratorsGroupName = string.Intern(c.AdministratorUserGroup.ToLower());
+                            _defaultGroupName = string.Intern(c.DefaultGroup.ToLower());
+                            _administratorsGroupName = string.Intern(c.AdministratorGroup.ToLower());
                             Reload();
                         }
                         catch
@@ -76,26 +76,27 @@ namespace OwinFramework.Authorization.Data.DataLayer
             _reloadThread.Start();
         }
 
-        #region Caching and testing user permissions
+        #region Caching and testing permissions
 
         private void Reload()
         {
-            var groups = new Dictionary<long, UserGroup>();
+            var groups = new Dictionary<long, IdentityGroup>();
 
             foreach (var group in GetGroups())
             {
-                groups[group.Id] = new UserGroup
+                groups[group.Id] = new IdentityGroup
                 {
                     GroupId = group.Id,
-                    UserRoles = GetGroupRoles(group.Id)
-                        .Select(r => new UserRole
+                    CodeName = group.CodeName,
+                    IdentityRoles = GetGroupRoles(group.Id)
+                        .Select(r => new IdentityRole
                         {
                             RoleId = r.Id,
                             CodeName = string.Intern(r.CodeName.ToLower())
                         })
                         .ToArray(),
-                    UserPermissions = GetGroupPermissions(group.Id)
-                        .Select(p => new UserPermission 
+                    IdentityPermissions = GetGroupPermissions(group.Id)
+                        .Select(p => new IdentityPermission 
                         { 
                             PermissionId = p.Id,
                             CodeName = string.Intern(p.CodeName.ToLower())
@@ -109,24 +110,24 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
 
             _groups = groups;
-            _userGroupIds = new Dictionary<string, long>();
+            _identityGroupIds = new Dictionary<string, long>();
         }
 
-        private UserGroup FindUserGroup(string userId)
+        private IdentityGroup FindIdentityGroup(string identity)
         {
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(identity))
                 return null;
 
             var groupId = (long?)null;
-            lock (_userGroupIds)
+            lock (_identityGroupIds)
             {
                 long id;
-                if (_userGroupIds.TryGetValue(userId.ToLower(), out id))
+                if (_identityGroupIds.TryGetValue(identity.ToLower(), out id))
                     groupId = id;
             }
 
             if (!groupId.HasValue)
-                groupId = GetUserGroupId(userId);
+                groupId = GetIdentityGroupId(identity);
 
             if (!groupId.HasValue)
                 groupId = _defaultGroupId;
@@ -134,30 +135,30 @@ namespace OwinFramework.Authorization.Data.DataLayer
             if (!groupId.HasValue)
                 return null;
 
-            UserGroup userGroup;
+            IdentityGroup identityGroup;
             lock(_groups)
-                _groups.TryGetValue(groupId.Value, out userGroup);
-            return userGroup;
+                _groups.TryGetValue(groupId.Value, out identityGroup);
+            return identityGroup;
         }
 
-        public bool UserIsInRole(string userId, string roleCodeName)
+        public bool IdentityIsInRole(string identity, string roleCodeName)
         {
-            var group = FindUserGroup(userId);
+            var group = FindIdentityGroup(identity);
             if (group == null) return false;
 
             var internedName = string.Intern(roleCodeName.ToLower());
-            return group.UserRoles.Any(r => ReferenceEquals(r.CodeName, internedName));
+            return group.IdentityRoles.Any(r => ReferenceEquals(r.CodeName, internedName));
         }
 
-        public bool UserHasPermission(string userId, string permissionCodeName, string resourceName)
+        public bool IdentityHasPermission(string identity, string permissionCodeName, string resourceName)
         {
-            var group = FindUserGroup(userId);
+            var group = FindIdentityGroup(identity);
             if (group == null) return false;
 
             if (group.GroupId == _administratorsGroupId) return true;
 
             var internedName = string.Intern(permissionCodeName.ToLower());
-            return group.UserPermissions.Any(p => ReferenceEquals(p.CodeName, internedName));
+            return group.IdentityPermissions.Any(p => ReferenceEquals(p.CodeName, internedName));
         }
 
         #endregion
@@ -321,14 +322,14 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public void DeleteGroup(long groupToDelete, long reassignUsersTo)
+        public void DeleteGroup(long groupToDelete, long reassignIdentitiesTo)
         {
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_DeleteGroup"))
                 {
                     command.AddParameter("groupId", groupToDelete);
-                    command.AddParameter("replacementGroupId", reassignUsersTo);
+                    command.AddParameter("replacementGroupId", reassignIdentitiesTo);
                     context.ExecuteNonQuery(command);
                 }
             }
@@ -403,21 +404,21 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public long? GetUserGroupId(string userId)
+        public long? GetIdentityGroupId(string identity)
         {
             using (var context = _contextFactory.Create(_repositoryName))
             {
-                using (var command = _commandFactory.CreateStoredProcedure("sp_GetUserGroupId"))
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityGroupId"))
                 {
-                    command.AddParameter("userId", userId);
+                    command.AddParameter("identity", identity);
                     return context.ExecuteScalar<long?>(command);
                 }
             }
         }
 
-        public Group GetUserGroup(string userId)
+        public Group GetIdentityGroup(string identity)
         {
-            var groupId = GetUserGroupId(userId);
+            var groupId = GetIdentityGroupId(identity);
             if (!groupId.HasValue) return null;
 
             using (var context = _contextFactory.Create(_repositoryName))
@@ -433,13 +434,13 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Role> GetUserRoles(string userId)
+        public IEnumerable<Role> GetIdentityRoles(string identity)
         {
             using (var context = _contextFactory.Create(_repositoryName))
             {
-                using (var command = _commandFactory.CreateStoredProcedure("sp_GetUserRoles"))
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityRoles"))
                 {
-                    command.AddParameter("userId", userId);
+                    command.AddParameter("identity", identity);
                     using (var results = context.ExecuteEnumerable<Role>(command))
                     {
                         return results.ToList();
@@ -448,13 +449,13 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Permission> GetUserPermissions(string userId)
+        public IEnumerable<Permission> GetIdentityPermissions(string identity)
         {
             using (var context = _contextFactory.Create(_repositoryName))
             {
-                using (var command = _commandFactory.CreateStoredProcedure("sp_GetUserPermissions"))
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityPermissions"))
                 {
-                    command.AddParameter("userId", userId);
+                    command.AddParameter("identity", identity);
                     using (var results = context.ExecuteEnumerable<Permission>(command))
                     {
                         return results.ToList();
@@ -463,15 +464,15 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public Group ChangeUserGroup(string userId, long groupId)
+        public Group ChangeIdentityGroup(string identity, long groupId)
         {
             try
             {
                 using (var context = _contextFactory.Create(_repositoryName))
                 {
-                    using (var command = _commandFactory.CreateStoredProcedure("sp_ChangeUserGroup"))
+                    using (var command = _commandFactory.CreateStoredProcedure("sp_ChangeIdentityGroup"))
                     {
-                        command.AddParameter("userId", userId);
+                        command.AddParameter("identity", identity);
                         command.AddParameter("groupId", groupId);
                         using (var results = context.ExecuteEnumerable<Group>(command))
                         {
@@ -482,8 +483,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
             finally
             {
-                lock (_userGroupIds)
-                    _userGroupIds.Remove(userId.ToLower());
+                lock (_identityGroupIds)
+                    _identityGroupIds.Remove(identity.ToLower());
             }
         }
 

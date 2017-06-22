@@ -39,13 +39,13 @@ CREATE TABLE IF NOT EXISTS `tbl_permissions`
   UNIQUE INDEX `ix_name` (`permissionCodeName`, `permissionResource`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `tbl_user_groups`
+CREATE TABLE IF NOT EXISTS `tbl_identity_groups`
 (
   `groupId` BIGINT(20) NOT NULL,
-  `userId` VARCHAR(80) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`groupId`, `userId`),
+  `identity` VARCHAR(80) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`groupId`, `identity`),
   KEY `ix_group` (`groupId`),
-  UNIQUE INDEX `ix_user` (`userId`)
+  UNIQUE INDEX `ix_identity` (`identity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `tbl_group_roles`
@@ -169,7 +169,7 @@ CREATE PROCEDURE `sp_DeleteGroup`
 DETERMINISTIC
 BEGIN
 	UPDATE
-		`tbl_user_groups` g
+		`tbl_identity_groups` g
 	SET
 		g.`groupId` = `replacementGroupId`
 	WHERE
@@ -237,21 +237,21 @@ DELIMITER ;
 /********************************************************************/
 
 DELIMITER //
-CREATE PROCEDURE `sp_ChangeUserGroup`
+CREATE PROCEDURE `sp_ChangeIdentityGroup`
 (
-	IN `userId` VARCHAR(80),
+	IN `identity` VARCHAR(80),
 	IN `groupId` BIGINT UNSIGNED
 )
 DETERMINISTIC
 BEGIN
 	REPLACE INTO 
-		`tbl_user_groups`
+		`tbl_identity_groups`
 	(
 		`groupId`,
-		`userId`
+		`identity`
 	) VALUES (
 		`groupId`,
-		`userId`
+		`identity`
 	);
 	
 	CALL sp_GetGroup(`groupId`);	
@@ -647,9 +647,9 @@ DELIMITER ;
 /********************************************************************/
 
 DELIMITER //
-CREATE PROCEDURE `sp_GetUserPermissions`
+CREATE PROCEDURE `sp_GetIdentityPermissions`
 (
-	IN `userId` VARCHAR(80)
+	IN `identity` VARCHAR(80)
 )
 DETERMINISTIC
 BEGIN
@@ -660,7 +660,7 @@ BEGIN
 		p.`permissionDisplayName`,
 		p.`permissionDescription`
 	FROM
-		`tbl_user_groups` ug
+		`tbl_identity_groups` ug
 			JOIN 
 		`tbl_group_roles` gr ON ug.`groupId` = gr.`groupId`
 			JOIN
@@ -668,16 +668,16 @@ BEGIN
 			JOIN
 		`tbl_permissions` p ON rp.`permissionId` = p.`permissionId`
 	WHERE
-		ug.`userId` = `userId`;
+		ug.`identity` = `identity`;
 END//
 DELIMITER ;
 
 /********************************************************************/
 
 DELIMITER //
-CREATE PROCEDURE `sp_GetUserRoles`
+CREATE PROCEDURE `sp_GetIdentityRoles`
 (
-	IN `userId` VARCHAR(80)
+	IN `identity` VARCHAR(80)
 )
 DETERMINISTIC
 BEGIN
@@ -687,40 +687,40 @@ BEGIN
 		r.`roleDisplayName`,
 		r.`roleDescription`
 	FROM
-		`tbl_user_groups` ug
+		`tbl_identity_groups` ug
 			JOIN 
 		`tbl_group_roles` gr ON ug.`groupId` = gr.`groupId`
 			JOIN
 		`tbl_roles` r ON gr.`roleId` = r.`roleId`
 	WHERE
-		ug.`userId` = `userId`;
+		ug.`identity` = `identity`;
 END//
 DELIMITER ;
 
 /********************************************************************/
 
 DELIMITER //
-CREATE PROCEDURE `sp_GetUserGroupId`
+CREATE PROCEDURE `sp_GetIdentityGroupId`
 (
-	IN `userId` VARCHAR(80)
+	IN `identity` VARCHAR(80)
 )
 DETERMINISTIC
 BEGIN
 	SELECT DISTINCT
 		ug.`groupId`
 	FROM
-		`tbl_user_groups` ug
+		`tbl_identity_groups` ug
 	WHERE
-		ug.`userId` = `userId`;
+		ug.`identity` = `identity`;
 END//
 DELIMITER ;
 
 /********************************************************************/
 
 DELIMITER //
-CREATE PROCEDURE `sp_GetUser`
+CREATE PROCEDURE `sp_GetIdentity`
 (
-	IN `userId` VARCHAR(80)
+	IN `identity` VARCHAR(80)
 )
 DETERMINISTIC
 BEGIN
@@ -731,9 +731,9 @@ BEGIN
 	INTO
 		`groupId`
 	FROM
-		`tbl_user_groups` ug
+		`tbl_identity_groups` ug
 	WHERE
-		ug.`userId` = `userId`;
+		ug.`identity` = `identity`;
 
 	SELECT
 		g.`groupId`,

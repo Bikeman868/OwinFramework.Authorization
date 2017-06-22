@@ -39,11 +39,11 @@ CALL sp_AddGroupRole(3, 4);
 CALL sp_AddGroupRole(4, 1);
 CALL sp_AddGroupRole(4, 4);
 
-CALL sp_ChangeUserGroup('manager@domain', 3);
-CALL sp_ChangeUserGroup('cs1@domain', 4);
-CALL sp_ChangeUserGroup('cs2@domain', 4);
-CALL sp_ChangeUserGroup('cs3@domain', 4);
-CALL sp_ChangeUserGroup('admin@domain', 2);
+CALL sp_ChangeIdentityGroup('manager@domain', 3);
+CALL sp_ChangeIdentityGroup('cs1@domain', 4);
+CALL sp_ChangeIdentityGroup('cs2@domain', 4);
+CALL sp_ChangeIdentityGroup('cs3@domain', 4);
+CALL sp_ChangeIdentityGroup('admin@domain', 2);
 
 /************************************************************/
 
@@ -64,22 +64,22 @@ CALL sp_GetRolesWithPermission(5);
 CALL sp_GetRolesWithPermission(6);
 CALL sp_GetRolesWithPermission(7);
 
-CALL sp_GetUserPermissions('manager@domain');
-CALL sp_GetUserPermissions('cs1@domain');
-CALL sp_GetUserPermissions('cs2@domain');
-CALL sp_GetUserPermissions('cs3@domain');
+CALL sp_GetIdentityPermissions('manager@domain');
+CALL sp_GetIdentityPermissions('cs1@domain');
+CALL sp_GetIdentityPermissions('cs2@domain');
+CALL sp_GetIdentityPermissions('cs3@domain');
 
-CALL sp_GetUserRoles('manager@domain');
-CALL sp_GetUserRoles('cs1@domain');
-CALL sp_GetUserRoles('cs2@domain');
-CALL sp_GetUserRoles('cs3@domain');
+CALL sp_GetIdentityRoles('manager@domain');
+CALL sp_GetIdentityRoles('cs1@domain');
+CALL sp_GetIdentityRoles('cs2@domain');
+CALL sp_GetIdentityRoles('cs3@domain');
 
-CALL sp_GetUser('manager@domain');
-CALL sp_GetUser('cs1@domain');
-CALL sp_GetUser('cs2@domain');
-CALL sp_GetUser('cs3@domain');
-CALL sp_GetUser('annonymous@domain');
-CALL sp_GetUser('admin@domain');
+CALL sp_GetIdentity('manager@domain');
+CALL sp_GetIdentity('cs1@domain');
+CALL sp_GetIdentity('cs2@domain');
+CALL sp_GetIdentity('cs3@domain');
+CALL sp_GetIdentity('annonymous@domain');
+CALL sp_GetIdentity('admin@domain');
 
 /************************************************************/
 

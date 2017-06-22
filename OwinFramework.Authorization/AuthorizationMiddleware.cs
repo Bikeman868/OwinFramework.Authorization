@@ -58,7 +58,7 @@ namespace OwinFramework.Authorization
             var identification = context.GetFeature<IIdentification>();
 
             if (identification == null || authorization == null)
-                throw new HttpException((int)HttpStatusCode.Forbidden, "User identification is missing");
+                throw new HttpException((int)HttpStatusCode.Forbidden, "Caller identification is missing");
 
             if (identification.IsAnonymous)
             {
@@ -68,7 +68,7 @@ namespace OwinFramework.Authorization
             }
             else
             {
-                authorization.UserId = identification.Identity;
+                authorization.Identity = identification.Identity;
                 if (!authorization.IsAllowed())
                     throw new HttpException((int) HttpStatusCode.Forbidden,
                         "You do not have permission to perform this operation");
@@ -153,12 +153,12 @@ namespace OwinFramework.Authorization
 
         string ISelfDocumenting.LongDescription
         {
-            get { return "Provides a mechanism for defining user groups, roles and permissionn"; }
+            get { return "Provides a mechanism for defining identity groups, roles and permissionn"; }
         }
 
         string ISelfDocumenting.ShortDescription
         {
-            get { return "Provides a mechanism for defining user groups, roles and permissionn"; }
+            get { return "Provides a mechanism for defining identity groups, roles and permissionn"; }
         }
 
         #endregion
@@ -189,8 +189,8 @@ namespace OwinFramework.Authorization
 
         private class Authorization : IUpstreamAuthorization, IAuthorization
         {
-            private IAuthorizationData _authorizationData;
-            public string UserId;
+            private readonly IAuthorizationData _authorizationData;
+            public string Identity;
 
             private readonly List<string> _requiredRoles = new List<string>();
             private readonly List<string> _requiredPermissions = new List<string>();
@@ -218,17 +218,17 @@ namespace OwinFramework.Authorization
 
             public bool HasPermission(string permissionName, string resourceName)
             {
-                return _authorizationData.UserHasPermission(UserId, permissionName, resourceName);
+                return _authorizationData.IdentityHasPermission(Identity, permissionName, resourceName);
             }
 
             public bool IsInRole(string roleName)
             {
-                return _authorizationData.UserIsInRole(UserId, roleName);
+                return _authorizationData.IdentityIsInRole(Identity, roleName);
             }
 
             public bool IsAllowed()
             {
-                if (ReferenceEquals(UserId, null)) return false;
+                if (ReferenceEquals(Identity, null)) return false;
                 return _requiredRoles.All(IsInRole) && _requiredPermissions.All(r => HasPermission(r, null));
             }
         }

@@ -41,8 +41,8 @@ namespace OwinFramework.Authorization.UI
         private PathString _permissionListPath;
         private PathString _permissionPath;
 
-        private PathString _searchUserListPath;
-        private PathString _userGroupPath;
+        private PathString _searchIdentityListPath;
+        private PathString _identityGroupPath;
 
         public AuthorizationApiMiddleware(IAuthorizationData authorizationData)
         {
@@ -118,8 +118,8 @@ namespace OwinFramework.Authorization.UI
                     _permissionListPath = new PathString(root + "permissions");
                     _permissionPath = new PathString(root + "permission");
 
-                    _searchUserListPath = new PathString(root + "users/_search");
-                    _userGroupPath = new PathString(root + "user/group");
+                    _searchIdentityListPath = new PathString(root + "identity/_search");
+                    _identityGroupPath = new PathString(root + "identity/group");
                 },
                 new AuthorizationApiConfiguration());
         }
@@ -168,20 +168,20 @@ namespace OwinFramework.Authorization.UI
                     new EndpointDocumentation
                     {
                         RelativePath = _groupListPath.Value,
-                        Description = "The list of groups. Each user is assigned to a single group",
+                        Description = "The list of groups. Each identity (user, machine, service) is assigned to a single group",
                         Attributes = new List<IEndpointAttributeDocumentation>
                                 {
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Method",
                                         Name = "GET",
-                                        Description = "Returns a list of user groups"
+                                        Description = "Returns a list of identity groups"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Method",
                                         Name = "POST",
-                                        Description = "Creates a new user group and returns it in the response"
+                                        Description = "Creates a new identity group and returns it in the response"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
@@ -202,7 +202,7 @@ namespace OwinFramework.Authorization.UI
                     new EndpointDocumentation
                     {
                         RelativePath = _groupPath.Value + "/{groupId}",
-                        Description = "CRUD operations on a user group",
+                        Description = "CRUD operations on a identity group",
                         Attributes = new List<IEndpointAttributeDocumentation>
                                 {
                                     new EndpointAttributeDocumentation
@@ -215,13 +215,13 @@ namespace OwinFramework.Authorization.UI
                                     {
                                         Type = "Method",
                                         Name = "PUT",
-                                        Description = "Overwrites details of a user group"
+                                        Description = "Overwrites details of a identity group"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Method",
                                         Name = "DELETE",
-                                        Description = "Overwrites details of a user group"
+                                        Description = "Overwrites details of a identity group"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
@@ -236,7 +236,7 @@ namespace OwinFramework.Authorization.UI
                     new EndpointDocumentation
                     {
                         RelativePath = _groupRoleListPath.Value + "/{groupId}",
-                        Description = "The list of roles assigned to a group of users.",
+                        Description = "The list of roles assigned to a group of identities.",
                         Attributes = new List<IEndpointAttributeDocumentation>
                                 {
                                     new EndpointAttributeDocumentation
@@ -270,7 +270,7 @@ namespace OwinFramework.Authorization.UI
                     new EndpointDocumentation
                     {
                         RelativePath = _roleListPath.Value,
-                        Description = "The list of roles. A role is a job function such as software developer, tester, project manager etc. Each group of users can be assigned to one or more roles",
+                        Description = "The list of roles. A role is a job function such as software developer, tester, project manager etc. Each group of identities can be assigned to one or more roles",
                         Attributes = new List<IEndpointAttributeDocumentation>
                                 {
                                     new EndpointAttributeDocumentation
@@ -372,7 +372,7 @@ namespace OwinFramework.Authorization.UI
                     new EndpointDocumentation
                     {
                         RelativePath = _permissionListPath.Value,
-                        Description = "The list of permissions. A permission is something the software will test for before processing a request, for example permission to 'cancel an order'. Each role can grant one or more permissions to the users in that role.",
+                        Description = "The list of permissions. A permission is something the software will test for before processing a request, for example permission to 'cancel an order'. Each role can grant one or more permissions to the identities in that role.",
                         Attributes = new List<IEndpointAttributeDocumentation>
                                 {
                                     new EndpointAttributeDocumentation
@@ -439,21 +439,21 @@ namespace OwinFramework.Authorization.UI
                 documentation.Add(
                     new EndpointDocumentation
                     {
-                        RelativePath = _searchUserListPath.Value,
-                        Description = "Search for a user based on a search phrase",
+                        RelativePath = _searchIdentityListPath.Value,
+                        Description = "Search for an identity based on a search phrase",
                         Attributes = new List<IEndpointAttributeDocumentation>
                                 {
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Method",
                                         Name = "GET",
-                                        Description = "Returns a list of users matching the search text"
+                                        Description = "Returns a list of identities matching the search text"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Parameter",
                                         Name = "query",
-                                        Description = "The text that was entered to find matching users"
+                                        Description = "The text that was entered to find matching identities"
                                     }
                                 }
                     });
@@ -461,27 +461,27 @@ namespace OwinFramework.Authorization.UI
                 documentation.Add(
                     new EndpointDocumentation
                     {
-                        RelativePath = _userGroupPath.Value,
-                        Description = "Get and update the group that a user belongs to",
+                        RelativePath = _identityGroupPath.Value,
+                        Description = "Get and update the group that an identity belongs to",
                         Attributes = new List<IEndpointAttributeDocumentation>
                                 {
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Method",
                                         Name = "GET",
-                                        Description = "Returns the id of the group that the user is assigned to"
+                                        Description = "Returns the id of the group that the identity is assigned to"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Method",
                                         Name = "PUT",
-                                        Description = "Assigns the user to a different group"
+                                        Description = "Assigns the identity to a different group"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Parameter",
-                                        Name = "id",
-                                        Description = "The user id of the user to get/modify"
+                                        Name = "identity",
+                                        Description = "The identity to get/modify"
                                     }
                                 }
                     });
@@ -506,12 +506,12 @@ namespace OwinFramework.Authorization.UI
 
         string ISelfDocumenting.LongDescription
         {
-            get { return "Provides a REST API for managing user groups, roles and permissionn"; }
+            get { return "Provides a REST API for managing identity groups, roles and permissionn"; }
         }
 
         string ISelfDocumenting.ShortDescription
         {
-            get { return "Provides a REST API for managing user groups, roles and permissionn"; }
+            get { return "Provides a REST API for managing identity groups, roles and permissionn"; }
         }
 
         #endregion
