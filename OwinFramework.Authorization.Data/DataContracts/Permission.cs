@@ -10,6 +10,9 @@ namespace OwinFramework.Authorization.Data.DataContracts
         [Mapping("permissionCodeName")]
         public string CodeName { get; set; }
 
+        [Mapping("permissionResource")]
+        public string Resource { get; set; }
+
         [Mapping("permissionDisplayName")]
         public string DisplayName { get; set; }
 

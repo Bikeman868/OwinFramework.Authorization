@@ -55,10 +55,22 @@
     </div>
     <h2>Authorization Middleware</h2>
     <p>
-        You can test the authorization middleware using urls like this one:
+        You can test the authorization middleware using urls like these:
     </p>
     <div>
-        <a href="/check?user=me@gmail.com&permission=delete-order">/check?user=me@gmail.com&permission=delete-order</a>
+        <a href="/check?permission=auth:group.assign&resource=group:admins">/check?permission=auth:group.assign&resource=group:admins</a>
+    </div>
+    <div>
+        <a href="/check?permission=sys:use">/check?permission=sys:use</a>
+    </div>
+    <div>
+        <a href="/check?role=user">/check?role=user</a>
+    </div>
+    <div>
+        <a href="/check?user=me@gmail.com&permission=auth:group.assign&resource=group:admins">/check?user=me@gmail.com&permission=auth:group.assign&resource=group:admins</a>
+    </div>
+    <div>
+        <a href="/check?user=me@gmail.com&role=user">/check?user=me@gmail.com&role=user</a>
     </div>
 </body>
 </html>

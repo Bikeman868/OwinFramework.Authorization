@@ -102,9 +102,9 @@ namespace OwinFramework.Authorization.Data.DataLayer
                         })
                         .ToArray()
                 };
-                if (string.Equals(group.Name, _defaultGroupName, StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(group.DisplayName, _defaultGroupName, StringComparison.InvariantCultureIgnoreCase))
                     _defaultGroupId = group.Id;
-                if (string.Equals(group.Name, _administratorsGroupName, StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(group.DisplayName, _administratorsGroupName, StringComparison.InvariantCultureIgnoreCase))
                     _administratorsGroupId = group.Id;
             }
 
@@ -114,6 +114,9 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         private UserGroup FindUserGroup(string userId)
         {
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
             var groupId = (long?)null;
             lock (_userGroupIds)
             {
@@ -215,7 +218,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddGroup"))
                 {
-                    command.AddParameter("groupName", group.Name);
+                    command.AddParameter("groupCodeName", group.CodeName);
+                    command.AddParameter("groupDisplayName", group.DisplayName);
                     command.AddParameter("groupDescription", group.Description);
                     command.AddParameter("groupPermissionId", group.PermissionId);
                     using (var results = context.ExecuteEnumerable<Group>(command))
@@ -250,6 +254,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddPermission"))
                 {
                     command.AddParameter("permissionCodeName", permission.CodeName);
+                    command.AddParameter("permissionResource", permission.Resource);
                     command.AddParameter("permissionDisplayName", permission.DisplayName);
                     command.AddParameter("permissionDescription", permission.Description);
                     using (var results = context.ExecuteEnumerable<Permission>(command))
@@ -267,7 +272,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 using (var command = _commandFactory.CreateStoredProcedure("sp_UpdateGroup"))
                 {
                     command.AddParameter("groupId", group.Id);
-                    command.AddParameter("groupName", group.Name);
+                    command.AddParameter("groupCodeName", group.CodeName);
+                    command.AddParameter("groupDisplayName", group.DisplayName);
                     command.AddParameter("groupDescription", group.Description);
                     command.AddParameter("groupPermissionId", group.PermissionId);
                     using (var results = context.ExecuteEnumerable<Group>(command))
@@ -304,6 +310,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 {
                     command.AddParameter("permissionId", permission.Id);
                     command.AddParameter("permissionCodeName", permission.CodeName);
+                    command.AddParameter("permissionResource", permission.Resource);
                     command.AddParameter("permissionDisplayName", permission.DisplayName);
                     command.AddParameter("permissionDescription", permission.Description);
                     using (var results = context.ExecuteEnumerable<Permission>(command))

@@ -7,8 +7,11 @@ namespace OwinFramework.Authorization.Data.DataContracts
         [Mapping("groupId")]
         public long Id { get; set; }
 
-        [Mapping("groupName")]
-        public string Name { get; set; }
+        [Mapping("groupCodeName")]
+        public string CodeName { get; set; }
+
+        [Mapping("groupDisplayName")]
+        public string DisplayName { get; set; }
 
         [Mapping("groupDescription")]
         public string Description { get; set; }

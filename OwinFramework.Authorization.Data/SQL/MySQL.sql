@@ -10,11 +10,12 @@ USE `authorization`;
 CREATE TABLE IF NOT EXISTS `tbl_groups`
 (
   `groupId` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `groupName` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `groupCodeName` VARCHAR(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `groupDisplayName` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `groupDescription` VARCHAR(400) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `groupPermissionId` BIGINT(20),
   PRIMARY KEY (`groupId`),
-  UNIQUE INDEX `ix_name` (`groupName`)
+  UNIQUE INDEX `ix_code_name` (`groupCodeName`),
+  UNIQUE INDEX `ix_display_name` (`groupDisplayName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `tbl_roles`
@@ -31,10 +32,11 @@ CREATE TABLE IF NOT EXISTS `tbl_permissions`
 (
   `permissionId` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `permissionCodeName` VARCHAR(80) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `permissionResource` VARCHAR(80) COLLATE utf8mb4_unicode_ci NULL,
   `permissionDisplayName` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `permissionDescription` VARCHAR(400) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`permissionId`),
-  UNIQUE INDEX `ix_name` (`permissionCodeName`)
+  UNIQUE INDEX `ix_name` (`permissionCodeName`, `permissionResource`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `tbl_user_groups`
@@ -71,9 +73,9 @@ CREATE PROCEDURE `sp_GetGroups`() DETERMINISTIC
 BEGIN
 	SELECT
 		g.`groupId`,
-		g.`groupName`,
-		g.`groupDescription`,
-		g.`groupPermissionId`
+		g.`groupCodeName`,
+		g.`groupDisplayName`,
+		g.`groupDescription`
 	FROM
 		`tbl_groups` g;
 END//
@@ -90,9 +92,9 @@ DETERMINISTIC
 BEGIN
 	SELECT
 		g.`groupId`,
-		g.`groupName`,
-		g.`groupDescription`,
-		g.`groupPermissionId`
+		g.`groupCodeName`,
+		g.`groupDisplayName`,
+		g.`groupDescription`
 	FROM
 		`tbl_groups` g
 	WHERE
@@ -105,9 +107,9 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE `sp_AddGroup`
 (
-	IN `groupName` VARCHAR(50),
-	IN `groupDescription` VARCHAR(400),
-	IN `groupPermissionId` BIGINT UNSIGNED
+	IN `groupCodeName` VARCHAR(30),
+	IN `groupDisplayName` VARCHAR(50),
+	IN `groupDescription` VARCHAR(400)
 )
 DETERMINISTIC
 BEGIN
@@ -116,13 +118,13 @@ BEGIN
 	INSERT INTO 
 		`tbl_groups`
 	(
-		`groupName`,
-		`groupDescription`,
-		`groupPermissionId`
+		`groupCodeName`,
+		`groupDisplayName`,
+		`groupDescription`
 	) VALUES (
-		`groupName`,
-		`groupDescription`,
-		`groupPermissionId`
+		`groupCodeName`,
+		`groupDisplayName`,
+		`groupDescription`
 	);
 		
 	SELECT LAST_INSERT_ID() INTO `groupId`;
@@ -137,16 +139,17 @@ DELIMITER //
 CREATE PROCEDURE `sp_UpdateGroup`
 (
 	IN `groupId` BIGINT UNSIGNED,
-	IN `groupName` VARCHAR(50),
-	IN `groupDescription` VARCHAR(400),
-	IN `groupPermissionId` BIGINT UNSIGNED
+	IN `groupCodeName` VARCHAR(30),
+	IN `groupDisplayName` VARCHAR(50),
+	IN `groupDescription` VARCHAR(400)
 )
 DETERMINISTIC
 BEGIN
 	UPDATE
 		`tbl_groups` g
 	SET
-		`groupName` = `groupName`,
+		`groupCodeName` = `groupCodeName`,
+		`groupDisplayName` = `groupDisplayName`,
 		`groupDescription` = `groupDescription`
 	WHERE
 		g.`groupId` = `groupId`;
@@ -430,6 +433,7 @@ BEGIN
 	SELECT
 		p.`permissionId`,
 		p.`permissionCodeName`,
+		p.`permissionResource`,
 		p.`permissionDisplayName`,
 		p.`permissionDescription`
 	FROM
@@ -449,6 +453,7 @@ BEGIN
 	SELECT
 		p.`permissionId`,
 		p.`permissionCodeName`,
+		p.`permissionResource`,
 		p.`permissionDisplayName`,
 		p.`permissionDescription`
 	FROM
@@ -464,6 +469,7 @@ DELIMITER //
 CREATE PROCEDURE `sp_AddPermission`
 (
 	IN `permissionCodeName` VARCHAR(30),
+	IN `permissionResource` VARCHAR(80),
 	IN `permissionDisplayName` VARCHAR(50),
 	IN `permissionDescription` VARCHAR(400)
 )
@@ -475,10 +481,12 @@ BEGIN
 		`tbl_permissions`
 	(
 		`permissionCodeName`,
+		`permissionResource`,
 		`permissionDisplayName`,
 		`permissionDescription`
 	) VALUES (
 		`permissionCodeName`,
+		`permissionResource`,
 		`permissionDisplayName`,
 		`permissionDescription`
 	);
@@ -496,6 +504,7 @@ CREATE PROCEDURE `sp_UpdatePermission`
 (
 	IN `permissionId` BIGINT UNSIGNED,
 	IN `permissionCodeName` VARCHAR(30),
+	IN `permissionResource` VARCHAR(80),
 	IN `permissionDisplayName` VARCHAR(50),
 	IN `permissionDescription` VARCHAR(400)
 )
@@ -505,6 +514,7 @@ BEGIN
 		`tbl_permissions` p
 	SET
 		`permissionCodeName` = `permissionCodeName`,
+		`permissionResource` = `permissionResource`,
 		`permissionDisplayName` = `permissionDisplayName`,
 		`permissionDescription` = `permissionDescription`
 	WHERE
@@ -597,6 +607,7 @@ BEGIN
 	SELECT DISTINCT
 		p.`permissionId`,
 		p.`permissionCodeName`,
+		p.`permissionResource`,
 		p.`permissionDisplayName`,
 		p.`permissionDescription`
 	FROM
@@ -645,6 +656,7 @@ BEGIN
 	SELECT DISTINCT
 		p.`permissionId`,
 		p.`permissionCodeName`,
+		p.`permissionResource`,
 		p.`permissionDisplayName`,
 		p.`permissionDescription`
 	FROM
@@ -725,7 +737,8 @@ BEGIN
 
 	SELECT
 		g.`groupId`,
-		g.`groupName`
+		g.`groupCodeName`,
+		g.`groupDisplayName`
 	FROM
 		`tbl_groups` g
 	WHERE
@@ -743,7 +756,8 @@ BEGIN
 
 	SELECT DISTINCT
 		p.`permissionId`,
-		p.`permissionCodeName`
+		p.`permissionCodeName`,
+		p.`permissionResource`
 	FROM
 		`tbl_group_roles` gr
 			JOIN
@@ -754,3 +768,14 @@ BEGIN
 		gr.`groupId` = `groupId`;
 END//
 DELIMITER ;
+
+/********************************************************************/
+
+CALL sp_AddRole('user',  'User of the system', 'Public user of the system');
+CALL sp_AddRole('admin', 'Administrator of the system', 'Administrator of the system');
+
+CALL sp_AddGroup('users',  'Users', 'Default group for all new users');
+CALL sp_AddGroup('admins', 'Administrators', 'Users who have full control over everything in the system. These users can give anyone access to anything.');
+
+CALL sp_AddGroupRole(1, 1);
+CALL sp_AddGroupRole(2, 2);

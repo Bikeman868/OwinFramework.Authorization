@@ -42,6 +42,7 @@ namespace TestWebsite.Middleware
             if (!IsForMe(context)) return next();
 
             var permission = context.Request.Query["permission"];
+            var resource = context.Request.Query["resource"];
             var role = context.Request.Query["role"];
 
             var identification = context.GetFeature<IIdentification>();
@@ -77,10 +78,20 @@ namespace TestWebsite.Middleware
 
             if (!string.IsNullOrEmpty(permission))
             {
-                if (authorization.HasPermission(permission))
-                    response.AppendLine("This user has permission to " + permission);
+                if (string.IsNullOrEmpty(resource))
+                {
+                    if (authorization.HasPermission(permission))
+                        response.AppendLine("This user has permission to " + permission);
+                    else
+                        response.AppendLine("This user does not have permission to " + permission);
+                }
                 else
-                    response.AppendLine("This user does not have permission to " + permission);
+                {
+                    if (authorization.HasPermission(permission))
+                        response.AppendLine("This user has permission to " + permission + " on " + resource);
+                    else
+                        response.AppendLine("This user does not have permission to " + permission + " on " + resource);
+                }
             }
 
             context.Response.ContentType = "text/plain";
