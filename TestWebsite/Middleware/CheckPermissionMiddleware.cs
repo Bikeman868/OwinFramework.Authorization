@@ -66,6 +66,17 @@ namespace TestWebsite.Middleware
                 }
             }
 
+            if (identification.Purposes != null && identification.Purposes.Count > 0)
+            {
+                response.AppendLine();
+                response.AppendLine("The identified user is restricted to these roles:");
+                foreach (var purpose in identification.Purposes)
+                {
+                    response.AppendFormat("   {0}", purpose);
+                    response.AppendLine();
+                }
+            }
+
             response.AppendLine();
 
             if (!string.IsNullOrEmpty(role))

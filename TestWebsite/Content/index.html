@@ -24,13 +24,25 @@
         To set the user you want to impersonate navigate to a url like this one.
     </p>
     <div>
-        <a href="/index.html?identity=me@gmail.com">/index.html?identity=me@gmail.com</a>
+        <a href="/index.html?identity=manager@domain">/index.html?identity=manager@domain</a>
+    </div>
+    <div>
+        <a href="/index.html?identity=cs2@domain">/index.html?identity=cs2@domain</a>
+    </div>
+    <div>
+        <a href="/index.html?identity=admin@domain">/index.html?identity=admin@domain</a>
     </div>
     <p>
         To test what happens for an anonymous user, visit this page to clear the cookie
     </p>
     <div>
         <a href="/index.html?identity=">/index.html?identity=</a>
+    </div>
+    <p>
+        To set the user you want to impersonate with limited purposes (mapped to roles)
+    </p>
+    <div>
+        <a href="/index.html?identity=manager@domain:user">/index.html?identity=admin@domain:user</a>
     </div>
     <p>
         Note that this user identification mechanism is helpful for testing but is totally
@@ -67,10 +79,10 @@
         <a href="/check?role=user">/check?role=user</a>
     </div>
     <div>
-        <a href="/check?identity=me@gmail.com&permission=auth:group.assign&resource=group:admins">/check?identity=me@gmail.com&permission=auth:group.assign&resource=group:admins</a>
+        <a href="/check?identity=admin@domain&permission=auth:group.assign&resource=group:admins">/check?identity=admin@domain&permission=auth:group.assign&resource=group:admins</a>
     </div>
     <div>
-        <a href="/check?identity=me@gmail.com&role=user">/check?identity=me@gmail.com&role=user</a>
+        <a href="/check?identity=cs1@domain.com&role=user">/check?identity=cs1@domain.com&role=user</a>
     </div>
 </body>
 </html>

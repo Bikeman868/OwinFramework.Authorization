@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using OwinFramework.Builder;
@@ -35,6 +36,7 @@ namespace TestWebsite.Middleware
         {
             var identity = context.Request.Query["identity"];
             var claims = new List<IIdentityClaim>();
+            var purposes = new List<string>();
 
             if (identity == null)
             {
@@ -49,13 +51,20 @@ namespace TestWebsite.Middleware
                 context.Response.Cookies.Append("identity", identity);
             }
 
-            if (!string.IsNullOrEmpty(identity))
+            var anonymous = string.IsNullOrEmpty(identity);
+            if (!anonymous)
             {
+                var colonPos = identity.IndexOf(':');
+                if (colonPos > 0)
+                {
+                    purposes = identity.Substring(colonPos + 1).Split(',').ToList();
+                    identity = identity.Substring(0, colonPos);
+                }
                 claims.Add(new IdentityClaim(ClaimNames.Email, "someone@mailinator.com", ClaimStatus.Verified));
                 claims.Add(new IdentityClaim(ClaimNames.IpV4, context.Request.RemoteIpAddress, ClaimStatus.Verified));
             };
 
-            var identification = new Identification(identity, claims);
+            var identification = new Identification(identity, claims, anonymous, purposes);
             identification.AllowAnonymous = true;
             context.SetFeature<IUpstreamIdentification>(identification);
 
