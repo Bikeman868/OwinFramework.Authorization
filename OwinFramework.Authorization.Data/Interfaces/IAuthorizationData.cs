@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OwinFramework.Authorization.Data.DataContracts;
+using OwinFramework.InterfacesV1.Middleware;
 
 namespace OwinFramework.Authorization.Data.Interfaces
 {
@@ -25,15 +26,15 @@ namespace OwinFramework.Authorization.Data.Interfaces
         IEnumerable<Role> GetGroupRoles(long groupId);
         IEnumerable<Permission> GetRolePermissions(long roleId);
 
-        long? GetIdentityGroupId(string identity);
-        Group GetIdentityGroup(string identity);
-        IEnumerable<Role> GetIdentityRoles(string identity);
-        IEnumerable<Permission> GetIdentityPermissions(string identity);
+        long? GetGroupId(IIdentification identification);
+        Group GetGroup(IIdentification identification);
+        IEnumerable<Role> GetRoles(IIdentification identification);
+        IEnumerable<Permission> GetPermissions(IIdentification identification);
 
-        bool IdentityIsInRole(string identity, string roleCodeName);
-        bool IdentityHasPermission(string identity, string permissionCodeName, string resourceName);
+        bool IsInRole(IIdentification identification, string roleCodeName);
+        bool HasPermission(IIdentification identification, string permissionCodeName, string resourceName);
 
-        Group ChangeIdentityGroup(string identity, long groupId);
+        Group ChangeGroup(IIdentification identification, long groupId);
 
         void AddRoleToGroup(long roleId, long groupId);
         void AddPermissionToRole(long permissionId, long roleId);

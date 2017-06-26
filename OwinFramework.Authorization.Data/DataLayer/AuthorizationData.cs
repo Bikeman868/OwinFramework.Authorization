@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web;
 using OwinFramework.Authorization.Data.DataContracts;
 using OwinFramework.Authorization.Data.Interfaces;
+using OwinFramework.InterfacesV1.Middleware;
 using Prius.Contracts.Interfaces;
 using Urchin.Client.Interfaces;
+using Group = OwinFramework.Authorization.Data.DataContracts.Group;
 
 namespace OwinFramework.Authorization.Data.DataLayer
 {
@@ -14,11 +19,16 @@ namespace OwinFramework.Authorization.Data.DataLayer
         private readonly IContextFactory _contextFactory;
         private readonly ICommandFactory _commandFactory;
         private readonly IDisposable _configurationChangeRegistration;
+
         private string _repositoryName;
+
         private string _defaultGroupName;
         private string _administratorsGroupName;
+        private string _anonymousGroupName;
+
         private long? _defaultGroupId;
         private long? _administratorsGroupId;
+        private long? _anonymousGroupId;
 
         private readonly Thread _reloadThread;
         private Dictionary<string, long> _identityGroupIds;
@@ -41,6 +51,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                             _repositoryName = c.PriusRepositoryName;
                             _defaultGroupName = string.Intern(c.DefaultGroup.ToLower());
                             _administratorsGroupName = string.Intern(c.AdministratorGroup.ToLower());
+                            _anonymousGroupName = string.Intern(c.AnonymousGroup.ToLower());
                             Reload();
                         }
                         catch
@@ -59,7 +70,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                         Thread.Sleep(TimeSpan.FromMinutes(1));
                         Reload();
                     }
-                    catch (ThreadAbortException ex)
+                    catch (ThreadAbortException)
                     {
                         return;
                     }
@@ -87,50 +98,69 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 groups[group.Id] = new IdentityGroup
                 {
                     GroupId = group.Id,
-                    CodeName = group.CodeName,
+                    CodeName = string.Intern(group.CodeName.ToLower()),
                     IdentityRoles = GetGroupRoles(group.Id)
                         .Select(r => new IdentityRole
                         {
                             RoleId = r.Id,
-                            CodeName = string.Intern(r.CodeName.ToLower())
+                            CodeName = string.Intern(r.CodeName.ToLower()),
+                            IdentityPermissions = GetRolePermissions(r.Id)
+                                .Select(p => new IdentityPermission
+                                {
+                                    PermissionId = p.Id,
+                                    CodeName = string.Intern(p.CodeName.ToLower()),
+                                    Resource = p.Resource
+                                })
+                                .ToArray()
                         })
                         .ToArray(),
                     IdentityPermissions = GetGroupPermissions(group.Id)
                         .Select(p => new IdentityPermission 
                         { 
                             PermissionId = p.Id,
-                            CodeName = string.Intern(p.CodeName.ToLower())
+                            CodeName = string.Intern(p.CodeName.ToLower()),
+                            Resource = p.Resource
                         })
                         .ToArray()
                 };
-                if (string.Equals(group.DisplayName, _defaultGroupName, StringComparison.InvariantCultureIgnoreCase))
+
+                if (group.CodeName == _defaultGroupName)
                     _defaultGroupId = group.Id;
-                if (string.Equals(group.DisplayName, _administratorsGroupName, StringComparison.InvariantCultureIgnoreCase))
+
+                if (group.CodeName == _administratorsGroupName)
                     _administratorsGroupId = group.Id;
+
+                if (group.CodeName == _anonymousGroupName)
+                    _anonymousGroupId = group.Id;
             }
 
             _groups = groups;
             _identityGroupIds = new Dictionary<string, long>();
         }
 
-        private IdentityGroup FindIdentityGroup(string identity)
+        private IdentityGroup FindGroup(IIdentification identification)
         {
-            if (string.IsNullOrEmpty(identity))
-                return null;
-
             var groupId = (long?)null;
-            lock (_identityGroupIds)
+
+            if (identification == null || identification.IsAnonymous)
             {
-                long id;
-                if (_identityGroupIds.TryGetValue(identity.ToLower(), out id))
-                    groupId = id;
+                groupId = _anonymousGroupId;
             }
+            else
+            {
+                lock (_identityGroupIds)
+                {
+                    long id;
+                    if (_identityGroupIds.TryGetValue(identification.Identity, out id))
+                        groupId = id;
+                }
 
-            if (!groupId.HasValue)
-                groupId = GetIdentityGroupId(identity);
+                if (!groupId.HasValue)
+                    groupId = GetGroupId(identification);
 
-            if (!groupId.HasValue)
-                groupId = _defaultGroupId;
+                if (!groupId.HasValue)
+                    groupId = _defaultGroupId;
+            }
 
             if (!groupId.HasValue)
                 return null;
@@ -141,24 +171,133 @@ namespace OwinFramework.Authorization.Data.DataLayer
             return identityGroup;
         }
 
-        public bool IdentityIsInRole(string identity, string roleCodeName)
+        public bool IsInRole(IIdentification identification, string roleCodeName)
         {
-            var group = FindIdentityGroup(identity);
+            var group = FindGroup(identification);
             if (group == null) return false;
 
-            var internedName = string.Intern(roleCodeName.ToLower());
-            return group.IdentityRoles.Any(r => ReferenceEquals(r.CodeName, internedName));
+            var internedRoleName = string.Intern(roleCodeName.ToLower());
+            if (!group.IdentityRoles.Any(r => r.CodeName == internedRoleName))
+                return false;
+
+            if (identification.Purposes == null || identification.Purposes.Count == 0)
+                return true;
+
+            return identification.Purposes.Any(p => string.Intern(p.ToLower()) == internedRoleName);
         }
 
-        public bool IdentityHasPermission(string identity, string permissionCodeName, string resourceName)
+        public bool HasPermission(IIdentification identification, string permissionCodeName, string resourceName)
         {
-            var group = FindIdentityGroup(identity);
+            var group = FindGroup(identification);
             if (group == null) return false;
 
             if (group.GroupId == _administratorsGroupId) return true;
 
-            var internedName = string.Intern(permissionCodeName.ToLower());
-            return group.IdentityPermissions.Any(p => ReferenceEquals(p.CodeName, internedName));
+            var internedPermissionName = string.Intern(permissionCodeName.ToLower());
+
+            IEnumerable<IdentityPermission> permissions;
+
+            if (identification.Purposes == null || identification.Purposes.Count == 0)
+            {
+                permissions = group.IdentityPermissions.Where(p => p.CodeName == internedPermissionName);
+            }
+            else
+            {
+                var purposeNames = identification
+                    .Purposes
+                    .Select(p => string.Intern(p.ToLower()))
+                    .ToList();
+
+                var roles = group
+                    .IdentityRoles
+                    .Where(r => purposeNames.Contains(r.CodeName))
+                    .ToList();
+
+                permissions = roles.Aggregate(new List<IdentityPermission>(), (l, r) =>
+                {
+                    l.AddRange(r.IdentityPermissions.Where(p => p.CodeName == internedPermissionName));
+                    return l;
+                });
+            }
+
+            if (string.IsNullOrEmpty(resourceName))
+                return permissions.Any();
+
+            return permissions.Any(p => IsResourceMatch(resourceName, p.Resource, identification, group));
+        }
+
+        private bool IsResourceMatch(string resourceName, string expression, IIdentification identification, IdentityGroup group)
+        {
+            if (string.IsNullOrEmpty(expression)) return true;
+            if (string.IsNullOrEmpty(resourceName)) return true;
+
+            var resourceColonPos = resourceName.IndexOf(':');
+            var expressionColonPos = expression.IndexOf(':');
+            if (resourceColonPos != expressionColonPos) return false;
+
+            if (resourceColonPos >= 0)
+            {
+                if (!string.Equals(resourceName.Substring(0, resourceColonPos), expression.Substring(0, expressionColonPos))) 
+                    return false;
+                resourceName = resourceName.Substring(resourceColonPos + 1);
+                expression = expression.Substring(expressionColonPos + 1);
+            }
+
+            var resourcePath = resourceName.Split('/');
+            var expressionPath = expression.Split('/');
+
+            if (expressionPath.Length > resourcePath.Length) return false;
+
+            for (var i = 0; i < expressionPath.Length; i++)
+            {
+                var expressionElement = expressionPath[i];
+                if (expressionElement.Length == 0) return false;
+                if (expressionElement[0] == '*') continue;
+                if (expressionElement[0] == '{')
+                {
+                    switch (expressionElement.ToLower())
+                    {
+                        case "{my.id}":
+                            expressionElement = identification.Identity;
+                            break;
+                        case "{my.group}":
+                            expressionElement = group.CodeName;
+                            break;
+                        case "{my.username}":
+                            expressionElement = identification
+                                .Claims
+                                .Where(c => c.Name == ClaimNames.Username)
+                                .Select(c => c.Value)
+                                .FirstOrDefault();
+                            break;
+                        case "{my.email}":
+                            expressionElement = identification
+                                .Claims
+                                .Where(c => c.Name == ClaimNames.Email)
+                                .Select(c => c.Value)
+                                .FirstOrDefault();
+                            break;
+                        case "{my.ipv4}":
+                            expressionElement = identification
+                                .Claims
+                                .Where(c => c.Name == ClaimNames.IpV4)
+                                .Select(c => c.Value)
+                                .FirstOrDefault();
+                            break;
+                        case "{my.ipv6}":
+                            expressionElement = identification
+                                .Claims
+                                .Where(c => c.Name == ClaimNames.IpV6)
+                                .Select(c => c.Value)
+                                .FirstOrDefault();
+                            break;
+                    }
+                }
+                if (!string.Equals(expressionElement, resourcePath[i]))
+                    return false;
+            }
+
+            return true;
         }
 
         #endregion
@@ -215,6 +354,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Group NewGroup(Group group)
         {
+            Validate(group);
+
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddGroup"))
@@ -233,6 +374,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Role NewRole(Role role)
         {
+            Validate(role);
+
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddRole"))
@@ -250,6 +393,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Permission NewPermission(Permission permission)
         {
+            Validate(permission);
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddPermission"))
@@ -268,6 +412,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Group UpdateGroup(Group group)
         {
+            Validate(group);
+
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_UpdateGroup"))
@@ -287,6 +433,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Role UpdateRole(Role role)
         {
+            Validate(role);
+
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_UpdateRole"))
@@ -305,6 +453,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Permission UpdatePermission(Permission permission)
         {
+            Validate(permission);
+
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddPermission"))
@@ -404,21 +554,21 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public long? GetIdentityGroupId(string identity)
+        public long? GetGroupId(IIdentification identification)
         {
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityGroupId"))
                 {
-                    command.AddParameter("identity", identity);
+                    command.AddParameter("identity", identification.Identity);
                     return context.ExecuteScalar<long?>(command);
                 }
             }
         }
 
-        public Group GetIdentityGroup(string identity)
+        public Group GetGroup(IIdentification identification)
         {
-            var groupId = GetIdentityGroupId(identity);
+            var groupId = GetGroupId(identification);
             if (!groupId.HasValue) return null;
 
             using (var context = _contextFactory.Create(_repositoryName))
@@ -434,13 +584,13 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Role> GetIdentityRoles(string identity)
+        public IEnumerable<Role> GetRoles(IIdentification identification)
         {
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityRoles"))
                 {
-                    command.AddParameter("identity", identity);
+                    command.AddParameter("identity", identification.Identity);
                     using (var results = context.ExecuteEnumerable<Role>(command))
                     {
                         return results.ToList();
@@ -449,13 +599,13 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Permission> GetIdentityPermissions(string identity)
+        public IEnumerable<Permission> GetPermissions(IIdentification identification)
         {
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityPermissions"))
                 {
-                    command.AddParameter("identity", identity);
+                    command.AddParameter("identity", identification.Identity);
                     using (var results = context.ExecuteEnumerable<Permission>(command))
                     {
                         return results.ToList();
@@ -464,7 +614,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public Group ChangeIdentityGroup(string identity, long groupId)
+        public Group ChangeGroup(IIdentification identification, long groupId)
         {
             try
             {
@@ -472,7 +622,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 {
                     using (var command = _commandFactory.CreateStoredProcedure("sp_ChangeIdentityGroup"))
                     {
-                        command.AddParameter("identity", identity);
+                        command.AddParameter("identity", identification.Identity);
                         command.AddParameter("groupId", groupId);
                         using (var results = context.ExecuteEnumerable<Group>(command))
                         {
@@ -484,7 +634,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             finally
             {
                 lock (_identityGroupIds)
-                    _identityGroupIds.Remove(identity.ToLower());
+                    _identityGroupIds.Remove(identification.Identity.ToLower());
             }
         }
 
@@ -538,6 +688,71 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     context.ExecuteNonQuery(command);
                 }
             }
+        }
+
+        #endregion
+
+        #region Validation
+
+        private readonly Regex _nameRegex = new Regex("^[a-z0-9_\\-.@]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private readonly Regex _permissionNameRegex = new Regex("^[a-z0-9_\\-.@]+(:[a-z0-9_\\-.@]+).$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private readonly Regex _resourceRegex = new Regex("^[a-z0-9_\\-.]+:[a-z0-9_\\-.@/]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private readonly Regex _resourceMatchRegex = new Regex("^[a-z0-9_\\-.]+:(\\*|{[a-z]+}|[a-z0-9_\\-.@]+)(/(\\*|{[a-z]+}|[a-z0-9_\\-.@]+))*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        private void Validate(Group group)
+        {
+            if (group.CodeName == null || group.CodeName.Length > 30 || group.CodeName.Length < 1)
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Group code name length must be between 1 and 30 characters");
+
+            if (!_nameRegex.IsMatch(group.CodeName))
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Group code name must match " + _nameRegex);
+
+            if (group.DisplayName == null || group.DisplayName.Length > 50 || group.DisplayName.Length < 1)
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Group display name length must be between 1 and 50 characters");
+        }
+
+        private  void Validate(Role role)
+        {
+            if (role.CodeName == null || role.CodeName.Length > 30 || role.CodeName.Length < 1)
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Role code name length must be between 1 and 30 characters");
+
+            if (!_nameRegex.IsMatch(role.CodeName))
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Role code name must match " + _nameRegex);
+
+            if (role.DisplayName == null || role.DisplayName.Length > 50 || role.DisplayName.Length < 1)
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Role display name length must be between 1 and 50 characters");
+        }
+
+        private void Validate(Permission permission)
+        {
+            if (permission.CodeName == null || permission.CodeName.Length > 80 || permission.CodeName.Length < 1)
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Permission code name length must be between 1 and 80 characters");
+
+            if (!_permissionNameRegex.IsMatch(permission.CodeName))
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Permission code name must match " + _nameRegex);
+
+            if (!string.IsNullOrEmpty(permission.Resource))
+            {
+                if (permission.Resource.Length > 120)
+                    throw new HttpException((int)HttpStatusCode.BadRequest,
+                        "Permission resource expression can not exceed 120 characters");
+
+                if (!_resourceMatchRegex.IsMatch(permission.Resource))
+                    throw new HttpException((int)HttpStatusCode.BadRequest,
+                        "Permission resource expression must match " + _nameRegex);
+            }
+
+            if (permission.DisplayName == null || permission.DisplayName.Length > 50 || permission.DisplayName.Length < 1)
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "Permission display name length must be between 1 and 50 characters");
         }
 
         #endregion

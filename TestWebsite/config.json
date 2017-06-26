@@ -44,7 +44,9 @@
         "Authorization": {
             "Data": {
                 "PriusRepositoryName": "Authorization",
-                "DefaultUserGroup": "Users"
+                "DefaultGroup": "users",
+                "AdministratorGroup": "admins",
+                "AnonymousGroup": ""
             }
         }
     },

@@ -7,7 +7,7 @@ CALL sp_AddPermission('sys:use',             NULL,               'Use the system
 
 CALL sp_AddPermission('cart:order.delete',   NULL,               'Delete order', 'Delete orders from the shopping cart system');
 CALL sp_AddPermission('cart:order.discount', NULL,               'Discount order', 'Apply discounts to orders');
-CALL sp_AddPermission('cart:order.cancel',   'user:{self}',      'Cancel my orders', 'Cancel orders that I placed in the system');
+CALL sp_AddPermission('cart:order.cancel',   'user:{my.id}',     'Cancel my orders', 'Cancel orders that I placed in the system');
 CALL sp_AddPermission('cart:order.cancel',   NULL,               'Cancel any order', 'Cancel any order in the shopping cart system');
 															     
 CALL sp_AddPermission('users:user.suspend',  NULL,               'Suspend any user', 'Suspend any user''s access to the system');
@@ -17,27 +17,28 @@ CALL sp_AddPermission('auth:role.assign',    'role:csmanager',   'Assign the CS 
 CALL sp_AddPermission('auth:role.assign',    'role:cs',          'Assign CS role', 'Assign the CS role to any group of users');
 CALL sp_AddPermission('auth:group.assign',   'group:cs.manager', 'Assign user to cs.manager group', 'Add users to the CS Managers group');
 CALL sp_AddPermission('auth:group.assign',   'group:cs',         'Assign user to cs group', 'Add users to the CS group');
+CALL sp_AddPermission('auth:group.assign',   'group:{my.group}', 'Assign user to my group', 'Add users to the group that I am in');
 
-CALL sp_AddRolePermission(1, 1);
-CALL sp_AddRolePermission(1, 4);
+CALL sp_AddRolePermission(1, 1);  -- Users can use the system
+CALL sp_AddRolePermission(1, 4);  -- Users can cancel their own orders
 
-CALL sp_AddRolePermission(3, 2);
-CALL sp_AddRolePermission(3, 5);
-CALL sp_AddRolePermission(3, 11);
+CALL sp_AddRolePermission(3, 2);  -- CS managers can delete orders
+CALL sp_AddRolePermission(3, 5);  -- CS managers can cancel any order
+CALL sp_AddRolePermission(3, 11); -- CS managers can add users to the 'cs' group
 
-CALL sp_AddRolePermission(4, 3);
-CALL sp_AddRolePermission(4, 6);
-CALL sp_AddRolePermission(4, 7);
+CALL sp_AddRolePermission(4, 3);  -- CS can discount any order
+CALL sp_AddRolePermission(4, 6);  -- CS can suspend user accounts
+CALL sp_AddRolePermission(4, 7);  -- CS can resume user accounts
 
 CALL sp_AddGroup('cs.manager', 'Customer service manager', 'Manages the customer service team');
 CALL sp_AddGroup('cs', 'Customer service', 'Users who listen to customer comlaints and resolve them');
 
-CALL sp_AddGroupRole(3, 1);
-CALL sp_AddGroupRole(3, 3);
-CALL sp_AddGroupRole(3, 4);
+CALL sp_AddGroupRole(3, 1); -- CS manager has the 'user' role
+CALL sp_AddGroupRole(3, 3); -- CS manager has the 'cs.manager' role
+CALL sp_AddGroupRole(3, 4); -- CS manager has the 'cs' role
 
-CALL sp_AddGroupRole(4, 1);
-CALL sp_AddGroupRole(4, 4);
+CALL sp_AddGroupRole(4, 1); -- CS has the 'user' role
+CALL sp_AddGroupRole(4, 4); -- CS manager has the 'cs' role
 
 CALL sp_ChangeIdentityGroup('manager@domain', 3);
 CALL sp_ChangeIdentityGroup('cs1@domain', 4);
@@ -55,6 +56,11 @@ CALL sp_GetGroupPermissions(1);
 CALL sp_GetGroupPermissions(2);
 CALL sp_GetGroupPermissions(3);
 CALL sp_GetGroupPermissions(4);
+
+CALL sp_GetRolePermissions(1);
+CALL sp_GetRolePermissions(2);
+CALL sp_GetRolePermissions(3);
+CALL sp_GetRolePermissions(4);
 
 CALL sp_GetRolesWithPermission(1);
 CALL sp_GetRolesWithPermission(2);

@@ -66,13 +66,11 @@ namespace OwinFramework.Authorization
                 if (upstreamIdentification != null && !upstreamIdentification.AllowAnonymous)
                     throw new HttpException((int) HttpStatusCode.Forbidden, "Anonymous access is not permitted");
             }
-            else
-            {
-                authorization.Identity = identification.Identity;
-                if (!authorization.IsAllowed())
-                    throw new HttpException((int) HttpStatusCode.Forbidden,
-                        "You do not have permission to perform this operation");
-            }
+
+            authorization.Identification = identification;
+            if (!authorization.IsAllowed())
+                throw new HttpException((int) HttpStatusCode.Forbidden,
+                    "You do not have permission to perform this operation");
             context.SetFeature<IAuthorization>(authorization);
 
             return next();
@@ -190,7 +188,7 @@ namespace OwinFramework.Authorization
         private class Authorization : IUpstreamAuthorization, IAuthorization
         {
             private readonly IAuthorizationData _authorizationData;
-            public string Identity;
+            public IIdentification Identification;
 
             private readonly List<string> _requiredRoles = new List<string>();
             private readonly List<string> _requiredPermissions = new List<string>();
@@ -218,17 +216,17 @@ namespace OwinFramework.Authorization
 
             public bool HasPermission(string permissionName, string resourceName)
             {
-                return _authorizationData.IdentityHasPermission(Identity, permissionName, resourceName);
+                return _authorizationData.HasPermission(Identification, permissionName, resourceName);
             }
 
             public bool IsInRole(string roleName)
             {
-                return _authorizationData.IdentityIsInRole(Identity, roleName);
+                return _authorizationData.IsInRole(Identification, roleName);
             }
 
             public bool IsAllowed()
             {
-                if (ReferenceEquals(Identity, null)) return false;
+                if (ReferenceEquals(Identification, null)) return false;
                 return _requiredRoles.All(IsInRole) && _requiredPermissions.All(r => HasPermission(r, null));
             }
         }

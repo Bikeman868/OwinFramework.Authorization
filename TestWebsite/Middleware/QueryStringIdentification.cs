@@ -24,14 +24,6 @@ namespace TestWebsite.Middleware
         private readonly IList<IDependency> _dependencies = new List<IDependency>();
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
 
-        Task IMiddleware.Invoke(IOwinContext context, Func<Task> next)
-        {
-            var identification = (Identification)context.GetFeature<IUpstreamIdentification>();
-            context.SetFeature<IIdentification>(identification);
-
-            return next();
-        }
-
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
             var identity = context.Request.Query["identity"];
@@ -67,6 +59,14 @@ namespace TestWebsite.Middleware
             var identification = new Identification(identity, claims, anonymous, purposes);
             identification.AllowAnonymous = true;
             context.SetFeature<IUpstreamIdentification>(identification);
+
+            return next();
+        }
+
+        Task IMiddleware.Invoke(IOwinContext context, Func<Task> next)
+        {
+            var identification = (Identification)context.GetFeature<IUpstreamIdentification>();
+            context.SetFeature<IIdentification>(identification);
 
             return next();
         }

@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `tbl_permissions`
 (
   `permissionId` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `permissionCodeName` VARCHAR(80) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `permissionResource` VARCHAR(80) COLLATE utf8mb4_unicode_ci NULL,
+  `permissionResource` VARCHAR(120) COLLATE utf8mb4_unicode_ci NULL,
   `permissionDisplayName` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `permissionDescription` VARCHAR(400) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`permissionId`),
@@ -469,7 +469,7 @@ DELIMITER //
 CREATE PROCEDURE `sp_AddPermission`
 (
 	IN `permissionCodeName` VARCHAR(30),
-	IN `permissionResource` VARCHAR(80),
+	IN `permissionResource` VARCHAR(120),
 	IN `permissionDisplayName` VARCHAR(50),
 	IN `permissionDescription` VARCHAR(400)
 )
@@ -504,7 +504,7 @@ CREATE PROCEDURE `sp_UpdatePermission`
 (
 	IN `permissionId` BIGINT UNSIGNED,
 	IN `permissionCodeName` VARCHAR(30),
-	IN `permissionResource` VARCHAR(80),
+	IN `permissionResource` VARCHAR(120),
 	IN `permissionDisplayName` VARCHAR(50),
 	IN `permissionDescription` VARCHAR(400)
 )
@@ -561,6 +561,7 @@ BEGIN
 	SELECT
 		p.`permissionId`,
 		p.`permissionCodeName`,
+		p.`permissionResource`,
 		p.`permissionDisplayName`,
 		p.`permissionDescription`
 	FROM
