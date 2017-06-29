@@ -8,3 +8,8 @@ _ReSharper*/
 
 packages/*/
 
+/TestWebsite/Content/AuthorizationUi/packages/*
+/TestWebsite/Content/AuthorizationUi/.pub/*
+/TestWebsite/Content/AuthorizationUi/web/packages/*
+
+

@@ -11,6 +11,7 @@ using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
 using OwinFramework.Interfaces.Utility;
+using OwinFramework.InterfacesV1.Middleware;
 using TestWebsite;
 using TestWebsite.Middleware;
 using Urchin.Client.Sources;
@@ -76,6 +77,21 @@ namespace TestWebsite
             builder.Register(ninject.Get<AuthorizationApiMiddleware>())
                 .As("Authorization API")
                 .RunOnRoute("api");
+
+            // Output caching just makes the web site more efficient by capturing the output from
+            // downstream middleware and reusing it for the next request. Note that the Dart middleware
+            // produces different results for the same URL and therefore can not use output caching
+            builder.Register(ninject.Get<OwinFramework.OutputCache.OutputCacheMiddleware>())
+                .As("Output cache")
+                .ConfigureWith(config, "/middleware/outputCache")
+                .RunAfter("Authorization Dart");
+            
+            // The Versioning middleware will add version numbers to static assets and
+            // instruct the browser to cache them
+            builder.Register(ninject.Get<OwinFramework.Versioning.VersioningMiddleware>())
+                .As("Versioning")
+                .ConfigureWith(config, "/middleware/versioning")
+                .RunAfter<IOutputCache>();
 
             // The authorization user interface is written in the Dart programming language
             // This middleware will serve Dart files to browsers that natively support Dart

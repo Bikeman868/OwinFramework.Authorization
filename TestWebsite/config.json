@@ -33,6 +33,58 @@
             "uiRootUrl": "/authorizationUi",
             "dartUiRootUrl": "/authorizationUi/web",
             "compiledUiRootUrl": "/authorizationUi/build/web"
+        },
+        "dart": {
+            "defaultDocument": "index.html",
+            "documentationRootUrl": "/owin/dart",
+            "uiRootUrl": "/authorizationUi",
+            "dartUiRootUrl": "/authorizationUi/web",
+            "compiledUiRootUrl": "/authorizationUi/build/web"
+        },
+        "outputCache": {
+            "rules": [
+                {
+                    "category": "",
+                    "priority": "Always",
+                    "cacheCategory": "OutputCache",
+                    "serverCacheTime": "03:00:00",
+                    "browserCacheTime": "2"
+                },
+                {
+                    "category": "",
+                    "priority": "High",
+                    "cacheCategory": "OutputCache",
+                    "serverCacheTime": "01:00:00",
+                    "browserCacheTime": "2"
+                },
+                {
+                    "category": "",
+                    "priority": "Medium",
+                    "cacheCategory": "OutputCache",
+                    "serverCacheTime": "00:10:00",
+                    "browserCacheTime": "2"
+                }
+            ],
+            "documentationRootUrl": "/owin/outputCache"
+        },
+        "versioning": {
+            "version": 1,
+            "documentationRootUrl": "/owin/versioning",
+            "mimeTypes": [
+                "text/html",
+                "text/css",
+                "application/javascript",
+                "application/dart"
+            ],
+            "fileExtensions": [
+                ".css",
+                ".html",
+                ".ico",
+                ".js",
+                ".dart"
+            ],
+            "browserCacheTime": "90",
+            "exactVersion": "true"
         }
     },
     "OwinFramework": {

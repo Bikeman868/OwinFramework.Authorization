@@ -103,6 +103,10 @@
       <HintPath>..\packages\Owin.Framework.ExceptionReporter.2.5.0\lib\net40\OwinFramework.ExceptionReporter.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OwinFramework.Facilities.Cache.Local, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.Facilities.Cache.Local.2.5.1\lib\net40\OwinFramework.Facilities.Cache.Local.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OwinFramework.Facilities.IdentityStore.Prius, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.Framework.Facilities.IdentityStore.Prius.2.5.2\lib\net40\OwinFramework.Facilities.IdentityStore.Prius.dll</HintPath>
       <Private>True</Private>
@@ -115,8 +119,16 @@
       <HintPath>..\packages\Owin.Framework.Less.2.5.0\lib\net40\OwinFramework.Less.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OwinFramework.OutputCache, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.OutputCache.2.5.0\lib\net40\OwinFramework.OutputCache.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OwinFramework.StaticFiles, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.Framework.StaticFiles.2.5.0\lib\net40\OwinFramework.StaticFiles.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OwinFramework.Versioning, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.Versioning.2.5.0\lib\net40\OwinFramework.Versioning.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Prius.Contracts, Version=2.0.1.20, Culture=neutral, processorArchitecture=MSIL">
@@ -153,6 +165,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AuthorizationUI\build\web\favicon.ico" />
+    <Content Include="Content\AuthorizationUI\build\web\index.html" />
+    <Content Include="Content\AuthorizationUI\build\web\main.dart.js" />
+    <Content Include="Content\AuthorizationUI\build\web\packages\browser\dart.js" />
+    <Content Include="Content\AuthorizationUI\build\web\packages\browser\interop.js" />
+    <Content Include="Content\AuthorizationUI\web\favicon.ico" />
+    <Content Include="Content\AuthorizationUI\web\index.html" />
     <Content Include="Content\index.html" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -169,6 +188,10 @@
     <Content Include="Content\main.less" />
     <Content Include="config.json" />
     <Content Include="packages.config" />
+    <Content Include="Content\AuthorizationUI\pubspec.yaml" />
+    <Content Include="Content\AuthorizationUI\web\main.dart" />
+    <Content Include="Content\AuthorizationUI\web\styles.less" />
+    <Content Include="Content\AuthorizationUI\build\web\styles.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -176,10 +199,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\AuthorizationUI\build\web\" />
-    <Folder Include="Content\AuthorizationUI\web\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\OwinFramework.Authorization.Data\OwinFramework.Authorization.Data.Net40.csproj">
       <Project>{b5860f84-9158-4177-81df-9497f0a4ea20}</Project>
