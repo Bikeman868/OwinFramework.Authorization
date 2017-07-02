@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
+using OwinFramework.Authorization.Data.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
@@ -12,7 +12,7 @@ using OwinFramework.InterfacesV1.Upstream;
 
 namespace TestWebsite.Middleware
 {
-    public class CheckPermissionMiddleware: 
+    public class CheckPermissionMiddleware :
         IMiddleware<IResponseProducer>,
         IRoutingProcessor
     {
@@ -21,8 +21,13 @@ namespace TestWebsite.Middleware
         private readonly IList<IDependency> _dependencies = new List<IDependency>();
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
 
-        public CheckPermissionMiddleware()
+        private readonly IAuthorizationData _authorizationData;
+
+        public CheckPermissionMiddleware(
+            IAuthorizationData authorizationData)
         {
+            _authorizationData = authorizationData;
+
             this.RunAfter<IAuthorization>();
         }
 
@@ -51,9 +56,22 @@ namespace TestWebsite.Middleware
             var response = new StringBuilder();
 
             if (identification.IsAnonymous)
+            {
                 response.AppendLine("Unidentified user");
+            }
             else
+            {
                 response.AppendLine("User identified as " + identification.Identity);
+
+                string group;
+                List<string> roles;
+                List<string> permissions;
+                _authorizationData.GetIdentity(identification, out group, out roles, out permissions);
+
+                response.AppendLine("   User is in the " + group + " group");
+                response.AppendLine("   User has the role of " + string.Join(" and ", roles));
+                response.AppendLine("   User has permissions to " + string.Join(" and ", permissions));
+            }
 
             if (identification.Claims != null && identification.Claims.Count > 0)
             {
@@ -102,7 +120,8 @@ namespace TestWebsite.Middleware
                     if (hasPermission)
                         response.AppendLine("This user has permission to " + permission + " on " + resource);
                     else
-                        response.AppendLine("This user does not have permission to " + permission + " on " + resource);
+                        response.AppendLine("This user does not have permission to " + permission + " on " +
+                                            resource);
                 }
             }
 
@@ -112,7 +131,7 @@ namespace TestWebsite.Middleware
 
         private bool IsForMe(IOwinContext context)
         {
-            return 
+            return
                 context.Request.Method == "GET" &&
                 string.Equals(context.Request.Path.Value, "/check", StringComparison.OrdinalIgnoreCase);
         }

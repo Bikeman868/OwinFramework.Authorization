@@ -7,6 +7,12 @@ namespace OwinFramework.Authorization.Data.Interfaces
 {
     public interface IAuthorizationData
     {
+        void GetIdentity(
+            IIdentification identification, 
+            out string group, 
+            out List<string> roles,
+            out List<string> permissions);
+
         IEnumerable<Group> GetGroups(Func<Group, bool> filterFunction = null);
         IEnumerable<Role> GetRoles(Func<Role, bool> filterFunction = null);
         IEnumerable<Permission> GetPermissions(Func<Permission, bool> filterFunction = null);
