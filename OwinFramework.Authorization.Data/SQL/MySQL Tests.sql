@@ -1,50 +1,83 @@
 USE authorization;
 
+SELECT p.permissionId INTO @permission_assign_mygroup FROM tbl_permissions p WHERE p.permissionCodeName='auth:group.assign' AND p.permissionResource='group:{my.group}';
+
+SELECT r.roleId INTO @role_user FROM tbl_roles r WHERE r.roleCodeName='sys.user';
+SELECT r.roleId INTO @role_admin FROM tbl_roles r WHERE r.roleCodeName='auth.admin';
+SELECT r.roleId INTO @role_super FROM tbl_roles r WHERE r.roleCodeName='auth.super';
+
+SELECT g.groupId INTO @group_sys_admins FROM tbl_groups g WHERE g.groupCodeName='sys.admins';
+SELECT g.groupId INTO @group_sys_users FROM tbl_groups g WHERE g.groupCodeName='sys.users';
+SELECT g.groupId INTO @group_auth_admins FROM tbl_groups g WHERE g.groupCodeName='auth.admins';
+SELECT g.groupId INTO @group_auth_super FROM tbl_groups g WHERE g.groupCodeName='auth.super';
+
+CALL sp_AddPermission('sys:use', NULL,  'Use the system', 'Make use of the parts of the system restricted to logged in users');
+SELECT p.permissionId INTO @permission_sys_user FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
+CALL sp_AddPermission('cart:order.delete', NULL, 'Delete order', 'Delete orders from the shopping cart system');
+SELECT p.permissionId INTO @permission_cart_order_delete FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
+CALL sp_AddPermission('cart:order.discount', NULL, 'Discount order', 'Apply discounts to orders');
+SELECT p.permissionId INTO @permission_cart_order_discount FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
+CALL sp_AddPermission('cart:order.cancel', 'user:{my.id}', 'Cancel my orders', 'Cancel orders that I placed in the system');
+SELECT p.permissionId INTO @permission_cart_myorder_cancel FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
+CALL sp_AddPermission('cart:order.cancel', NULL, 'Cancel any order', 'Cancel any order in the shopping cart system');
+SELECT p.permissionId INTO @permission_cart_order_cancel FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+															     
+CALL sp_AddPermission('users:user.suspend', NULL, 'Suspend any user', 'Suspend any user''s access to the system');
+SELECT p.permissionId INTO @permission_user_suspend FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
+CALL sp_AddPermission('users:user.resume', NULL, 'Resume any user', 'Restore any user''s access to the system');
+SELECT p.permissionId INTO @permission_user_resume FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+															     
+CALL sp_AddPermission('auth:role.assign', 'role:csmanager', 'Assign the CS Manager role', 'Assign the CS managers role to any group of users');
+SELECT p.permissionId INTO @permission_assign_role_csmanager FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
+CALL sp_AddPermission('auth:role.assign', 'role:cs', 'Assign CS role', 'Assign the CS role to any group of users');
+SELECT p.permissionId INTO @permission_assign_role_cs FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
+CALL sp_AddPermission('auth:group.assign', 'group:cs.manager', 'Assign user to cs.manager group', 'Add users to the CS Managers group');
+SELECT p.permissionId INTO @permission_assign_group_csmanager FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
+CALL sp_AddPermission('auth:group.assign', 'group:cs', 'Assign user to cs group', 'Add users to the CS group');
+SELECT p.permissionId INTO @permission_assign_group_cs FROM tbl_permissions p ORDER BY p.permissionId DESC LIMIT 1;
+
 CALL sp_AddRole('cs.manager', 'Customer service manager', 'Manages the customer service function');
 CALL sp_AddRole('cs', 'Customer service operator', 'Helps customers with their issues');
 
-CALL sp_AddPermission('sys:use',             NULL,               'Use the system', 'Make use of the parts of the system restricted to logged in users');
+SELECT r.roleId INTO @role_cs_manager FROM tbl_roles r WHERE r.roleCodeName='cs.manager';
+SELECT r.roleId INTO @role_cs FROM tbl_roles r WHERE r.roleCodeName='cs';
 
-CALL sp_AddPermission('cart:order.delete',   NULL,               'Delete order', 'Delete orders from the shopping cart system');
-CALL sp_AddPermission('cart:order.discount', NULL,               'Discount order', 'Apply discounts to orders');
-CALL sp_AddPermission('cart:order.cancel',   'user:{my.id}',     'Cancel my orders', 'Cancel orders that I placed in the system');
-CALL sp_AddPermission('cart:order.cancel',   NULL,               'Cancel any order', 'Cancel any order in the shopping cart system');
-															     
-CALL sp_AddPermission('users:user.suspend',  NULL,               'Suspend any user', 'Suspend any user''s access to the system');
-CALL sp_AddPermission('users:user.resume',   NULL,               'Resume any user', 'Restore any user''s access to the system');
-															     
-CALL sp_AddPermission('auth:role.assign',    'role:csmanager',   'Assign the CS Manager role', 'Assign the CS managers role to any group of users');
-CALL sp_AddPermission('auth:role.assign',    'role:cs',          'Assign CS role', 'Assign the CS role to any group of users');
-CALL sp_AddPermission('auth:group.assign',   'group:cs.manager', 'Assign user to cs.manager group', 'Add users to the CS Managers group');
-CALL sp_AddPermission('auth:group.assign',   'group:cs',         'Assign user to cs group', 'Add users to the CS group');
-CALL sp_AddPermission('auth:group.assign',   'group:{my.group}', 'Assign user to my group', 'Add users to the group that I am in');
+CALL sp_AddRolePermission(@role_user, @permission_sys_user); -- Users can use the system
+CALL sp_AddRolePermission(@role_user, @permission_cart_myorder_cancel);  -- Users can cancel their own orders
 
-CALL sp_AddRolePermission(1, 1);  -- Users can use the system
-CALL sp_AddRolePermission(1, 4);  -- Users can cancel their own orders
+CALL sp_AddRolePermission(@role_cs_manager, @permission_cart_order_delete);  -- CS managers can delete orders
+CALL sp_AddRolePermission(@role_cs_manager, @permission_cart_order_cancel);  -- CS managers can cancel any order
+CALL sp_AddRolePermission(@role_cs_manager, @permission_assign_group_cs); -- CS managers can add users to the 'cs' group
 
-CALL sp_AddRolePermission(3, 2);  -- CS managers can delete orders
-CALL sp_AddRolePermission(3, 5);  -- CS managers can cancel any order
-CALL sp_AddRolePermission(3, 11); -- CS managers can add users to the 'cs' group
-
-CALL sp_AddRolePermission(4, 3);  -- CS can discount any order
-CALL sp_AddRolePermission(4, 6);  -- CS can suspend user accounts
-CALL sp_AddRolePermission(4, 7);  -- CS can resume user accounts
+CALL sp_AddRolePermission(@role_cs, @permission_cart_order_discount);  -- CS can discount any order
+CALL sp_AddRolePermission(@role_cs, @permission_user_suspend);  -- CS can suspend user accounts
+CALL sp_AddRolePermission(@role_cs, @permission_user_resume);  -- CS can resume user accounts
 
 CALL sp_AddGroup('cs.manager', 'Customer service manager', 'Manages the customer service team');
 CALL sp_AddGroup('cs', 'Customer service', 'Users who listen to customer comlaints and resolve them');
 
-CALL sp_AddGroupRole(3, 1); -- CS manager has the 'user' role
-CALL sp_AddGroupRole(3, 3); -- CS manager has the 'cs.manager' role
-CALL sp_AddGroupRole(3, 4); -- CS manager has the 'cs' role
+SELECT g.groupId INTO @group_cs_manager FROM tbl_groups g WHERE g.groupCodeName='cs.manager';
+SELECT g.groupId INTO @group_cs FROM tbl_groups g WHERE g.groupCodeName='cs';
 
-CALL sp_AddGroupRole(4, 1); -- CS has the 'user' role
-CALL sp_AddGroupRole(4, 4); -- CS manager has the 'cs' role
+CALL sp_AddGroupRole(@group_cs_manager, @role_user); -- CS manager has the 'user' role
+CALL sp_AddGroupRole(@group_cs_manager, @role_cs_manager); -- CS manager has the 'cs.manager' role
+CALL sp_AddGroupRole(@group_cs_manager, @role_cs); -- CS manager has the 'cs' role
 
-CALL sp_ChangeIdentityGroup('manager@domain', 3);
-CALL sp_ChangeIdentityGroup('cs1@domain', 4);
-CALL sp_ChangeIdentityGroup('cs2@domain', 4);
-CALL sp_ChangeIdentityGroup('cs3@domain', 4);
-CALL sp_ChangeIdentityGroup('admin@domain', 2);
+CALL sp_AddGroupRole(@group_cs, @role_user); -- CS has the 'user' role
+CALL sp_AddGroupRole(@group_cs, @role_cs); -- CS manager has the 'cs' role
+
+CALL sp_ChangeIdentityGroup('manager@domain', @group_cs_manager);
+CALL sp_ChangeIdentityGroup('cs1@domain', @group_cs);
+CALL sp_ChangeIdentityGroup('cs2@domain', @group_cs);
+CALL sp_ChangeIdentityGroup('cs3@domain', @group_cs);
 
 /************************************************************/
 
@@ -52,23 +85,24 @@ CALL sp_GetGroups();
 CALL sp_GetRoles();
 CALL sp_GetPermissions();
 
-CALL sp_GetGroupPermissions(1);
-CALL sp_GetGroupPermissions(2);
-CALL sp_GetGroupPermissions(3);
-CALL sp_GetGroupPermissions(4);
+CALL sp_GetGroupPermissions(@group_sys_admins);
+CALL sp_GetGroupPermissions(@group_sys_users);
+CALL sp_GetGroupPermissions(@group_auth_admins);
+CALL sp_GetGroupPermissions(@group_auth_super);
+CALL sp_GetGroupPermissions(@group_cs_manager);
+CALL sp_GetGroupPermissions(@group_cs);
 
-CALL sp_GetRolePermissions(1);
-CALL sp_GetRolePermissions(2);
-CALL sp_GetRolePermissions(3);
-CALL sp_GetRolePermissions(4);
+CALL sp_GetRolePermissions(@role_user);
+CALL sp_GetRolePermissions(@role_admin);
+CALL sp_GetRolePermissions(@role_super);
+CALL sp_GetRolePermissions(@role_cs_manager);
+CALL sp_GetRolePermissions(@role_cs);
 
-CALL sp_GetRolesWithPermission(1);
-CALL sp_GetRolesWithPermission(2);
-CALL sp_GetRolesWithPermission(3);
-CALL sp_GetRolesWithPermission(4);
-CALL sp_GetRolesWithPermission(5);
-CALL sp_GetRolesWithPermission(6);
-CALL sp_GetRolesWithPermission(7);
+CALL sp_GetRolesWithPermission(@permission_assign_mygroup);
+CALL sp_GetRolesWithPermission(@permission_sys_user);
+CALL sp_GetRolesWithPermission(@permission_assign_role_cs);
+CALL sp_GetRolesWithPermission(@permission_assign_group_cs);
+CALL sp_GetRolesWithPermission(@permission_cart_myorder_cancel);
 
 CALL sp_GetIdentityPermissions('manager@domain');
 CALL sp_GetIdentityPermissions('cs1@domain');
@@ -85,7 +119,7 @@ CALL sp_GetIdentity('cs1@domain');
 CALL sp_GetIdentity('cs2@domain');
 CALL sp_GetIdentity('cs3@domain');
 CALL sp_GetIdentity('annonymous@domain');
-CALL sp_GetIdentity('admin@domain');
+CALL sp_GetIdentity('administrator@mycompany.com');
 
 /************************************************************/
 

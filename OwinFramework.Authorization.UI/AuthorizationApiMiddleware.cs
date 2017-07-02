@@ -56,7 +56,7 @@ namespace OwinFramework.Authorization.UI
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            if (!string.IsNullOrEmpty(_configuration.RequiredPermission))
+            if (!string.IsNullOrEmpty(_configuration.PermissionToCallApi))
             {
                 var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
                 if (upstreamIdentification != null)
@@ -64,7 +64,7 @@ namespace OwinFramework.Authorization.UI
 
                 var upstreamAuthorization = context.GetFeature<IUpstreamAuthorization>();
                 if (upstreamAuthorization != null)
-                    upstreamAuthorization.AddRequiredPermission(_configuration.RequiredPermission);
+                    upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToCallApi);
             }
 
             return next();

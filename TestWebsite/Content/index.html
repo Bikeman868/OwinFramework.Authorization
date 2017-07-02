@@ -24,19 +24,13 @@
         To set the user you want to impersonate navigate to a url like this one.
     </p>
     <div>
-        <a href="/index.html?identity=manager@domain">/index.html?identity=manager@domain</a>
+        <a href="/index.html?identity=administrator@mycompany.com">/index.html?identity=administrator@mycompany.com</a>
     </div>
     <div>
         <a href="/index.html?identity=cs2@domain">/index.html?identity=cs2@domain</a>
     </div>
     <div>
-        <a href="/index.html?identity=admin@domain">/index.html?identity=admin@domain</a>
-    </div>
-    <p>
-        You can also impersonate a user but with restricted access rights like this:
-    </p>
-    <div>
-        <a href="/index.html?identity=cs2@domain:user">/index.html?identity=cs2@domain:user</a>
+        <a href="/index.html?identity=manager@domain">/index.html?identity=manager@domain</a>
     </div>
     <p>
         To test what happens for an anonymous user, visit this page to clear the cookie
@@ -47,6 +41,9 @@
     <p>
         To set the user you want to impersonate with specified purposes (mapped to roles)
     </p>
+    <div>
+        <a href="/index.html?identity=cs2@domain:user">/index.html?identity=cs2@domain:user</a>
+    </div>
     <div>
         <a href="/index.html?identity=manager@domain:user">/index.html?identity=manager@domain:user</a>
     </div>
@@ -80,7 +77,7 @@
     </div>
     <br />
     <div>
-        <a href="/check?role=user">/check?role=user</a>
+        <a href="/check?role=sys.user">/check?role=sys.user</a>
     </div>
     <div>
         <a href="/check?role=cs">/check?role=cs</a>
@@ -94,7 +91,7 @@
     </div>
     <br />
     <div>
-        <a href="/check?permission=auth:group.assign&resource=group:admins">/check?permission=auth:group.assign&resource=group:admins</a>
+        <a href="/check?permission=auth:group.assign&resource=group:auth.admins">/check?permission=auth:group.assign&resource=group:auth.admins</a>
     </div>
     <div>
         <a href="/check?permission=auth:group.assign&resource=group:cs.manager">/check?permission=auth:group.assign&resource=group:cs.manager</a>
@@ -106,10 +103,10 @@
         You can also combine the user identification and the permission checks into one URL like this:
     </p>
     <div>
-        <a href="/check?identity=admin@domain&permission=auth:group.assign&resource=group:admins">/check?identity=admin@domain&permission=auth:group.assign&resource=group:admins</a>
+        <a href="/check?identity=administrator@mycompany.com&permission=auth:group.assign&resource=group:sys.admins">/check?identity=administrator@mycompany.com&permission=auth:group.assign&resource=group:sys.admins</a>
     </div>
     <div>
-        <a href="/check?identity=cs1@domain.com&role=user">/check?identity=cs1@domain.com&role=user</a>
+        <a href="/check?identity=cs1@domain.com&role=user">/check?identity=cs1@domain.com&role=sys.user</a>
     </div>
 </body>
 </html>

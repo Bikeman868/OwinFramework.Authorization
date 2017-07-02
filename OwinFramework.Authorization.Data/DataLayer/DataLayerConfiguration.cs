@@ -10,8 +10,8 @@
         public DataLayerConfiguration()
         {
             PriusRepositoryName = "Authorization";
-            DefaultGroup = "users";
-            AdministratorGroup = "admins";
+            DefaultGroup = "sys.users";
+            AdministratorGroup = "sys.admins";
             AnonymousGroup = "";
         }
     }
