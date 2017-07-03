@@ -1,6 +1,7 @@
 ﻿import 'dart:html';
 
 import '../../MVVM/View.dart';
+import '../../Views/Base/NewModelView.dart';
 
 class EditableListView extends View
 {
@@ -8,7 +9,7 @@ class EditableListView extends View
 
 	View _selectView;
 	View _editView;
-	View _addView;
+	NewModelView _addView;
 
 	Element _editButton;
 	Element _newButton;
@@ -16,7 +17,7 @@ class EditableListView extends View
 	Element _addButton;
 	Element _cancelButton;
 
-	EditableListView(String title, View selectView, View editView, View addView)
+	EditableListView(String title, View selectView, View editView, NewModelView addView)
 	{
 		_selectView = selectView;
 		_editView = editView;
@@ -70,13 +71,14 @@ class EditableListView extends View
 		_cancelButton.hidden = false;
 
 		_changeView(_addView);
+
+		_addView.clearForm();
 	}
 
 	void _addClicked(MouseEvent e)
 	{
-		// Create a new one
-
-		_doneClicked(e);
+		if (_addView.addModel())
+			_doneClicked(e);
 	}
 
 	_changeView(View view)

@@ -1,10 +1,10 @@
 ﻿body,html
 {
     margin: 0;
-    padding: 0;
+    padding: 0;help
     font-family: sans-serif;
     font-size: 12px;
-    background:ghostwhite
+    background: ghostwhite;
 }
 
 div
@@ -88,6 +88,14 @@ span.button
 }
 
 .panel div.help-note
+{
+    margin-top: 6px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+.panel div.validation-error
 {
     margin-top: 6px;
     margin-bottom: 10px;
@@ -322,4 +330,12 @@ div.help-note
     font-weight: lighter;
     font-size: smaller;
     margin-bottom: 10px;   
+}
+
+div.validation-error
+{
+    font-weight: bolder;
+    font-size: larger;
+    margin-bottom: 14px;
+    background-color: lightpink;
 }

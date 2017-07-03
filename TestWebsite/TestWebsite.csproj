@@ -202,7 +202,7 @@
     <Content Include="packages.config" />
     <Content Include="Content\AuthorizationUI\pubspec.yaml" />
     <Content Include="Content\AuthorizationUI\web\main.dart" />
-    <Content Include="Content\AuthorizationUI\web\styles.less" />
+    <None Include="Content\AuthorizationUI\web\styles.less" />
     <Content Include="Content\AuthorizationUI\build\web\styles.less" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundContainer.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundElement.dart" />
@@ -244,6 +244,7 @@
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionListSelectView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\NewPermissionView.dart" />
     <Content Include="Content\AuthorizationUI\web\Events\AppEvents.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Base\NewModelView.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
