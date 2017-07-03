@@ -64,8 +64,11 @@ namespace TestWebsite
             var builder = ninject.Get<IBuilder>();
 
             var apiPath = new PathString("/api");
+            var uiPath = new PathString("/authorizationui");
+
             builder.Register(ninject.Get<IRouter>()
                 .AddRoute("api", c => c.Request.Path.StartsWithSegments(apiPath))
+                .AddRoute("ui", c => c.Request.Path.StartsWithSegments(uiPath))
                 .AddRoute("default", c => true));
 
             // This is the authorization middleware we want to test
@@ -84,29 +87,32 @@ namespace TestWebsite
             builder.Register(ninject.Get<OwinFramework.OutputCache.OutputCacheMiddleware>())
                 .As("Output cache")
                 .ConfigureWith(config, "/middleware/outputCache")
-                .RunAfter("Authorization Dart");
-            
+                .RunOnRoute("ui")
+                .RunAfter("Dart UI", false);
+
             // The Versioning middleware will add version numbers to static assets and
             // instruct the browser to cache them
             builder.Register(ninject.Get<OwinFramework.Versioning.VersioningMiddleware>())
                 .As("Versioning")
                 .ConfigureWith(config, "/middleware/versioning")
+                .RunOnRoute("ui")
                 .RunAfter<IOutputCache>();
 
             // The authorization user interface is written in the Dart programming language
             // This middleware will serve Dart files to browsers that natively support Dart
             // and compiled JavaScript to browsers that do not
             builder.Register(ninject.Get<OwinFramework.Dart.DartMiddleware>())
-                .As("Authorization Dart")
+                .As("Dart UI")
                 .ConfigureWith(config, "/middleware/authorizationUi")
-                .RunOnRoute("default");
+                .RunOnRoute("ui");
 
             // The Less middleware will compile LESS into CSS on the fly
             builder.Register(ninject.Get<OwinFramework.Less.LessMiddleware>())
                 .As("LESS compiler")
                 .ConfigureWith(config, "/middleware/less")
-                .RunAfter("Authorization Dart")
-                .RunOnRoute("default");
+                .RunAfter("Dart UI", false)
+                .RunOnRoute("default")
+                .RunOnRoute("ui");
 
             // The static files middleware will allow requests to retrieve files of certian types
             // Configuration options limit the files that can be retrieved this way. The ConfigureWith
@@ -115,8 +121,9 @@ namespace TestWebsite
                 .As("Static files")
                 .ConfigureWith(config, "/middleware/staticFiles")
                 .RunAfter("LESS compiler")
-                .RunAfter("Authorization Dart")
-                .RunOnRoute("default");
+                .RunAfter("Dart UI", false)
+                .RunOnRoute("default")
+                .RunOnRoute("ui");
 
             // To make it easy to test Authorization, the user making the call is identified by
             // simply passing the user's identity in a query string parameter. Do not do this in a real
@@ -147,6 +154,12 @@ namespace TestWebsite
             builder.Register(ninject.Get<OwinFramework.ExceptionReporter.ExceptionReporterMiddleware>())
                 .As("Exception reporter")
                 .RunFirst();
+
+            // The route visualizer middleware will draw an SVG of the Owin pipeline
+            builder.Register(ninject.Get<OwinFramework.RouteVisualizer.RouteVisualizerMiddleware>())
+                .As("Route visualizer")
+                .ConfigureWith(config, "/middleware/visualizer")
+                .RunOnRoute("default");
 
             // Use the Owin Framework builder to add middleware to the Owin pipeline
             app.UseBuilder(builder);

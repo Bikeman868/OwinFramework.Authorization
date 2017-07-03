@@ -27,6 +27,9 @@
             "defaultPage": "/index.html",
             "documentationRootUrl": "/owin/defaultDocument"
         },
+        "visualizer": {
+            "path": "/pipeline"
+        },
         "authorizationUi": {
             "defaultDocument": "index.html",
             "documentationRootUrl": "/owin/authorizationUi",

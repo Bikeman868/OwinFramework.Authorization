@@ -51,80 +51,93 @@ namespace TestWebsite.Middleware
             var role = context.Request.Query["role"];
 
             var identification = context.GetFeature<IIdentification>();
-            var authorization = context.GetFeature<IAuthorization>();
 
             var response = new StringBuilder();
 
-            if (identification.IsAnonymous)
+            if (identification == null)
             {
-                response.AppendLine("Unidentified user");
+                response.AppendLine("No identification middleware configured");
             }
             else
             {
-                response.AppendLine("User identified as " + identification.Identity);
-
-                string group;
-                List<string> roles;
-                List<string> permissions;
-                _authorizationData.GetIdentity(identification, out group, out roles, out permissions);
-
-                response.AppendLine("   User is in the " + group + " group");
-                response.AppendLine("   User has the role of " + string.Join(" and ", roles));
-                response.AppendLine("   User has permissions to " + string.Join(" and ", permissions));
-            }
-
-            if (identification.Claims != null && identification.Claims.Count > 0)
-            {
-                response.AppendLine();
-                response.AppendLine("The identified user is making the following claims:");
-                foreach (var claim in identification.Claims)
+                if (identification.IsAnonymous)
                 {
-                    response.AppendFormat("   {0} = {1} [{2}]", claim.Name, claim.Value, claim.Status);
-                    response.AppendLine();
-                }
-            }
-
-            if (identification.Purposes != null && identification.Purposes.Count > 0)
-            {
-                response.AppendLine();
-                response.AppendLine("The identified user is restricted to these roles:");
-                foreach (var purpose in identification.Purposes)
-                {
-                    response.AppendFormat("   {0}", purpose);
-                    response.AppendLine();
-                }
-            }
-
-            response.AppendLine();
-
-            if (!string.IsNullOrEmpty(role))
-            {
-                if (authorization.IsInRole(role))
-                    response.AppendLine("This user has the role of " + role);
-                else
-                    response.AppendLine("This user does not have the role of " + role);
-            }
-
-            if (!string.IsNullOrEmpty(permission))
-            {
-                var hasPermission = authorization.HasPermission(permission, resource);
-                if (string.IsNullOrEmpty(resource))
-                {
-                    if (hasPermission)
-                        response.AppendLine("This user has permission to " + permission);
-                    else
-                        response.AppendLine("This user does not have permission to " + permission);
+                    response.AppendLine("Unidentified user");
                 }
                 else
                 {
-                    if (hasPermission)
-                        response.AppendLine("This user has permission to " + permission + " on " + resource);
-                    else
-                        response.AppendLine("This user does not have permission to " + permission + " on " +
-                                            resource);
+                    response.AppendLine("User identified as " + identification.Identity);
+
+                    string group;
+                    List<string> roles;
+                    List<string> permissions;
+                    _authorizationData.GetIdentity(identification, out group, out roles, out permissions);
+
+                    response.AppendLine("   User is in the " + group + " group");
+                    response.AppendLine("   User has the role of " + string.Join(" and ", roles));
+                    response.AppendLine("   User has permissions to " + string.Join(" and ", permissions));
+                }
+
+                if (identification.Claims != null && identification.Claims.Count > 0)
+                {
+                    response.AppendLine();
+                    response.AppendLine("The identified user is making the following claims:");
+                    foreach (var claim in identification.Claims)
+                    {
+                        response.AppendFormat("   {0} = {1} [{2}]", claim.Name, claim.Value, claim.Status);
+                        response.AppendLine();
+                    }
+                }
+
+                if (identification.Purposes != null && identification.Purposes.Count > 0)
+                {
+                    response.AppendLine();
+                    response.AppendLine("The identified user is restricted to these roles:");
+                    foreach (var purpose in identification.Purposes)
+                    {
+                        response.AppendFormat("   {0}", purpose);
+                        response.AppendLine();
+                    }
+                }
+
+                response.AppendLine();
+
+                var authorization = context.GetFeature<IAuthorization>();
+                if (authorization == null)
+                {
+                    response.AppendLine("Authorization middleware is not properly configured");
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(role))
+                    {
+                        if (authorization.IsInRole(role))
+                            response.AppendLine("This user has the role of " + role);
+                        else
+                            response.AppendLine("This user does not have the role of " + role);
+                    }
+
+                    if (!string.IsNullOrEmpty(permission))
+                    {
+                        var hasPermission = authorization.HasPermission(permission, resource);
+                        if (string.IsNullOrEmpty(resource))
+                        {
+                            if (hasPermission)
+                                response.AppendLine("This user has permission to " + permission);
+                            else
+                                response.AppendLine("This user does not have permission to " + permission);
+                        }
+                        else
+                        {
+                            if (hasPermission)
+                                response.AppendLine("This user has permission to " + permission + " on " + resource);
+                            else
+                                response.AppendLine("This user does not have permission to " + permission + " on " +
+                                                    resource);
+                        }
+                    }
                 }
             }
-
             context.Response.ContentType = "text/plain";
             return context.Response.WriteAsync(response.ToString());
         }
