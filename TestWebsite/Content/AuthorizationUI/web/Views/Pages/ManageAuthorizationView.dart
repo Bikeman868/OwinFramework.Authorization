@@ -2,7 +2,10 @@
 
 import '../../ViewModels/AuthorizationViewModel.dart';
 
-import '../Permissions/PermissionListView.dart';
+import '../Panels/EditableListView.dart';
+import '../Permissions/PermissionListSelectView.dart';
+import '../Permissions/PermissionListEditView.dart';
+import '../Permissions/NewPermissionView.dart';
 
 class ManageAuthorizationView extends View
 {
@@ -10,7 +13,12 @@ class ManageAuthorizationView extends View
 	{
 		addHeading(2, 'Authorization');
 
-		var view = new PermissionListView(viewModel.permissionList);
+		var view = new EditableListView(
+			'Permissions',
+			new PermissionListSelectView(viewModel.permissionList),
+			new PermissionListEditView(viewModel.permissionList),
+			new NewPermissionView(viewModel.permissionList));
+
 		view.displayIn(addDiv());
 	}
 }

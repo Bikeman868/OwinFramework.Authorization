@@ -10,27 +10,17 @@ import '../../ViewModels/PermissionListViewModel.dart';
 
 import 'PermissionNameView.dart';
 
-class PermissionListView extends View
+class NewPermissionView extends View
 {
 	BoundList<PermissionModel, PermissionViewModel, PermissionNameView> _permissionsBinding;
 
-	PermissionListView([PermissionListViewModel viewModel])
+	NewPermissionView([PermissionListViewModel viewModel])
 	{
-		addHeading(3, 'Permissions');
-
-		addBlockText('Choose an permission to edit.' + 
-			'<br>You can also create new permissions and delete permissions here.' +
-			'<br>The Save button will save all changes to all permissions'
-			, className: 'help-note');
+		addBlockText('Create a new permission', className: 'help-note');
 
 		_permissionsBinding = new BoundList<PermissionModel, PermissionViewModel, PermissionNameView>(
 			(vm) => new PermissionNameView(vm), 
 			addList());
-
-		var buttonBar = addContainer(className: 'button-bar');
-		addButton("Save", _saveClicked, parent: buttonBar);
-		addButton("Discard", _discardClicked, parent: buttonBar);
-
 		this.viewModel = viewModel;
 	}
 
