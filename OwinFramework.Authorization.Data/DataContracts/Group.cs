@@ -15,8 +15,5 @@ namespace OwinFramework.Authorization.Data.DataContracts
 
         [Mapping("groupDescription")]
         public string Description { get; set; }
-
-        [Mapping("groupPermissionId")]
-        public long? PermissionId { get; set; }
     }
 }

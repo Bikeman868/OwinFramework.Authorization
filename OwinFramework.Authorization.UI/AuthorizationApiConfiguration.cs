@@ -19,7 +19,7 @@ namespace OwinFramework.Authorization
         public AuthorizationApiConfiguration()
         {
             DocumentationRootUrl = "/owin/authorizationApi/config";
-            ApiRootUrl = "/authorization/api";
+            ApiRootUrl = "/api/authorization";
 
             PermissionToCallApi = "auth:api";
             PermissionToEditPermissions = "auth:permission.edit";

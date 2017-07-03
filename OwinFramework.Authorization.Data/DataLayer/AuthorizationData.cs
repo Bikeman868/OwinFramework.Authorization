@@ -378,7 +378,6 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("groupCodeName", group.CodeName);
                     command.AddParameter("groupDisplayName", group.DisplayName);
                     command.AddParameter("groupDescription", group.Description);
-                    command.AddParameter("groupPermissionId", group.PermissionId);
                     using (var results = context.ExecuteEnumerable<Group>(command))
                     {
                         return results.FirstOrDefault();
@@ -437,7 +436,6 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("groupCodeName", group.CodeName);
                     command.AddParameter("groupDisplayName", group.DisplayName);
                     command.AddParameter("groupDescription", group.Description);
-                    command.AddParameter("groupPermissionId", group.PermissionId);
                     using (var results = context.ExecuteEnumerable<Group>(command))
                     {
                         return results.FirstOrDefault();

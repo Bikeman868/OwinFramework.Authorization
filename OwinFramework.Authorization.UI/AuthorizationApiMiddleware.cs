@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
+using Newtonsoft.Json;
 using OwinFramework.Authorization.Data.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
@@ -30,6 +31,8 @@ namespace OwinFramework.Authorization.UI
 
         private readonly IAuthorizationData _authorizationData;
 
+        private PathString _documentationPath;
+
         private PathString _groupListPath;
         private PathString _groupPath;
         private PathString _groupRoleListPath;
@@ -50,12 +53,17 @@ namespace OwinFramework.Authorization.UI
 
             this.RunAfter<IAuthorization>(null, false);
             this.RunAfter<IIdentification>(null, false);
+
+            ConfigurationChanged(new AuthorizationApiConfiguration());
         }
 
-        #region Request routing
+        #region Request routing and permissions
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
+            var apiContext = new ApiContext();
+            context.SetFeature(apiContext);
+
             if (!string.IsNullOrEmpty(_configuration.PermissionToCallApi))
             {
                 var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
@@ -67,25 +75,77 @@ namespace OwinFramework.Authorization.UI
                     upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToCallApi);
             }
 
+            var path = context.Request.Path;
+            var method = context.Request.Method;
+
+            if (method == "GET")
+            {
+                if (path.Equals(_documentationPath))
+                    apiContext.Handler = DocumentConfiguration;
+                else if (path.StartsWithSegments(_groupPath))
+                    apiContext.Handler = GetGroupHandler;
+                else if (path.StartsWithSegments(_groupListPath))
+                    apiContext.Handler = GetGroupListHandler;
+            }
+            else if (context.Request.Method == "POST")
+            {
+
+            }
+
             return next();
+        }
+
+        Task IMiddleware.Invoke(IOwinContext context, Func<Task> next)
+        {
+            var apiContext = context.GetFeature<ApiContext>();
+            if (apiContext == null || apiContext.Handler == null)
+                return next();
+
+            try
+            {
+                return apiContext.Handler(context);
+            }
+            catch(Exception ex)
+            {
+                var result = new ApiResponse
+                {
+                    Result = ApiResult.FatalError,
+                    ErrorMessage = ex.Message
+                };
+                return Json(context, result);
+            }
+        }
+
+        private Task Json<T>(IOwinContext context, T result) where T : ApiResponse
+        {
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
         }
 
         #endregion
 
-        #region Request handling
+        #region Request handlers
 
-        Task IMiddleware.Invoke(IOwinContext context, Func<Task> next)
+        private Task GetGroupHandler(IOwinContext context)
         {
-            if (!string.IsNullOrEmpty(_configuration.DocumentationRootUrl) &&
-                context.Request.Path.Value.Equals(_configuration.DocumentationRootUrl, StringComparison.OrdinalIgnoreCase))
+            throw new NotImplementedException();
+        }
+
+        private Task GetGroupListHandler(IOwinContext context)
+        {
+            var result = new GetGroupListResponse
             {
-                return DocumentConfiguration(context);
-            }
+                Groups = _authorizationData.GetGroups()
+                .Select(g => new GroupDto
+                {
+                    CodeName = g.CodeName,
+                    DisplayName = g.DisplayName,
+                    Description = g.Description
+                })
+                .ToList()
+            };
 
-            var authorization = context.GetFeature<IAuthorization>();
-
-
-            return next();
+            return Json(context, result);
         }
 
         #endregion
@@ -99,30 +159,37 @@ namespace OwinFramework.Authorization.UI
         {
             _configurationRegistration = configuration.Register(
                 path,
-                cfg =>
-                {
-                    _configuration = cfg;
-
-                    var root = string.IsNullOrEmpty(cfg.ApiRootUrl) ? "/" : cfg.ApiRootUrl;
-                    if (!root.StartsWith("/")) root = "/" + root;
-                    if (!root.EndsWith("/")) root = root + "/";
-
-                    _groupListPath = new PathString(root + "groups");
-                    _groupPath = new PathString(root + "group");
-                    _groupRoleListPath = new PathString(root + "group/roles");
-
-                    _roleListPath = new PathString(root + "roles");
-                    _rolePath = new PathString(root + "role");
-                    _rolePermissionListPath = new PathString(root + "role/permissions");
-
-                    _permissionListPath = new PathString(root + "permissions");
-                    _permissionPath = new PathString(root + "permission");
-
-                    _searchIdentityListPath = new PathString(root + "identity/_search");
-                    _identityGroupPath = new PathString(root + "identity/group");
-                },
+                ConfigurationChanged,
                 new AuthorizationApiConfiguration());
         }
+
+        private void ConfigurationChanged(AuthorizationApiConfiguration configuration)
+        {
+            _configuration = configuration;
+
+            var root = string.IsNullOrEmpty(configuration.ApiRootUrl) ? "/" : configuration.ApiRootUrl;
+            if (!root.StartsWith("/")) root = "/" + root;
+            if (!root.EndsWith("/")) root = root + "/";
+
+            _groupListPath = new PathString(root + "groups");
+            _groupPath = new PathString(root + "group");
+            _groupRoleListPath = new PathString(root + "group/roles");
+
+            _roleListPath = new PathString(root + "roles");
+            _rolePath = new PathString(root + "role");
+            _rolePermissionListPath = new PathString(root + "role/permissions");
+
+            _permissionListPath = new PathString(root + "permissions");
+            _permissionPath = new PathString(root + "permission");
+
+            _searchIdentityListPath = new PathString(root + "identity/_search");
+            _identityGroupPath = new PathString(root + "identity/group");
+
+            _documentationPath = string.IsNullOrEmpty(configuration.DocumentationRootUrl)
+                ? new PathString()
+                : new PathString(_configuration.DocumentationRootUrl.ToLower());
+        }
+
 
         #endregion
 
@@ -536,6 +603,66 @@ namespace OwinFramework.Authorization.UI
                     return reader.ReadToEnd();
                 }
             }
+        }
+
+        #endregion
+
+        #region Api request context
+
+        private class ApiContext
+        {
+            public Func<IOwinContext, Task> Handler;
+        }
+
+        #endregion
+
+        #region Data contracts
+
+        private enum ApiResult
+        {
+            Successs,
+            FatalError,
+            TemporaryError,
+            SessionExpired,
+            AccessDenied
+        }
+
+        private class GroupDto
+        {
+            [JsonProperty("codeName")]
+            public string CodeName { get; set; }
+
+            [JsonProperty("displayName")]
+            public string DisplayName { get; set; }
+
+            [JsonProperty("description")]
+            public string Description { get; set; }
+        }
+
+        private class ApiResponse
+        {
+            [JsonProperty("result")]
+            public ApiResult Result { get; set; }
+
+            [JsonProperty("error")]
+            public string ErrorMessage { get; set; }
+
+            public ApiResponse()
+            {
+                Result = ApiResult.Successs;
+            }
+        }
+
+        private class GetGroupResponse: ApiResponse
+        {
+            [JsonProperty("group")]
+            public GroupDto Group { get; set; }
+        }
+
+        private class GetGroupListResponse : ApiResponse
+        {
+            [JsonProperty("groups")]
+            public List<GroupDto> Groups { get; set; }
         }
 
         #endregion
