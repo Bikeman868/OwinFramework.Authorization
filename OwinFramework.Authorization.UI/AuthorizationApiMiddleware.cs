@@ -64,13 +64,14 @@ namespace OwinFramework.Authorization.UI
             var apiContext = new ApiContext();
             context.SetFeature(apiContext);
 
+            var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
+            var upstreamAuthorization = context.GetFeature<IUpstreamAuthorization>();
+
             if (!string.IsNullOrEmpty(_configuration.PermissionToCallApi))
             {
-                var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
                 if (upstreamIdentification != null)
                     upstreamIdentification.AllowAnonymous = false;
 
-                var upstreamAuthorization = context.GetFeature<IUpstreamAuthorization>();
                 if (upstreamAuthorization != null)
                     upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToCallApi);
             }
@@ -86,12 +87,78 @@ namespace OwinFramework.Authorization.UI
                     apiContext.Handler = GetGroupHandler;
                 else if (path.StartsWithSegments(_groupListPath))
                     apiContext.Handler = GetGroupListHandler;
+                else if (path.StartsWithSegments(_rolePath))
+                    apiContext.Handler = GetRoleHandler;
+                else if (path.StartsWithSegments(_roleListPath))
+                    apiContext.Handler = GetRoleListHandler;
+                else if (path.StartsWithSegments(_permissionPath))
+                    apiContext.Handler = GetPermissionHandler;
+                else if (path.StartsWithSegments(_permissionListPath))
+                    apiContext.Handler = GetPermissionListHandler;
             }
             else if (context.Request.Method == "POST")
             {
-
+                if (path.StartsWithSegments(_groupListPath))
+                {
+                    apiContext.Handler = NewGroupHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
+                }
+                else if (path.StartsWithSegments(_roleListPath))
+                {
+                    apiContext.Handler = NewRoleHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
+                }
+                else if (path.StartsWithSegments(_permissionListPath))
+                {
+                    apiContext.Handler = NewPermissionHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
+                }
             }
-
+            else if (context.Request.Method == "PUT")
+            {
+                if (path.StartsWithSegments(_groupPath))
+                {
+                    apiContext.Handler = UpdateGroupHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
+                }
+                else if (path.StartsWithSegments(_rolePath))
+                {
+                    apiContext.Handler = UpdateRoleHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
+                }
+                else if (path.StartsWithSegments(_permissionPath))
+                {
+                    apiContext.Handler = UpdatePermissionHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
+                }
+            }
+            else if (context.Request.Method == "DELETE")
+            {
+                if (path.StartsWithSegments(_groupPath))
+                {
+                    apiContext.Handler = DeleteGroupHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
+                }
+                else if (path.StartsWithSegments(_rolePath))
+                {
+                    apiContext.Handler = DeleteRoleHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
+                }
+                else if (path.StartsWithSegments(_permissionPath))
+                {
+                    apiContext.Handler = DeletePermissionHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
+                }
+            }
             return next();
         }
 
@@ -124,7 +191,7 @@ namespace OwinFramework.Authorization.UI
 
         #endregion
 
-        #region Request handlers
+        #region Group related handlers
 
         private Task GetGroupHandler(IOwinContext context)
         {
@@ -146,6 +213,104 @@ namespace OwinFramework.Authorization.UI
             };
 
             return Json(context, result);
+        }
+
+        private Task NewGroupHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task UpdateGroupHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task DeleteGroupHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Role related handlers
+
+        private Task GetRoleHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task GetRoleListHandler(IOwinContext context)
+        {
+            var result = new GetRoleListResponse
+            {
+                Roles = _authorizationData.GetRoles()
+                .Select(r => new RoleDto
+                {
+                    CodeName = r.CodeName,
+                    DisplayName = r.DisplayName,
+                    Description = r.Description
+                })
+                .ToList()
+            };
+
+            return Json(context, result);
+        }
+
+        private Task NewRoleHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task UpdateRoleHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task DeleteRoleHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Permission related handlers
+
+        private Task GetPermissionHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task GetPermissionListHandler(IOwinContext context)
+        {
+            var result = new GetPermissionListResponse
+            {
+                Permissions = _authorizationData.GetPermissions()
+                .Select(p => new PermissionDto
+                {
+                    CodeName = p.CodeName,
+                    Resource = p.Resource,
+                    DisplayName = p.DisplayName,
+                    Description = p.Description
+                })
+                .ToList()
+            };
+
+            return Json(context, result);
+        }
+
+        private Task NewPermissionHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task UpdatePermissionHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task DeletePermissionHandler(IOwinContext context)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -639,6 +804,33 @@ namespace OwinFramework.Authorization.UI
             public string Description { get; set; }
         }
 
+        private class RoleDto
+        {
+            [JsonProperty("codeName")]
+            public string CodeName { get; set; }
+
+            [JsonProperty("displayName")]
+            public string DisplayName { get; set; }
+
+            [JsonProperty("description")]
+            public string Description { get; set; }
+        }
+
+        private class PermissionDto
+        {
+            [JsonProperty("codeName")]
+            public string CodeName { get; set; }
+
+            [JsonProperty("resource")]
+            public string Resource { get; set; }
+
+            [JsonProperty("displayName")]
+            public string DisplayName { get; set; }
+
+            [JsonProperty("description")]
+            public string Description { get; set; }
+        }
+
         private class ApiResponse
         {
             [JsonProperty("result")]
@@ -663,6 +855,30 @@ namespace OwinFramework.Authorization.UI
         {
             [JsonProperty("groups")]
             public List<GroupDto> Groups { get; set; }
+        }
+
+        private class GetRoleResponse : ApiResponse
+        {
+            [JsonProperty("role")]
+            public RoleDto Role { get; set; }
+        }
+
+        private class GetRoleListResponse : ApiResponse
+        {
+            [JsonProperty("roles")]
+            public List<RoleDto> Roles { get; set; }
+        }
+
+        private class GetPermissionResponse : ApiResponse
+        {
+            [JsonProperty("permission")]
+            public PermissionDto Permission { get; set; }
+        }
+
+        private class GetPermissionListResponse : ApiResponse
+        {
+            [JsonProperty("permissions")]
+            public List<PermissionDto> Permissions { get; set; }
         }
 
         #endregion

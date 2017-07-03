@@ -1,10 +1,17 @@
 import 'dart:html';
 
+import 'MVVM/View.dart';
+import 'ViewModels/AuthorizationViewModel.dart';
+import 'Views/Pages/ManageAuthorizationView.dart';
+
+Element _uiDiv;
+AuthorizationViewModel _viewModel;
+View _view;
+
 main()
 { 
-	InputElement version = querySelector('#version');
-	Element div = querySelector('#auth-ui');
-
-	div.innerHtml = r'<h1>User Authorization</h1>'
-		+ '<p>Version ' + version.value + ' of the authorization user interface</p>';
+	_uiDiv = querySelector('#auth-ui');
+	_viewModel = new AuthorizationViewModel();
+	_view = new ManageAuthorizationView(_viewModel);
+	_view.displayIn(_uiDiv);
 }

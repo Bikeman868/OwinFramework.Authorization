@@ -10,14 +10,16 @@ import 'Models/IdentityModel.dart';
 class Server
 {
 
-	static String _apiUrl = '/authorization/api';
+	static String _apiUrl = '/api/authorization';
 //
 //-- Permission related server methods -----------------------------------------------------------------
 //
-	static Future<List<PermissionModel>> getPermissions() async
+	static Future<List<PermissionModel>> getPermissionList() async
 	{
 		String response = await HttpRequest.getString(_apiUrl + '/permissions');
-		List<Map> permissionsJson = JSON.decode(response);
+		Map responseJson = JSON.decode(response);
+
+		List<Map> permissionsJson = responseJson['permissions'];
 
 		var permissions = new List<PermissionModel>();
 		for (Map permissionJson in permissionsJson)
@@ -30,7 +32,7 @@ class Server
 //
 //-- Role related server methods -----------------------------------------------------------------
 //
-	static Future<List<RoleModel>> getRoles() async
+	static Future<List<RoleModel>> getRoleList() async
 	{
 		String response = await HttpRequest.getString(_apiUrl + '/roles');
 		List<Map> rolesJson = JSON.decode(response);
@@ -46,7 +48,7 @@ class Server
 //
 //-- Group related server methods -----------------------------------------------------------------
 //
-	static Future<List<GroupModel>> getGroups() async
+	static Future<List<GroupModel>> getGroupList() async
 	{
 		String response = await HttpRequest.getString(_apiUrl + '/groups');
 		List<Map> groupsJson = JSON.decode(response);

@@ -9,6 +9,8 @@
             "fileExtensions": [
                 { "extension": ".html", "mimeType": "text/html" },
                 { "extension": ".ico", "mimeType": "image/ico" },
+                { "extension": ".jpg", "mimeType": "image/jpg" },
+                { "extension": ".gif", "mimeType": "image/gif" },
                 { "extension": ".js", "mimeType": "application/javascript" },
                 { "extension": ".dart", "mimeType": "application/dart" }
             ],
@@ -82,6 +84,8 @@
             "fileExtensions": [
                 ".css",
                 ".html",
+                ".gif",
+                ".jpg",
                 ".ico",
                 ".js",
                 ".dart"

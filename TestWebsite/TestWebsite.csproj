@@ -180,6 +180,8 @@
     <Content Include="Content\AuthorizationUI\build\web\packages\browser\interop.js" />
     <Content Include="Content\AuthorizationUI\favicon.ico" />
     <Content Include="Content\AuthorizationUI\web\favicon.ico" />
+    <Content Include="Content\AuthorizationUI\web\images\add.gif" />
+    <Content Include="Content\AuthorizationUI\web\images\delete.gif" />
     <Content Include="Content\AuthorizationUI\web\index.html" />
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\index.html" />
@@ -232,6 +234,12 @@
     <Content Include="Content\AuthorizationUI\web\Server.dart" />
     <Content Include="Content\AuthorizationUI\web\Models\IdentityModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Models\ClaimModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\ViewModels\AuthorizationViewModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Pages\ManageAuthorizationView.dart" />
+    <Content Include="Content\AuthorizationUI\web\ViewModels\PermissionListViewModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\ViewModels\PermissionViewModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionNameView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionListView.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -242,9 +250,6 @@
   <ItemGroup>
     <Folder Include="Content\AuthorizationUI\web\Events\" />
     <Folder Include="Content\AuthorizationUI\web\html\" />
-    <Folder Include="Content\AuthorizationUI\web\images\" />
-    <Folder Include="Content\AuthorizationUI\web\ViewModels\" />
-    <Folder Include="Content\AuthorizationUI\web\Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OwinFramework.Authorization.Data\OwinFramework.Authorization.Data.Net40.csproj">

@@ -80,7 +80,7 @@ class BoundList<TM extends Model, TVM extends ViewModel, TV extends View> extend
 					if (allowRemove)
 					{
 						var deleteButton = builder.addImage(
-							'ui/images/delete{_v_}.gif',
+							'/authorizationui/images/delete{_v_}.gif',
 							altText: 'Delete',
 							classNames: ['bound-list-delete','image-button'],
 							parent: listItem,
@@ -95,7 +95,7 @@ class BoundList<TM extends Model, TVM extends ViewModel, TV extends View> extend
 				var listItem = builder.addListElement(className:'list-item');
 				var viewContainer = builder.addContainer(className:'list-view', parent: listItem);
 				var addButton = builder.addImage(
-					'ui/images/add{_v_}.gif',
+					'/authorizationui/images/add{_v_}.gif',
 					altText: 'New',
 					classNames: ['bound-list-add','image-button'],
 					parent: listItem,
