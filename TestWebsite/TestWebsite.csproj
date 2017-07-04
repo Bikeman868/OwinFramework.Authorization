@@ -115,8 +115,8 @@
       <HintPath>..\packages\Owin.Framework.Facilities.TokenStore.Prius.2.5.1\lib\net40\OwinFramework.Facilities.TokenStore.Prius.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.Less, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.Less.2.5.0\lib\net40\OwinFramework.Less.dll</HintPath>
+    <Reference Include="OwinFramework.Less, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.Less.2.5.2\lib\net40\OwinFramework.Less.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OwinFramework.OutputCache, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
