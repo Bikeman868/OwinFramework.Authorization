@@ -3,9 +3,12 @@
 import '../../MVVM/View.dart';
 import '../../MVVM/BoundList.dart';
 
+import '../../Server.dart';
+
 import '../../Events/AppEvents.dart';
 
 import '../../Models/PermissionModel.dart';
+import '../../Models/ApiResponseModel.dart';
 
 import '../../ViewModels/PermissionViewModel.dart';
 import '../../ViewModels/PermissionListViewModel.dart';
@@ -21,6 +24,8 @@ class NewPermissionView extends NewModelView
 	InputElement _codeName;
 	InputElement _resource;
 
+	Element _fieldValidationError;
+
 	NewPermissionView([PermissionListViewModel viewModel])
 	{
 		addBlockText(
@@ -35,7 +40,7 @@ class NewPermissionView extends NewModelView
 		_codeName = addLabeledEdit(form, 'Code name');
 		_resource = addLabeledEdit(form, 'Resource filter');
 
-		var fieldValidationError = addBlockText('', className: 'validation-error');
+		_fieldValidationError = addBlockText('', className: 'validation-error');
 		var fieldHelpNote = addBlockText('', className: 'help-note');
 
 		_displayName.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
@@ -47,12 +52,12 @@ class NewPermissionView extends NewModelView
 		{
 			if (_displayName.value.length < 3)
 			{
-				fieldValidationError.innerHtml = 'The display name is too short';
+				_fieldValidationError.innerHtml = 'The display name is too short';
 				_displayName.focus();
 			}
 			else
 			{
-				fieldValidationError.innerHtml = '';
+				_fieldValidationError.innerHtml = '';
 			}
 		});
 
@@ -60,7 +65,18 @@ class NewPermissionView extends NewModelView
 			'Provide a detailed description of the features a user will gain access to if this permission is ' +
 			'granted to them.');
 
-		_description.onBlur.listen((Event e) => {}); // validation
+		_description.onBlur.listen((Event e)
+		{
+			if (_description.value.length < 20)
+			{
+				_fieldValidationError.innerHtml = 'The description is too short';
+				_description.focus();
+			}
+			else
+			{
+				_fieldValidationError.innerHtml = '';
+			}
+		});
 
 		_codeName.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
 			'This code name must match exactly with the name that is checked by the application code to determine ' +
@@ -68,7 +84,10 @@ class NewPermissionView extends NewModelView
 			'with the name of the application or sub-system, followed by a colon, followed by a dot separated path to ' +
 			'the feature, for example auth:role.assign defines the permission to assign roles within the authentication system.');
 
-		_codeName.onBlur.listen((Event e) => {}); // validation
+		_codeName.onBlur.listen((Event e)
+		{
+			_fieldValidationError.innerHtml = '';
+		});
 
 		_resource.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
 			'Leave the resource filter blank to assign this permission to all resources. By filling in the resource filter field ' +
@@ -78,7 +97,10 @@ class NewPermissionView extends NewModelView
 			'path separators and wildwards, for example <span class="code">user:*/profile/image</span> means profile images '+
 			'for all users.');
 
-		_resource.onBlur.listen((Event e) => {}); // validation
+		_resource.onBlur.listen((Event e)
+		{
+			_fieldValidationError.innerHtml = '';
+		});
 
 		this.viewModel = viewModel;
 	}
@@ -101,18 +123,30 @@ class NewPermissionView extends NewModelView
 		_displayName.focus();
 	}
 
-	bool addModel()
+	void addModel(void onSuccess())
 	{
-		var vm = _viewModel.permissions.add();
+		var permission = new PermissionModel(
+			new Map()
+				..['codeName'] = _codeName.value
+				..['displayName'] = _displayName.value
+				..['description'] = _description.value
+				..['resource'] = _resource.value);
 
-		vm.displayName.setProperty(_displayName.value);
-		vm.description.setProperty(_description.value);
-		vm.codeName.setProperty(_codeName.value);
-		vm.resource.setProperty(_resource.value);
-
-		AppEvents.permissionSelected.raise(new PermissionSelectedEvent(vm));
-
-		return true;
+		Server.validatePermission(permission)
+			.then((ApiResponseModel r)
+			{
+				if (r.isSuccess)
+				{
+					var vm = _viewModel.permissions.addModel(permission);
+					AppEvents.permissionSelected.raise(new PermissionSelectedEvent(vm));
+					onSuccess();
+				}
+				else
+				{
+					_fieldValidationError.innerHtml = r.error;
+				}
+			})
+			.catchError((Error error) => _fieldValidationError.innerHtml = error.toString());
 	}
 
 }

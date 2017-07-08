@@ -42,6 +42,26 @@ class EditableListView extends View
 
 	void _doneClicked(MouseEvent e)
 	{
+		done();
+	}
+
+	void _editClicked(MouseEvent e)
+	{
+		edit();
+	}
+
+	void _newClicked(MouseEvent e)
+	{
+		addNew();
+	}
+
+	void _addClicked(MouseEvent e)
+	{
+		saveNew();
+	}
+
+	void done()
+	{
 		_editButton.hidden = false;
 		_newButton.hidden = false;
 		_doneButton.hidden = true;
@@ -51,7 +71,7 @@ class EditableListView extends View
 		_changeView(_selectView);
 	}
 
-	void _editClicked(MouseEvent e)
+	void edit()
 	{
 		_editButton.hidden = true;
 		_newButton.hidden = true;
@@ -62,7 +82,7 @@ class EditableListView extends View
 		_changeView(_editView);
 	}
 
-	void _newClicked(MouseEvent e)
+	void addNew()
 	{
 		_editButton.hidden = true;
 		_newButton.hidden = true;
@@ -75,10 +95,9 @@ class EditableListView extends View
 		_addView.clearForm();
 	}
 
-	void _addClicked(MouseEvent e)
+	void saveNew()
 	{
-		if (_addView.addModel())
-			_doneClicked(e);
+		_addView.addModel(done);
 	}
 
 	_changeView(View view)

@@ -17,6 +17,10 @@ namespace OwinFramework.Authorization.Data.Interfaces
         IEnumerable<Role> GetRoles(Func<Role, bool> filterFunction = null);
         IEnumerable<Permission> GetPermissions(Func<Permission, bool> filterFunction = null);
 
+        void Validate(Group group);
+        void Validate(Role role);
+        void Validate(Permission permission);
+
         Group NewGroup(Group group);
         Role NewRole(Role role);
         Permission NewPermission(Permission permission);

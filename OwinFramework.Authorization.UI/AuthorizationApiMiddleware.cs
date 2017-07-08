@@ -6,8 +6,11 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.Owin;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using OwinFramework.Authorization.Data.DataContracts;
 using OwinFramework.Authorization.Data.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
@@ -32,6 +35,10 @@ namespace OwinFramework.Authorization.UI
         private readonly IAuthorizationData _authorizationData;
 
         private PathString _documentationPath;
+
+        private PathString _validateGroupPath;
+        private PathString _validateRolePath;
+        private PathString _validatePermissionPath;
 
         private PathString _groupListPath;
         private PathString _groupPath;
@@ -113,6 +120,24 @@ namespace OwinFramework.Authorization.UI
                 else if (path.StartsWithSegments(_permissionListPath))
                 {
                     apiContext.Handler = NewPermissionHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
+                }
+                else if (path.StartsWithSegments(_validateGroupPath))
+                {
+                    apiContext.Handler = ValidateGroupHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
+                }
+                else if (path.StartsWithSegments(_validateRolePath))
+                {
+                    apiContext.Handler = ValidateRoleHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
+                }
+                else if (path.StartsWithSegments(_validatePermissionPath))
+                {
+                    apiContext.Handler = ValidatePermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
                 }
@@ -215,6 +240,30 @@ namespace OwinFramework.Authorization.UI
             return Json(context, result);
         }
 
+        private Task ValidateGroupHandler(IOwinContext context)
+        {
+            var result = new ValidationResponse();
+
+            try
+            {
+                var groupDto = GetBody<GroupDto>(context);
+                var group = new Group
+                {
+                    CodeName = groupDto.CodeName,
+                    DisplayName = groupDto.DisplayName,
+                    Description = groupDto.Description
+                };
+                _authorizationData.Validate(group);
+            }
+            catch (Exception ex)
+            {
+                result.Result = ApiResult.FatalError;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(context, result);
+        }
+
         private Task NewGroupHandler(IOwinContext context)
         {
             throw new NotImplementedException();
@@ -252,6 +301,30 @@ namespace OwinFramework.Authorization.UI
                 })
                 .ToList()
             };
+
+            return Json(context, result);
+        }
+
+        private Task ValidateRoleHandler(IOwinContext context)
+        {
+            var result = new ValidationResponse();
+
+            try
+            {
+                var roleDto = GetBody<RoleDto>(context);
+                var role = new Role
+                {
+                    CodeName = roleDto.CodeName,
+                    DisplayName = roleDto.DisplayName,
+                    Description = roleDto.Description
+                };
+                _authorizationData.Validate(role);
+            }
+            catch (Exception ex)
+            {
+                result.Result = ApiResult.FatalError;
+                result.ErrorMessage = ex.Message;
+            }
 
             return Json(context, result);
         }
@@ -298,6 +371,31 @@ namespace OwinFramework.Authorization.UI
             return Json(context, result);
         }
 
+        private Task ValidatePermissionHandler(IOwinContext context)
+        {
+            var result = new ValidationResponse();
+
+            try
+            {
+                var permissionDto = GetBody<PermissionDto>(context);
+                var permission = new Permission
+                {
+                    CodeName = permissionDto.CodeName,
+                    DisplayName = permissionDto.DisplayName,
+                    Description = permissionDto.Description,
+                    Resource = permissionDto.Resource
+                };
+                _authorizationData.Validate(permission);
+            }
+            catch (Exception ex)
+            {
+                result.Result = ApiResult.FatalError;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(context, result);
+        }
+
         private Task NewPermissionHandler(IOwinContext context)
         {
             throw new NotImplementedException();
@@ -311,6 +409,30 @@ namespace OwinFramework.Authorization.UI
         private Task DeletePermissionHandler(IOwinContext context)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+
+        #region Request parsing
+
+        protected T GetBody<T>(IOwinContext context)
+        {
+            T content;
+            try
+            {
+                string body;
+                using (var sr = new StreamReader(context.Request.Body, Encoding.UTF8))
+                    body = sr.ReadToEnd();
+                content = JsonConvert.DeserializeObject<T>(body);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpException((int)HttpStatusCode.BadRequest,
+                    "The body of the request could not be deserialized as " +
+                    typeof(T).FullName + ". " + ex.Message);
+            }
+            return content;
         }
 
         #endregion
@@ -353,6 +475,10 @@ namespace OwinFramework.Authorization.UI
             _documentationPath = string.IsNullOrEmpty(configuration.DocumentationRootUrl)
                 ? new PathString()
                 : new PathString(_configuration.DocumentationRootUrl.ToLower());
+
+            _validateGroupPath = new PathString(root + "validate/group");
+            _validateRolePath = new PathString(root + "validate/role");
+            _validatePermissionPath = new PathString(root + "validate/permission");
         }
 
 
@@ -785,7 +911,7 @@ namespace OwinFramework.Authorization.UI
 
         private enum ApiResult
         {
-            Successs,
+            Success,
             FatalError,
             TemporaryError,
             SessionExpired,
@@ -831,8 +957,30 @@ namespace OwinFramework.Authorization.UI
             public string Description { get; set; }
         }
 
+        private class IdentityDto
+        {
+            [JsonProperty("identity")]
+            public string Identity { get; set; }
+
+            [JsonProperty("claims")]
+            public List<ClaimDto> Claims { get; set; }
+        }
+
+        private class ClaimDto
+        {
+            [JsonProperty("name")]
+            public string Name { get; set; }
+
+            [JsonProperty("value")]
+            public string Value { get; set; }
+
+            [JsonProperty("status")]
+            public ClaimStatus Status { get; set; }
+        }
+
         private class ApiResponse
         {
+            [JsonConverter(typeof(StringEnumConverter))]
             [JsonProperty("result")]
             public ApiResult Result { get; set; }
 
@@ -841,7 +989,7 @@ namespace OwinFramework.Authorization.UI
 
             public ApiResponse()
             {
-                Result = ApiResult.Successs;
+                Result = ApiResult.Success;
             }
         }
 
@@ -879,6 +1027,16 @@ namespace OwinFramework.Authorization.UI
         {
             [JsonProperty("permissions")]
             public List<PermissionDto> Permissions { get; set; }
+        }
+
+        private class SearchIdentitiesResponse : ApiResponse
+        {
+            [JsonProperty("identities")]
+            public List<IdentityDto> Permissions { get; set; }
+        }
+
+        private class ValidationResponse : ApiResponse
+        {
         }
 
         #endregion

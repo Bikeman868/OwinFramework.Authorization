@@ -6,8 +6,7 @@ class NewModelView extends View
 	{
 	}
 
-	bool addModel()
+	void addModel(void onSuccess())
 	{
-		return true;
 	}
 }

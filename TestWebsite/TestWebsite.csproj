@@ -202,6 +202,7 @@
     <Content Include="packages.config" />
     <Content Include="Content\AuthorizationUI\pubspec.yaml" />
     <Content Include="Content\AuthorizationUI\web\main.dart" />
+    <Content Include="Content\AuthorizationUI\web\Models\ApiResponseModel.dart" />
     <None Include="Content\AuthorizationUI\web\styles.less" />
     <Content Include="Content\AuthorizationUI\build\web\styles.less" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundContainer.dart" />

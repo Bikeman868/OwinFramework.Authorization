@@ -408,6 +408,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         public Permission NewPermission(Permission permission)
         {
             Validate(permission);
+
             using (var context = _contextFactory.Create(_repositoryName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddPermission"))
@@ -712,7 +713,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         private readonly Regex _resourceRegex = new Regex("^[a-z0-9_\\-.]+:[a-z0-9_\\-.@/]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _resourceMatchRegex = new Regex("^[a-z0-9_\\-.]+:(\\*|{[a-z]+}|[a-z0-9_\\-.@]+)(/(\\*|{[a-z]+}|[a-z0-9_\\-.@]+))*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        private void Validate(Group group)
+        public void Validate(Group group)
         {
             if (group.CodeName == null || group.CodeName.Length > 30 || group.CodeName.Length < 1)
                 throw new HttpException((int)HttpStatusCode.BadRequest,
@@ -727,7 +728,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     "Group display name length must be between 1 and 50 characters");
         }
 
-        private  void Validate(Role role)
+        public void Validate(Role role)
         {
             if (role.CodeName == null || role.CodeName.Length > 30 || role.CodeName.Length < 1)
                 throw new HttpException((int)HttpStatusCode.BadRequest,
@@ -742,7 +743,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     "Role display name length must be between 1 and 50 characters");
         }
 
-        private void Validate(Permission permission)
+        public void Validate(Permission permission)
         {
             if (permission.CodeName == null || permission.CodeName.Length > 80 || permission.CodeName.Length < 1)
                 throw new HttpException((int)HttpStatusCode.BadRequest,
@@ -750,7 +751,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
             if (!_permissionNameRegex.IsMatch(permission.CodeName))
                 throw new HttpException((int)HttpStatusCode.BadRequest,
-                    "Permission code name must match " + _nameRegex);
+                    "Permission code name must match " + _permissionNameRegex);
 
             if (!string.IsNullOrEmpty(permission.Resource))
             {
@@ -760,7 +761,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
                 if (!_resourceMatchRegex.IsMatch(permission.Resource))
                     throw new HttpException((int)HttpStatusCode.BadRequest,
-                        "Permission resource expression must match " + _nameRegex);
+                        "Permission resource expression must match " + _resourceMatchRegex);
             }
 
             if (permission.DisplayName == null || permission.DisplayName.Length > 50 || permission.DisplayName.Length < 1)
