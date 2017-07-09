@@ -186,6 +186,13 @@ class ModelList<TM extends Model, TVM extends ViewModel>
 		}
 	}
 
+	// Changes the status of any deleted view modles back tp unmodified
+	void undelete()
+	{
+		_viewModels.forEach((ViewModel vm) => vm.undelete());
+		onListChanged.raise(new ListEvent(-1));
+	}
+
 	// Call this ater saving changes to mark all the view models as saved
 	void saved()
 	{

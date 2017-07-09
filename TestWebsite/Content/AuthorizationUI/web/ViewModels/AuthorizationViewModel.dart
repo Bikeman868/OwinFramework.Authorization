@@ -53,6 +53,6 @@ class AuthorizationViewModel extends ViewModel
 		return [_permissionList];
 	}
 
-	String toString() => 'authorization view model';
+	String toString() => 'authorization data';
 }
 

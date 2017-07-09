@@ -2,11 +2,20 @@
 
 class EditView extends View
 {
+	// Override in derrived classes to initialize the form
 	void clearForm()
 	{
 	}
 
-	void saveForm(void onSuccess())
+	// Override in derrived classes to save changes
+	void saveEdits(void onSuccess())
 	{
+		onSuccess();
+	}
+
+	// Override in derrived classes to back out changes
+	void cancelEdits(void onSuccess())
+	{
+		onSuccess();
 	}
 }

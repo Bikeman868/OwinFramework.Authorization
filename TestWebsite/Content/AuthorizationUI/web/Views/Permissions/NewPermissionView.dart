@@ -137,7 +137,7 @@ class NewPermissionView extends EditView
 		_displayName.focus();
 	}
 
-	void saveForm(void onSuccess())
+	void saveEdits(void onSuccess())
 	{
 		var permission = new PermissionModel(null)
 			..codeName = _codeName.value

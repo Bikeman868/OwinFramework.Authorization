@@ -151,6 +151,6 @@ class PermissionViewModel extends ViewModel
 		return result;
 	}
 
-	String toString() => _model.toString() + ' view model';
+	String toString() => _model.toString();
 }
 

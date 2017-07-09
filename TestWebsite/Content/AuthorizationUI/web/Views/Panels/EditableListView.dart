@@ -35,7 +35,7 @@ class EditableListView extends View
 		_newButton = addButton('New', _newClicked, parent: toolbar);
 		_doneButton = addButton('Done', _doneClicked, parent: toolbar);
 		_saveButton = addButton('Save', _saveClicked, parent: toolbar);
-		_cancelButton = addButton('Cancel', _doneClicked, parent: toolbar);
+		_cancelButton = addButton('Cancel', _cancelClicked, parent: toolbar);
 
 		_viewPanel = addContainer(parent: panel);
 
@@ -60,6 +60,11 @@ class EditableListView extends View
 	void _saveClicked(MouseEvent e)
 	{
 		save();
+	}
+
+	void _cancelClicked(MouseEvent e)
+	{
+		cancel();
 	}
 
 	void done()
@@ -101,7 +106,13 @@ class EditableListView extends View
 	void save()
 	{
 		if (_currentEditView != null)
-			_currentEditView.saveForm(done);
+			_currentEditView.saveEdits(done);
+	}
+
+	void cancel()
+	{
+		if (_currentEditView != null)
+			_currentEditView.cancelEdits(done);
 	}
 
 	_changeView(View view)

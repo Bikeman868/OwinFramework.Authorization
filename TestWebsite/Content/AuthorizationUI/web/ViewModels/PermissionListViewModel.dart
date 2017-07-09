@@ -59,6 +59,6 @@ class PermissionListViewModel extends ViewModel
 			.catchError((Error error) => window.alert(error.toString()));
 	}
 
-	String toString() => 'permission list view model';
+	String toString() => 'permission list';
 }
 

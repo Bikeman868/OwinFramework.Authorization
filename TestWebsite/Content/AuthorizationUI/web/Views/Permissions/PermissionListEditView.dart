@@ -48,9 +48,20 @@ class PermissionListEditView extends EditView
 		}
 	}
 
-	void saveForm(void onSuccess())
+	void saveEdits(void onSuccess())
 	{
 		viewModel.save()
-			.then((SaveResult saveResult) => onSuccess());
+			.then((SaveResult saveResult)
+			{
+				if (saveResult == SaveResult.saved || 
+					saveResult == SaveResult.unmodified)
+					onSuccess();
+			});
+	}
+
+	void cancelEdits(void onSuccess())
+	{
+		viewModel.undelete();
+		onSuccess();
 	}
 }

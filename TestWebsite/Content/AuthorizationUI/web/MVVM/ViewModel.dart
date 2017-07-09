@@ -193,6 +193,15 @@ abstract class ViewModel
 		_forEachModelList((ModelList modelList) => modelList.removeDeleted());
 	}
 
+	void undelete()
+	{
+		if (getState() == ChangeState.deleted)
+			_state = ChangeState.unmodified;
+
+		_forEachChild((ViewModel vm) => vm.undelete());
+		_forEachModelList((ModelList modelList) => modelList.undelete());
+	}
+
 	// Gets the current state of this view model and all of its children
 	ChangeState getState()
 	{
