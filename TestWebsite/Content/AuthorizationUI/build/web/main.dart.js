@@ -418,48 +418,58 @@ y=y.d.Q
 if(!y.gd9())H.vh(y.Pq())
 y.BH(new T.Ws(z))}}},"$1","gVh",2,0,0],
 Tm:[function(a){var z=this.Q
-if(z!=null)z.V6(0)},"$1","gNd",2,0,0]}}],["","",,X,{
+if(z!=null)z.V6(0)},"$1","gNd",2,0,0]}}],["","",,Q,{
+"^":"",
+pS:{
+"^":"jR;",
+kD:function(a){}}}],["","",,X,{
 "^":"",
 Lh:{
-"^":"jR;b,c,d,e,f,r,x,y,z,Q,a",
+"^":"jR;b,c,d,e,f,r,x,y,z,ch,Q,a",
 UT:[function(a){this.lj()},"$1","gQM",2,0,0],
 H5:[function(a){var z,y
-J.x0(this.f,!0)
-J.x0(this.r,!0)
-J.x0(this.x,!1)
-J.x0(this.y,!0)
-J.x0(this.z,!0)
-z=this.d
-y=this.b
-J.Z(J.OG(y))
-z.Uq(y)},"$1","gRg",2,0,0],
-b7:[function(a){var z,y
-J.x0(this.f,!0)
 J.x0(this.r,!0)
 J.x0(this.x,!0)
 J.x0(this.y,!1)
+J.x0(this.z,!0)
+J.x0(this.ch,!0)
+z=this.d
+y=this.b
+J.Z(J.OG(y))
+z.Uq(y)
+this.f=null
+this.f=this.d},"$1","gRg",2,0,0],
+b7:[function(a){var z,y
+J.x0(this.r,!0)
+J.x0(this.x,!0)
+J.x0(this.y,!0)
 J.x0(this.z,!1)
+J.x0(this.ch,!1)
 z=this.e
 y=this.b
 J.Z(J.OG(y))
 z.Uq(y)
+this.f=null
 y=this.e
 J.wH(y.b,"")
 J.wH(y.c,"")
 J.wH(y.d,"")
 J.wH(y.e,"")
-J.Nn(y.b)},"$1","gEP",2,0,0],
-xQ:[function(a){this.e.ny(this.gHN())},"$1","glY",2,0,0],
+J.Nn(y.b)
+this.f=this.e},"$1","gEP",2,0,0],
+xQ:[function(a){var z=this.f
+if(z!=null)z.kD(this.gHN())},"$1","glY",2,0,0],
 lj:[function(){var z,y
-J.x0(this.f,!1)
 J.x0(this.r,!1)
-J.x0(this.x,!0)
+J.x0(this.x,!1)
 J.x0(this.y,!0)
 J.x0(this.z,!0)
+J.x0(this.ch,!0)
 z=this.c
 y=this.b
 J.Z(J.OG(y))
-z.Uq(y)},"$0","gHN",0,0,3],
+z.Uq(y)
+this.f=null},"$0","gHN",0,0,3],
 yA:function(a,b,c,d){var z,y,x
 this.c=b
 this.d=c
@@ -468,14 +478,14 @@ z=this.iX(document.createElement("div",null),["panel","editable-list-view"],null
 y=this.iX(document.createElement("div",null),null,null,z)
 this.Cb(3,a,y)
 x=this.iX(document.createElement("div",null),null,"tool-bar",y)
-this.f=this.ix("Edit",this.gRg(),x)
-this.r=this.ix("New",this.gEP(),x)
-this.x=this.ix("Done",this.gQM(),x)
-this.y=this.ix("Add",this.glY(),x)
-this.z=this.ix("Cancel",this.gQM(),x)
+this.r=this.ix("Edit",this.gRg(),x)
+this.x=this.ix("New",this.gEP(),x)
+this.y=this.ix("Done",this.gQM(),x)
+this.z=this.ix("Add",this.glY(),x)
+this.ch=this.ix("Cancel",this.gQM(),x)
 this.b=this.iX(document.createElement("div",null),null,null,z)
 this.lj()},
-static:{Y:function(a,b,c,d){var z=new X.Lh(null,null,null,null,null,null,null,null,null,null,null)
+static:{Y:function(a,b,c,d){var z=new X.Lh(null,null,null,null,null,null,null,null,null,null,null,null)
 z.qm()
 z.yA(a,b,c,d)
 return z}}}}],["","",,G,{
@@ -610,14 +620,11 @@ Fh:{
 "^":"r;Q",
 $1:function(a){var z=this.Q
 return z.f.push(z.QH(a))},
-$signature:function(){return H.IG(function(a,b){return{func:1,args:[a]}},this.Q,"NZ")}}}],["","",,L,{
-"^":"",
-VZ:{
-"^":"jR;"}}],["","",,R,{
+$signature:function(){return H.IG(function(a,b){return{func:1,args:[a]}},this.Q,"NZ")}}}],["","",,R,{
 "^":"",
 xz:{
-"^":"VZ;b,c,d,e,f,r,Q,a",
-ny:function(a){var z,y
+"^":"pS;b,c,d,e,f,r,Q,a",
+kD:function(a){var z,y
 z=P.L5(null,null,null,null,null)
 z.q(0,"codeName",J.SW(this.d))
 z.q(0,"displayName",J.SW(this.b))
@@ -625,7 +632,7 @@ z.q(0,"description",J.SW(this.c))
 z.q(0,"resource",J.SW(this.e))
 y=new A.FC(null,null,null)
 y.cD(0,z)
-O.qL(y).ml(new R.wt(this,a,y)).OA(new R.V3(this))},
+O.qL(y).ml(new R.eV(this,a,y)).OA(new R.iQ(this))},
 k6:function(a){var z,y,x,w
 this.Bh("Create a new permission. After creating the permission you must assign it to one or more roles to make it effective. Your application must also be checking for this permission and restricting access to certain features of the software.","help-note")
 z=H.J([],[P.I])
@@ -696,7 +703,7 @@ return"Leave the resource filter blank to assign this permission to all resource
 Eb:{
 "^":"r:6;Q",
 $1:function(a){J.Qy(this.Q.f,"")}},
-wt:{
+eV:{
 "^":"r:7;Q,a,b",
 $1:function(a){var z,y
 z=this.Q
@@ -705,7 +712,7 @@ z=$.pF().Q
 if(!z.gd9())H.vh(z.Pq())
 z.BH(new F.kl(y))
 this.a.$0()}else J.Qy(z.f,J.Tf(a.Q,"error"))}},
-V3:{
+iQ:{
 "^":"r:8;Q",
 $1:function(a){var z,y
 z=this.Q.f
@@ -714,7 +721,7 @@ J.Qy(z,y)
 return y}}}],["","",,S,{
 "^":"",
 J9:{
-"^":"jR;b,c,Q,a",
+"^":"pS;b,c,Q,a",
 f0:function(a){var z,y
 this.Bh("Remove permissions that you no longer need. If your application is checking a permission before allowing access to a feature and you remove that permission, then the feature will become unavailable. In general only the software development team should manage permissions becauser they know which permissions the application is checking for.","help-note")
 z=this.iX(document.createElement("ul",null),null,null,null)

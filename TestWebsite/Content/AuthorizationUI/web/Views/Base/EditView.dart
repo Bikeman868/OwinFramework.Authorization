@@ -1,12 +1,12 @@
 ﻿import '../../MVVM/View.dart';
 
-class NewModelView extends View
+class EditView extends View
 {
 	void clearForm()
 	{
 	}
 
-	void addModel(void onSuccess())
+	void saveForm(void onSuccess())
 	{
 	}
 }

@@ -709,7 +709,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         #region Validation
 
         private readonly Regex _nameRegex = new Regex("^[a-z0-9_\\-.@]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private readonly Regex _permissionNameRegex = new Regex("^[a-z0-9_\\-.@]+(:[a-z0-9_\\-.@]+).$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private readonly Regex _permissionNameRegex = new Regex("^[a-z0-9_\\-.@]+(:[a-z0-9_\\-.@]+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _resourceRegex = new Regex("^[a-z0-9_\\-.]+:[a-z0-9_\\-.@/]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _resourceMatchRegex = new Regex("^[a-z0-9_\\-.]+:(\\*|{[a-z]+}|[a-z0-9_\\-.@]+)(/(\\*|{[a-z]+}|[a-z0-9_\\-.@]+))*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 

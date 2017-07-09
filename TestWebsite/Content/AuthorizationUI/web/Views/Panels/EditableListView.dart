@@ -1,23 +1,25 @@
 ﻿import 'dart:html';
 
 import '../../MVVM/View.dart';
-import '../../Views/Base/NewModelView.dart';
+import '../../Views/Base/EditView.dart';
 
 class EditableListView extends View
 {
 	Element _viewPanel;
 
 	View _selectView;
-	View _editView;
-	NewModelView _addView;
+	EditView _editView;
+	EditView _addView;
+
+	EditView _currentEditView;
 
 	Element _editButton;
 	Element _newButton;
 	Element _doneButton;
-	Element _addButton;
+	Element _saveButton;
 	Element _cancelButton;
 
-	EditableListView(String title, View selectView, View editView, NewModelView addView)
+	EditableListView(String title, View selectView, EditView editView, EditView addView)
 	{
 		_selectView = selectView;
 		_editView = editView;
@@ -32,12 +34,12 @@ class EditableListView extends View
 		_editButton = addButton('Edit', _editClicked, parent: toolbar);
 		_newButton = addButton('New', _newClicked, parent: toolbar);
 		_doneButton = addButton('Done', _doneClicked, parent: toolbar);
-		_addButton = addButton('Add', _addClicked, parent: toolbar);
+		_saveButton = addButton('Save', _saveClicked, parent: toolbar);
 		_cancelButton = addButton('Cancel', _doneClicked, parent: toolbar);
 
 		_viewPanel = addContainer(parent: panel);
 
-		_doneClicked(null);
+		done();
 	}
 
 	void _doneClicked(MouseEvent e)
@@ -55,9 +57,9 @@ class EditableListView extends View
 		addNew();
 	}
 
-	void _addClicked(MouseEvent e)
+	void _saveClicked(MouseEvent e)
 	{
-		saveNew();
+		save();
 	}
 
 	void done()
@@ -65,7 +67,7 @@ class EditableListView extends View
 		_editButton.hidden = false;
 		_newButton.hidden = false;
 		_doneButton.hidden = true;
-		_addButton.hidden = true;
+		_saveButton.hidden = true;
 		_cancelButton.hidden = true;
 
 		_changeView(_selectView);
@@ -75,11 +77,12 @@ class EditableListView extends View
 	{
 		_editButton.hidden = true;
 		_newButton.hidden = true;
-		_doneButton.hidden = false;
-		_addButton.hidden = true;
-		_cancelButton.hidden = true;
+		_doneButton.hidden = true;
+		_saveButton.hidden = false;
+		_cancelButton.hidden = false;
 
 		_changeView(_editView);
+		_currentEditView = _editView;
 	}
 
 	void addNew()
@@ -87,21 +90,23 @@ class EditableListView extends View
 		_editButton.hidden = true;
 		_newButton.hidden = true;
 		_doneButton.hidden = true;
-		_addButton.hidden = false;
+		_saveButton.hidden = false;
 		_cancelButton.hidden = false;
 
 		_changeView(_addView);
-
 		_addView.clearForm();
+		_currentEditView = _addView;
 	}
 
-	void saveNew()
+	void save()
 	{
-		_addView.addModel(done);
+		if (_currentEditView != null)
+			_currentEditView.saveForm(done);
 	}
 
 	_changeView(View view)
 	{
 		view.displayIn(_viewPanel);
+		_currentEditView = null;
 	}
 }

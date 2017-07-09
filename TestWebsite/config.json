@@ -80,8 +80,7 @@
             "mimeTypes": [
                 "text/html",
                 "text/css",
-                "application/javascript",
-                "application/dart"
+                "application/javascript"
             ],
             "fileExtensions": [
                 ".css",

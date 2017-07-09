@@ -8,20 +8,21 @@ import '../../Models/PermissionModel.dart';
 import '../../ViewModels/PermissionViewModel.dart';
 import '../../ViewModels/PermissionListViewModel.dart';
 
-import 'PermissionNameView.dart';
+import '../../Views/Base/EditView.dart';
+import '../../Views/Permissions/PermissionNameView.dart';
 
-class PermissionListEditView extends View
+class PermissionListEditView extends EditView
 {
 	BoundList<PermissionModel, PermissionViewModel, PermissionNameView> _permissionsBinding;
 
 	PermissionListEditView([PermissionListViewModel viewModel])
 	{
 		addBlockText(
-			'Remove permissions that you no longer need. If your application ' +
+			'<p>Remove permissions that you no longer need. If your application ' +
 			'is checking a permission before allowing access to a feature and you ' +
 			'remove that permission, then the feature will become unavailable. In ' +
 			'general only the software development team should manage permissions ' +
-			'becauser they know which permissions the application is checking for.',
+			'because they know which permissions the application is checking for.</p>',
 			className: 'help-note');
 
 		_permissionsBinding = new BoundList<PermissionModel, PermissionViewModel, PermissionNameView>(
@@ -44,5 +45,10 @@ class PermissionListEditView extends View
 		{
 			_permissionsBinding.binding = value.permissions;
 		}
+	}
+
+	void saveForm(void onSuccess())
+	{
+		onSuccess();
 	}
 }

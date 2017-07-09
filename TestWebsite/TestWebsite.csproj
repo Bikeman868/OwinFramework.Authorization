@@ -245,7 +245,7 @@
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionListSelectView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\NewPermissionView.dart" />
     <Content Include="Content\AuthorizationUI\web\Events\AppEvents.dart" />
-    <Content Include="Content\AuthorizationUI\web\Views\Base\NewModelView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Base\EditView.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
