@@ -109,7 +109,10 @@ class NewPermissionView extends EditView
 			'<p>For example the resource expression <span class="code">user:123/profile</span> will match the profile of user 123 and all ' +
 			'sub-paths like <span class="code">user:123/profile/image</span>, <span class="code">user:123/profile/preferences</span> etc.</p>' +
 			'<p>You can also use wildwards in resource expressions in place of a higer up path element, for example ' +
-			'<span class="code">user:*/profile/image</span> matches profile images for all users.</p>');
+			'<span class="code">user:*/profile/image</span> matches profile images for all users.</p>' +
+			'<p>You can also reference dynamic data in resource expressions in place of path elements by enclosing them in '+
+			'<span class="code">{}</span>, for example <span class="code">user:{my.id}/profile</span> matches the profile of the user ' +
+			'making the request. See documentation for a full list of supported dynamic data expressions.</p>');
 
 		_resource.onBlur.listen((Event e)
 		{

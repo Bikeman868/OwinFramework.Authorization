@@ -105,6 +105,27 @@ DELIMITER ;
 /********************************************************************/
 
 DELIMITER //
+CREATE PROCEDURE `sp_GetGroupByCodeName`
+(
+	IN `codeName` VARCHAR(80)
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		g.`groupId`,
+		g.`groupCodeName`,
+		g.`groupDisplayName`,
+		g.`groupDescription`
+	FROM
+		`tbl_groups` g
+	WHERE
+		g.`groupCodeName` = `codeName`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
 CREATE PROCEDURE `sp_AddGroup`
 (
 	IN `groupCodeName` VARCHAR(30),
@@ -297,6 +318,27 @@ DELIMITER ;
 /********************************************************************/
 
 DELIMITER //
+CREATE PROCEDURE `sp_GetRoleByCodeName`
+(
+	IN `codeName` VARCHAR(80)
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		r.`roleId`,
+		r.`roleCodeName`,
+		r.`roleDisplayName`,
+		r.`roleDescription`
+	FROM
+		`tbl_roles` r
+	WHERE
+		r.`roleCodeName` = `codeName`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
 CREATE PROCEDURE `sp_AddRole`
 (
 	IN `roleCodeName` VARCHAR(30),
@@ -428,7 +470,10 @@ DELIMITER ;
 /********************************************************************/
 
 DELIMITER //
-CREATE PROCEDURE `sp_GetPermissions`() DETERMINISTIC
+CREATE PROCEDURE `sp_GetPermissions`
+(
+) 
+DETERMINISTIC
 BEGIN
 	SELECT
 		p.`permissionId`,
@@ -460,6 +505,28 @@ BEGIN
 		`tbl_permissions` p
 	WHERE
 		p.`permissionId` = `permissionId`;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetPermissionByCodeName`
+(
+	IN `codeName` VARCHAR(80)
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		p.`permissionId`,
+		p.`permissionCodeName`,
+		p.`permissionResource`,
+		p.`permissionDisplayName`,
+		p.`permissionDescription`
+	FROM
+		`tbl_permissions` p
+	WHERE
+		p.`permissionCodeName` = `codeName`;
 END//
 DELIMITER ;
 

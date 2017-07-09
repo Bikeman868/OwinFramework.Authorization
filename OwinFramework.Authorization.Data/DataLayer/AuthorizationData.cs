@@ -319,6 +319,36 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         #region Stored procedure wrappers
 
+        public Group GetGroup(long groupId)
+        {
+            using (var context = _contextFactory.Create(_repositoryName))
+            {
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroup"))
+                {
+                    command.AddParameter("groupId", groupId);
+                    using (var results = context.ExecuteEnumerable<Group>(command))
+                    {
+                        return results.FirstOrDefault();
+                    }
+                }
+            }
+        }
+
+        public Group GetGroup(string codeName)
+        {
+            using (var context = _contextFactory.Create(_repositoryName))
+            {
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroupByCodeName"))
+                {
+                    command.AddParameter("codeName", codeName);
+                    using (var results = context.ExecuteEnumerable<Group>(command))
+                    {
+                        return results.FirstOrDefault();
+                    }
+                }
+            }
+        }
+
         public IEnumerable<Group> GetGroups(Func<Group, bool> filterFunction = null)
         {
             using (var context = _contextFactory.Create(_repositoryName))
@@ -335,6 +365,36 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
+        public Role GetRole(long roleId)
+        {
+            using (var context = _contextFactory.Create(_repositoryName))
+            {
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetRole"))
+                {
+                    command.AddParameter("roleId", roleId);
+                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    {
+                        return results.FirstOrDefault();
+                    }
+                }
+            }
+        }
+
+        public Role GetRole(string codeName)
+        {
+            using (var context = _contextFactory.Create(_repositoryName))
+            {
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetRoleByCodeName"))
+                {
+                    command.AddParameter("codeName", codeName);
+                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    {
+                        return results.FirstOrDefault();
+                    }
+                }
+            }
+        }
+
         public IEnumerable<Role> GetRoles(Func<Role, bool> filterFunction = null)
         {
             using (var context = _contextFactory.Create(_repositoryName))
@@ -346,6 +406,36 @@ namespace OwinFramework.Authorization.Data.DataLayer
                         return filterFunction == null
                             ? results.ToList()
                             : results.Where(filterFunction).ToList();
+                    }
+                }
+            }
+        }
+
+        public Permission GetPermission(long permissionId)
+        {
+            using (var context = _contextFactory.Create(_repositoryName))
+            {
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetPermission"))
+                {
+                    command.AddParameter("permissionId", permissionId);
+                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    {
+                        return results.FirstOrDefault();
+                    }
+                }
+            }
+        }
+
+        public Permission GetPermission(string codeName)
+        {
+            using (var context = _contextFactory.Create(_repositoryName))
+            {
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetPermissionByCodeName"))
+                {
+                    command.AddParameter("codeName", codeName);
+                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    {
+                        return results.FirstOrDefault();
                     }
                 }
             }
@@ -471,7 +561,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
             using (var context = _contextFactory.Create(_repositoryName))
             {
-                using (var command = _commandFactory.CreateStoredProcedure("sp_AddPermission"))
+                using (var command = _commandFactory.CreateStoredProcedure("sp_UpdatePermission"))
                 {
                     command.AddParameter("permissionId", permission.Id);
                     command.AddParameter("permissionCodeName", permission.CodeName);
@@ -711,7 +801,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         private readonly Regex _nameRegex = new Regex("^[a-z0-9_\\-.@]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _permissionNameRegex = new Regex("^[a-z0-9_\\-.@]+(:[a-z0-9_\\-.@]+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _resourceRegex = new Regex("^[a-z0-9_\\-.]+:[a-z0-9_\\-.@/]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private readonly Regex _resourceMatchRegex = new Regex("^[a-z0-9_\\-.]+:(\\*|{[a-z]+}|[a-z0-9_\\-.@]+)(/(\\*|{[a-z]+}|[a-z0-9_\\-.@]+))*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private readonly Regex _resourceMatchRegex = new Regex("^[a-z0-9_\\-.]+:(\\*|{[a-z\\.]+}|[a-z0-9_\\-.@]+)(/(\\*|{[a-z\\.]+}|[a-z0-9_\\-.@]+))*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         public void Validate(Group group)
         {

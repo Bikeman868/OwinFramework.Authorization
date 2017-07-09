@@ -350,12 +350,40 @@ namespace OwinFramework.Authorization.UI
 
         private Task GetPermissionHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new GetPermissionResponse();
+
+            var codeName = context.Request.Query["codename"];
+            if (string.IsNullOrEmpty(codeName))
+            {
+                response.Result = ApiResult.BadRequest;
+                response.ErrorMessage = "The codename of the permission must be passed in the query string";
+            }
+            else
+            {
+                var permission = _authorizationData.GetPermission(codeName);
+                if (permission == null)
+                {
+                    response.Result = ApiResult.NotFound;
+                    response.ErrorMessage = "There is no permission with the code name " + codeName;
+                }
+                else
+                {
+                    response.Permission = new PermissionDto
+                    {
+                        CodeName = permission.CodeName,
+                        DisplayName = permission.DisplayName,
+                        Description = permission.Description,
+                        Resource = permission.Resource
+                    };
+                }
+            }
+        
+            return Json(context, response);
         }
 
         private Task GetPermissionListHandler(IOwinContext context)
         {
-            var result = new GetPermissionListResponse
+            var response = new GetPermissionListResponse
             {
                 Permissions = _authorizationData.GetPermissions()
                 .Select(p => new PermissionDto
@@ -368,12 +396,12 @@ namespace OwinFramework.Authorization.UI
                 .ToList()
             };
 
-            return Json(context, result);
+            return Json(context, response);
         }
 
         private Task ValidatePermissionHandler(IOwinContext context)
         {
-            var result = new ValidationResponse();
+            var response = new ValidationResponse();
 
             try
             {
@@ -389,30 +417,104 @@ namespace OwinFramework.Authorization.UI
             }
             catch (Exception ex)
             {
-                result.Result = ApiResult.FatalError;
-                result.ErrorMessage = ex.Message;
+                response.Result = ApiResult.FatalError;
+                response.ErrorMessage = ex.Message;
             }
 
-            return Json(context, result);
+            return Json(context, response);
         }
 
         private Task NewPermissionHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse();
+            var permissionDto = GetBody<PermissionDto>(context);
+
+            var permission = new Permission
+            {
+                CodeName = permissionDto.CodeName,
+                DisplayName = permissionDto.DisplayName,
+                Description = permissionDto.Description,
+                Resource = permissionDto.Resource
+            };
+
+            try
+            {
+                _authorizationData.NewPermission(permission);
+            }
+            catch (Exception ex)
+            {
+                response.Result = ApiResult.FatalError;
+                response.ErrorMessage = 
+                    "Failed to add permission " + permission.CodeName + 
+                    " to the database. " + ex.Message;
+            }
+
+            return Json(context, response);
         }
 
         private Task UpdatePermissionHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse();
+            var permissionDto = GetBody<PermissionDto>(context);
+
+            var permission = _authorizationData.GetPermission(permissionDto.CodeName);
+            if (permission == null)
+            {
+                response.Result = ApiResult.NotFound;
+                response.ErrorMessage = "No permission found with code name " + permissionDto.CodeName;
+            }
+            else
+            {
+                permission.DisplayName = permissionDto.DisplayName;
+                permission.Description = permissionDto.Description;
+                permission.Resource = permissionDto.Resource;
+
+                try
+                {
+                    _authorizationData.UpdatePermission(permission);
+                }
+                catch (Exception ex)
+                {
+                    response.Result = ApiResult.FatalError;
+                    response.ErrorMessage =
+                        "Failed to update permission " + permission.CodeName +
+                        " in the database. " + ex.Message;
+                }
+            }
+
+            return Json(context, response);
         }
 
         private Task DeletePermissionHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse();
+            var permissionDto = GetBody<PermissionDto>(context);
+
+            var permission = _authorizationData.GetPermission(permissionDto.CodeName);
+            if (permission == null)
+            {
+                response.Result = ApiResult.NotFound;
+                response.ErrorMessage = "No permission found with code name " + permissionDto.CodeName;
+            }
+            else
+            {
+                try
+                {
+                    _authorizationData.DeletePermission(permission.Id);
+                }
+                catch (Exception ex)
+                {
+                    response.Result = ApiResult.FatalError;
+                    response.ErrorMessage =
+                        "Failed to delete permission " + permission.CodeName +
+                        " from the database. " + ex.Message;
+                }
+            }
+
+            return Json(context, response);
         }
 
         #endregion
-
 
         #region Request parsing
 
@@ -915,7 +1017,9 @@ namespace OwinFramework.Authorization.UI
             FatalError,
             TemporaryError,
             SessionExpired,
-            AccessDenied
+            AccessDenied,
+            NotFound,
+            BadRequest
         }
 
         private class GroupDto
