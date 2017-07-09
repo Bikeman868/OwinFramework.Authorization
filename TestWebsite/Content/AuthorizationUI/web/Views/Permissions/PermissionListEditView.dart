@@ -2,6 +2,7 @@
 
 import '../../MVVM/View.dart';
 import '../../MVVM/BoundList.dart';
+import '../../MVVM/Enums.dart';
 
 import '../../Models/PermissionModel.dart';
 
@@ -49,6 +50,7 @@ class PermissionListEditView extends EditView
 
 	void saveForm(void onSuccess())
 	{
-		onSuccess();
+		viewModel.save()
+			.then((SaveResult saveResult) => onSuccess());
 	}
 }

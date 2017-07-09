@@ -2,6 +2,7 @@
 
 import '../../MVVM/View.dart';
 import '../../MVVM/BoundList.dart';
+import '../../MVVM/Enums.dart';
 
 import '../../Server.dart';
 
@@ -138,12 +139,11 @@ class NewPermissionView extends EditView
 
 	void saveForm(void onSuccess())
 	{
-		var permission = new PermissionModel(
-			new Map()
-				..['codeName'] = _codeName.value
-				..['displayName'] = _displayName.value
-				..['description'] = _description.value
-				..['resource'] = _resource.value);
+		var permission = new PermissionModel(null)
+			..codeName = _codeName.value
+			..displayName = _displayName.value
+			..description = _description.value
+			..resource = _resource.value;
 
 		Server.validatePermission(permission)
 			.then((ApiResponseModel r)
@@ -152,7 +152,10 @@ class NewPermissionView extends EditView
 				{
 					var vm = _viewModel.permissions.addModel(permission);
 					AppEvents.permissionSelected.raise(new PermissionSelectedEvent(vm));
-					onSuccess();
+
+					vm.save()
+						.then((SaveResult saveResult) => onSuccess())
+						.catchError((Error error) => _fieldValidationError.innerHtml = error.toString());
 				}
 				else
 				{

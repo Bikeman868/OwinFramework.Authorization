@@ -59,31 +59,6 @@ class PermissionListViewModel extends ViewModel
 			.catchError((Error error) => window.alert(error.toString()));
 	}
 
-	Future<SaveResult> saveChanges(ChangeState state, bool alert) async
-	{
-		List<PermissionViewModel> viewModels = permissions.viewModels
-			.where((PermissionViewModel vm) => vm != null && vm.getState() != ChangeState.deleted)
-			.toList();
-
-		viewModels.forEach((PermissionViewModel vm) => vm.removeDeleted());
-
-		List<PermissionModel> permissionModels = permissions.viewModels
-			.map((PermissionViewModel vm) => vm.model)
-			.toList();
-
-		// PostResponseModel response = await Server.replaceEnvironments(environmentModels);
-
-		// if (response.success)
-		// {
-			viewModels.forEach((PermissionViewModel vm) => vm.saved());
-		//	if (alert) window.alert('Environments saved succesfully');
-			return SaveResult.saved;
-		//}
-
-		//window.alert('Environments were not saved. ' + response.error);
-		//return SaveResult.failed;
-	}
-
 	String toString() => 'permission list view model';
 }
 

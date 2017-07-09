@@ -6,8 +6,11 @@ import '../MVVM/Enums.dart';
 import '../MVVM/ModelList.dart';
 import '../MVVM/StringBinding.dart';
 
+import '../Server.dart';
+
 import '../ViewModels/PermissionListViewModel.dart';
 
+import '../Models/ApiResponseModel.dart';
 import '../Models/PermissionModel.dart';
 
 class PermissionViewModel extends ViewModel
@@ -93,7 +96,59 @@ class PermissionViewModel extends ViewModel
 
 	Future<SaveResult> saveChanges(ChangeState state, bool alert) async
 	{
-		return SaveResult.notsaved;
+		SaveResult result = SaveResult.unmodified;
+		String alertMessage;
+
+		if (state == ChangeState.modified)
+		{
+			var response = await Server.updatePermission(model);
+			if (response.isSuccess)
+			{
+				result = SaveResult.saved;
+				alertMessage = 'Changes to "' + model.displayName + '" permission successfully saved';
+			}
+			else
+			{
+				result = SaveResult.failed;
+				alertMessage = 'Changes to "' + model.displayName + '" permission were not saved. ' + response.error;
+			}
+		}
+		else if (state == ChangeState.added)
+		{
+			var response = await Server.createPermission(model);
+			if (response.isSuccess)
+			{
+				result = SaveResult.saved;
+				alertMessage = 'New "' + model.displayName + '" permission successfully added';
+			}
+			else
+			{
+				result = SaveResult.failed;
+				alertMessage = 'New "' + model.displayName + '" permission was not added. ' + response.error;
+			}
+		}
+		else if (state == ChangeState.deleted)
+		{
+			var response = await Server.deletePermission(model);
+			if (response.isSuccess)
+			{
+				result = SaveResult.saved;
+				alertMessage = 'The "' + model.displayName + '" permission was successfully deleted';
+			}
+			else
+			{
+				result = SaveResult.failed;
+				alertMessage = 'The "' + model.displayName + '" permission was not deleted. ' + response.error;
+			}
+		}
+		else
+		{
+			alertMessage = 'There were no changes to the "' + model.displayName + '" permission to save';
+		}
+
+		if (alert) window.alert(alertMessage);
+
+		return result;
 	}
 
 	String toString() => _model.toString() + ' view model';
