@@ -18,11 +18,10 @@ class PermissionListViewModel extends ViewModel
 	PermissionListViewModel([List<PermissionModel> permissionModels]): super(false)
 	{
 		permissions = new ModelList<PermissionModel, PermissionViewModel>(
-			(Map json) => new PermissionModel(
-				new Map()
-					..['codeName']='[unique_code_name]'
-					..['displayName']='[display_name]'
-					..['description']='[description]'),
+			(Map json) => new PermissionModel(null)
+				..codeName = '[unique_code_name]'
+				..displayName = '[display_name]'
+				..description = '[description]',
 			(PermissionModel m) => new PermissionViewModel(m));
 
 		if (permissionModels == null)

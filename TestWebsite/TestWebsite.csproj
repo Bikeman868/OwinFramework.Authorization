@@ -243,9 +243,10 @@
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionListEditView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Panels\EditableListView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionListSelectView.dart" />
-    <Content Include="Content\AuthorizationUI\web\Views\Permissions\NewPermissionView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionListNewView.dart" />
     <Content Include="Content\AuthorizationUI\web\Events\AppEvents.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Base\EditView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Permissions\EditPermissionFormView.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

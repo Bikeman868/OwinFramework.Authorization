@@ -18,6 +18,10 @@ abstract class ViewModel
 	{
 	}
 
+	void reload()
+	{
+	}
+
 	// Indicates that the view model should be deleted when changes are saved back to the server
 	void deleted()
 	{

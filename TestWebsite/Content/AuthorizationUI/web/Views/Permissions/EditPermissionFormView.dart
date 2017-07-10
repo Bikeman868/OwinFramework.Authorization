@@ -1,32 +1,19 @@
 ﻿import 'dart:html';
 
 import '../../MVVM/View.dart';
-import '../../MVVM/BoundList.dart';
-import '../../MVVM/Enums.dart';
-
-import '../../Server.dart';
-
-import '../../Events/AppEvents.dart';
 
 import '../../Models/PermissionModel.dart';
-import '../../Models/ApiResponseModel.dart';
 
-import '../../ViewModels/PermissionViewModel.dart';
-import '../../ViewModels/PermissionListViewModel.dart';
-
-import '../../Views/Base/EditView.dart';
-import '../../Views/Permissions/PermissionNameView.dart';
-
-class NewPermissionView extends EditView
+class EditPermissionFormView extends View
 {
-	InputElement _displayName;
-	InputElement _description;
-	InputElement _codeName;
-	InputElement _resource;
+	InputElement displayName;
+	TextAreaElement description;
+	InputElement codeName;
+	InputElement resource;
 
-	Element _fieldValidationError;
+	Element fieldValidationError;
 
-	NewPermissionView([PermissionListViewModel viewModel])
+	EditPermissionFormView()
 	{
 		addBlockText(
 			'<p>Create a new permission. After creating the permission you must assign it to one or more roles ' +
@@ -36,71 +23,71 @@ class NewPermissionView extends EditView
 			className: 'help-note');
 
 		var form = addForm();
-		_displayName = addLabeledEdit(form, 'Display name');
-		_description = addLabeledEdit(form, 'Description');
-		_codeName = addLabeledEdit(form, 'Code name');
-		_resource = addLabeledEdit(form, 'Resource expression');
+		displayName = addLabeledEdit(form, 'Display name');
+		description = addLabeledTextArea(form, 'Description');
+		codeName = addLabeledEdit(form, 'Code name');
+		resource = addLabeledEdit(form, 'Resource expression');
 
-		_fieldValidationError = addBlockText('', className: 'validation-error');
+		fieldValidationError = addBlockText('', className: 'validation-error');
 		var fieldHelpNote = addBlockText('', className: 'help-note');
 
-		_displayName.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
+		displayName.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
 			'<p>The display name is only used by this user interface to allow you to select the permission. ' +
 			'If you have a large number of permissions you should use a naming convention that makes it easier ' +
 			'to find permissions when they are sorted alphabetically.</p>');
 
-		_displayName.onBlur.listen((Event e) 
+		displayName.onBlur.listen((Event e) 
 		{
-			if (_displayName.value.length < 3)
+			if (displayName.value.length < 3)
 			{
-				_fieldValidationError.innerHtml = 'The display name is too short';
-				_displayName.focus();
+				fieldValidationError.innerHtml = 'The display name is too short';
+				displayName.focus();
 			}
 			else
 			{
-				_fieldValidationError.innerHtml = '';
+				fieldValidationError.innerHtml = '';
 			}
 		});
 
-		_description.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
+		description.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
 			'<p>Provide a detailed description of the features a user will gain access to if this permission is ' +
 			'granted to them. When users are assigning permissions to roles it is very important that they understand ' +
 			'exactly what they are granting access to.</p>');
 
-		_description.onBlur.listen((Event e)
+		description.onBlur.listen((Event e)
 		{
-			if (_description.value.length < 15)
+			if (description.value.length < 15)
 			{
-				_fieldValidationError.innerHtml = 'The description is too short';
-				_description.focus();
+				fieldValidationError.innerHtml = 'The description is too short';
+				description.focus();
 			}
 			else
 			{
-				_fieldValidationError.innerHtml = '';
+				fieldValidationError.innerHtml = '';
 			}
 		});
 
-		_codeName.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
+		codeName.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
 			'<p>This code name must match exactly with the name that is checked by the application code to determine ' +
 			'if a user has this permission assigned. The recommended best practice is to format permission code names ' +
 			'with the name of the application or sub-system, followed by a colon, followed by a dot separated path to ' +
 			'the feature, for example <span class="code">auth:role.assign</span> defines the permission to assign roles ' +
 			'within the authentication system.</p>');
 
-		_codeName.onBlur.listen((Event e)
+		codeName.onBlur.listen((Event e)
 		{
-			if (_codeName.value.length < 3)
+			if (codeName.value.length < 3)
 			{
-				_fieldValidationError.innerHtml = 'The code name is too short';
-				_codeName.focus();
+				fieldValidationError.innerHtml = 'The code name is too short';
+				codeName.focus();
 			}
 			else
 			{
-				_fieldValidationError.innerHtml = '';
+				fieldValidationError.innerHtml = '';
 			}
 		});
 
-		_resource.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
+		resource.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
 			'<p>Leave the resource expression blank to assign this permission to all resources. By filling in the resource ' +
 			'expression here, you are granting this permission but only on the resources that match this expression.</p>' +
 			'<p>Resources are defined by a resource type name followed by a colon followed by a resource path. For example ' +
@@ -114,58 +101,26 @@ class NewPermissionView extends EditView
 			'<span class="code">{}</span>, for example <span class="code">user:{my.id}/profile</span> matches the profile of the user ' +
 			'making the request. See documentation for a full list of supported dynamic data expressions.</p>');
 
-		_resource.onBlur.listen((Event e)
+		resource.onBlur.listen((Event e)
 		{
-			_fieldValidationError.innerHtml = '';
+			fieldValidationError.innerHtml = '';
 		});
-
-		this.viewModel = viewModel;
 	}
 
-	PermissionListViewModel _viewModel;
-	PermissionListViewModel get viewModel => _viewModel;
-
-	void set viewModel(PermissionListViewModel value)
+	PermissionModel get permissionModel
 	{
-		_viewModel = value;
+		return new PermissionModel(null)
+			..codeName = codeName.value
+			..displayName = displayName.value
+			..description = description.value
+			..resource = resource.value;
 	}
 
-	void clearForm()
+	void set permissionModel(PermissionModel value)
 	{
-		_displayName.value = '';
-		_description.value = '';
-		_codeName.value = '';
-		_resource.value = '';
-
-		_displayName.focus();
+		codeName.value = value.codeName;
+		displayName.value = value.displayName;
+		description.value = value.description;
+		resource.value = value.resource;
 	}
-
-	void saveEdits(void onSuccess())
-	{
-		var permission = new PermissionModel(null)
-			..codeName = _codeName.value
-			..displayName = _displayName.value
-			..description = _description.value
-			..resource = _resource.value;
-
-		Server.validatePermission(permission)
-			.then((ApiResponseModel r)
-			{
-				if (r.isSuccess)
-				{
-					var vm = _viewModel.permissions.addModel(permission);
-					AppEvents.permissionSelected.raise(new PermissionSelectedEvent(vm));
-
-					vm.save()
-						.then((SaveResult saveResult) => onSuccess())
-						.catchError((Error error) => _fieldValidationError.innerHtml = error.toString());
-				}
-				else
-				{
-					_fieldValidationError.innerHtml = r.error;
-				}
-			})
-			.catchError((Error error) => _fieldValidationError.innerHtml = error.toString());
-	}
-
 }

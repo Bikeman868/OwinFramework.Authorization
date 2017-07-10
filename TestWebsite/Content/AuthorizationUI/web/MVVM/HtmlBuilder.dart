@@ -29,6 +29,13 @@ class HtmlBuilder
 			container.children.add(e);
 	}
 
+	HtmlBuilder merge(HtmlBuilder other)
+	{
+		for (var e in other._elements)
+			_elements.add(e);
+		return other;
+	}
+
 	/******************************************************************************/
 
 	String _version;
@@ -386,6 +393,19 @@ class HtmlBuilder
 
 		var labelField = addInlineText(label, parent: row, className: 'data-label');
 		var dataField = addInput(parent: row, className: 'input-field');
+
+		return dataField;
+	}
+
+	TextAreaElement addLabeledTextArea(Element form, String label,
+		{
+			String className
+		})
+	{
+		var row = addContainer(parent: form, classNames: ['data-row', className]);
+
+		var labelField = addInlineText(label, parent: row, className: 'data-label');
+		var dataField = addTextArea(parent: row, className: 'input-field');
 
 		return dataField;
 	}

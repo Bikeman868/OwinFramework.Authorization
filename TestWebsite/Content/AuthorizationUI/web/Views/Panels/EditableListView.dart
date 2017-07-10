@@ -1,5 +1,6 @@
 ﻿import 'dart:html';
 
+import '../../MVVM/ViewModel.dart';
 import '../../MVVM/View.dart';
 import '../../Views/Base/EditView.dart';
 
@@ -7,68 +8,44 @@ class EditableListView extends View
 {
 	Element _viewPanel;
 
+	ViewModel _viewModel;
+
 	View _selectView;
 	EditView _editView;
 	EditView _addView;
 
 	EditView _currentEditView;
 
+	Element _refreshButton;
 	Element _editButton;
 	Element _newButton;
 	Element _doneButton;
 	Element _saveButton;
 	Element _cancelButton;
 
-	EditableListView(String title, View selectView, EditView editView, EditView addView)
+	EditableListView(String title, this._viewModel, this._selectView, this._editView, this._addView)
 	{
-		_selectView = selectView;
-		_editView = editView;
-		_addView = addView;
-
 		var panel = addContainer(classNames: ['panel', 'editable-list-view']);
 
 		var header = addContainer(parent: panel);
 		addHeading(3, title, parent: header);
 
 		var toolbar = addContainer(className: 'tool-bar', parent: header);
-		_editButton = addButton('Edit', _editClicked, parent: toolbar);
-		_newButton = addButton('New', _newClicked, parent: toolbar);
-		_doneButton = addButton('Done', _doneClicked, parent: toolbar);
-		_saveButton = addButton('Save', _saveClicked, parent: toolbar);
-		_cancelButton = addButton('Cancel', _cancelClicked, parent: toolbar);
+		_refreshButton = addButton('Refresh', (MouseEvent e) => refresh(), parent: toolbar);
+		_editButton = addButton('Edit', (MouseEvent e) => edit(), parent: toolbar);
+		_newButton = addButton('New', (MouseEvent e) => addNew(), parent: toolbar);
+		_doneButton = addButton('Done', (MouseEvent e) => done(), parent: toolbar);
+		_saveButton = addButton('Save', (MouseEvent e) => save(), parent: toolbar);
+		_cancelButton = addButton('Cancel', (MouseEvent e) => cancel(), parent: toolbar);
 
 		_viewPanel = addContainer(parent: panel);
 
 		done();
 	}
 
-	void _doneClicked(MouseEvent e)
-	{
-		done();
-	}
-
-	void _editClicked(MouseEvent e)
-	{
-		edit();
-	}
-
-	void _newClicked(MouseEvent e)
-	{
-		addNew();
-	}
-
-	void _saveClicked(MouseEvent e)
-	{
-		save();
-	}
-
-	void _cancelClicked(MouseEvent e)
-	{
-		cancel();
-	}
-
 	void done()
 	{
+		_refreshButton.hidden = false;
 		_editButton.hidden = false;
 		_newButton.hidden = false;
 		_doneButton.hidden = true;
@@ -80,6 +57,7 @@ class EditableListView extends View
 
 	void edit()
 	{
+		_refreshButton.hidden = true;
 		_editButton.hidden = true;
 		_newButton.hidden = true;
 		_doneButton.hidden = true;
@@ -92,6 +70,7 @@ class EditableListView extends View
 
 	void addNew()
 	{
+		_refreshButton.hidden = true;
 		_editButton.hidden = true;
 		_newButton.hidden = true;
 		_doneButton.hidden = true;
@@ -101,6 +80,11 @@ class EditableListView extends View
 		_changeView(_addView);
 		_addView.clearForm();
 		_currentEditView = _addView;
+	}
+
+	void refresh()
+	{
+		_viewModel.reload();
 	}
 
 	void save()
