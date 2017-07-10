@@ -39,6 +39,26 @@ class ManageAuthorizationView extends View
 		_bodyRegion = addContainer(classNames:['page-region', 'body-region'], parent: _mainRegion);
 
 		addHeading(2, 'Authorization', parent: _headerRegion);
+
+		addButton('Users', (MouseEvent e) => _usersView(), parent: _menuRegion);
+		addButton('Groups', (MouseEvent e) => _groupsView(), parent: _menuRegion);
+		addButton('Roles', (MouseEvent e) => _rolesView(), parent: _menuRegion);
+		addButton('Permissions', (MouseEvent e) => _permissionsView(), parent: _menuRegion);
+	}
+
+	_usersView()
+	{
+		_navRegion.children.clear();
+	}
+
+	_groupsView()
+	{
+		_navRegion.children.clear();
+	}
+
+	_rolesView()
+	{
+		_navRegion.children.clear();
 	}
 
 	_permissionsView()

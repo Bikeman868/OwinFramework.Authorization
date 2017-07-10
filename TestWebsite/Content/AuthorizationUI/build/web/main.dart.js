@@ -673,7 +673,11 @@ var z=this.d
 this.f=this.iX(document.createElement("div",null),["page-region","nav-region"],null,z)
 z=this.d
 this.r=this.iX(document.createElement("div",null),["page-region","body-region"],null,z)
-this.Cb(2,"Authorization",this.b)},
+this.Cb(2,"Authorization",this.b)
+this.ix("Users",new G.bj(this),this.c)
+this.ix("Groups",new G.QF(this),this.c)
+this.ix("Roles",new G.J5(this),this.c)
+this.ix("Permissions",new G.Xz(this),this.c)},
 yq:function(){var z,y,x,w,v,u
 z=this.x
 y=z.b
@@ -691,7 +695,22 @@ w.c=z
 u=X.c5("Permissions",z,y,x,w)
 w=this.f
 J.U2(J.O(w))
-u.Z(w)}}}],["","",,A,{
+u.Z(w)}},
+bj:{
+"^":"r:5;Q",
+$1:function(a){J.U2(J.O(this.Q.f))
+return}},
+QF:{
+"^":"r:5;Q",
+$1:function(a){J.U2(J.O(this.Q.f))
+return}},
+J5:{
+"^":"r:5;Q",
+$1:function(a){J.U2(J.O(this.Q.f))
+return}},
+Xz:{
+"^":"r:5;Q",
+$1:function(a){return this.Q.yq()}}}],["","",,A,{
 "^":"",
 bT:{
 "^":"a;",
@@ -4817,7 +4836,7 @@ $isGv:1,
 oe:{
 "^":"ea;M:value=",
 "%":"DeviceLightEvent"},
-QF:{
+YN:{
 "^":"KV;",
 goD:function(a){return H.J(new W.RO(a,"blur",!1),[null])},
 gI9:function(a){return H.J(new W.RO(a,"focus",!1),[null])},
