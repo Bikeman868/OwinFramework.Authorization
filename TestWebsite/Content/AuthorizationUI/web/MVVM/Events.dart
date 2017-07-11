@@ -23,3 +23,8 @@ class SubscriptionEvent<E>
 		return _controller.stream.listen(handler);
 	}
 }
+
+class MvvmEvents
+{
+	static SubscriptionEvent<String>alert = new SubscriptionEvent<String>();
+}

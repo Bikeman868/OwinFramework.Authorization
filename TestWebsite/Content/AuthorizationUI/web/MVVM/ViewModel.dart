@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'Enums.dart';
+import 'Events.dart';
 import 'ModelList.dart';
 
 abstract class ViewModel
@@ -109,7 +110,7 @@ abstract class ViewModel
 
 			if (state == ChangeState.unmodified)
 			{
-				if (alert) window.alert('There are no changes to save');
+				if (alert) MvvmEvents.alert.raise('There are no changes to save');
 				return SaveResult.unmodified;
 			}
 
@@ -124,7 +125,7 @@ abstract class ViewModel
 		}
 		catch (e)
 		{
-			window.alert(e.toString());
+			MvvmEvents.alert.raise(e.toString());
 			return SaveResult.failed;
 		}
 	}
@@ -181,13 +182,13 @@ abstract class ViewModel
 		if (alert)
 		{
 			if (result == SaveResult.saved)
-				window.alert('Saved changes to ' + toString());
+				MvvmEvents.alert.raise('Saved changes to ' + toString());
 			else if (result == SaveResult.notsaved)
-				window.alert('Did not save changes to ' + toString());
+				MvvmEvents.alert.raise('Did not save changes to ' + toString());
 			else if (result == SaveResult.failed)
-				window.alert('Failed to save changes to ' + toString());
+				MvvmEvents.alert.raise('Failed to save changes to ' + toString());
 			else if (result == SaveResult.unmodified)
-				window.alert('No changes to ' + toString() + ' to save');
+				MvvmEvents.alert.raise('No changes to ' + toString() + ' to save');
 		}
 		return result;
 	}

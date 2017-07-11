@@ -5,8 +5,10 @@ import '../MVVM/ViewModel.dart';
 import '../MVVM/Enums.dart';
 import '../MVVM/ModelList.dart';
 import '../MVVM/StringBinding.dart';
+import '../MVVM/Events.dart';
 
 import '../Server.dart';
+import '../Events/AppEvents.dart';
 
 import '../ViewModels/PermissionListViewModel.dart';
 
@@ -118,6 +120,7 @@ class PermissionViewModel extends ViewModel
 			var response = await Server.createPermission(model);
 			if (response.isSuccess)
 			{
+				_model.id = response.id;
 				result = SaveResult.saved;
 				alertMessage = 'New "' + model.displayName + '" permission successfully added';
 			}
@@ -146,7 +149,7 @@ class PermissionViewModel extends ViewModel
 			alertMessage = 'There were no changes to the "' + model.displayName + '" permission to save';
 		}
 
-		if (alert) window.alert(alertMessage);
+		if (alert) MvvmEvents.alert.raise(alertMessage);
 
 		return result;
 	}

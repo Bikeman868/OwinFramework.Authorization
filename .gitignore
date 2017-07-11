@@ -1,12 +1,12 @@
 *.suo
 *.user
 *.nupkg
+*.orig
 
 [Bb]in/
 [Oo]bj/
 _ReSharper*/
-
-packages/*/
+packages/
 
 /TestWebsite/Content/AuthorizationUi/packages/*
 /TestWebsite/Content/AuthorizationUi/.pub/*

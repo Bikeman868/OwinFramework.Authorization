@@ -1,6 +1,7 @@
 ﻿import 'dart:html';
 
 import '../../MVVM/View.dart';
+import '../../MVVM/Events.dart';
 
 import '../../ViewModels/AuthorizationViewModel.dart';
 
@@ -23,6 +24,9 @@ class DesktopView extends View
 
 	DesktopView(this._viewModel)
 	{
+		// TODO: use hidden panel instead of window.alert
+		MvvmEvents.alert.listen((message) => window.alert(message));
+
 		_desktopLayout();
 		_permissionsView();
 	}

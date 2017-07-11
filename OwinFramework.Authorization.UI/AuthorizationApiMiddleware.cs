@@ -230,6 +230,7 @@ namespace OwinFramework.Authorization.UI
                 Groups = _authorizationData.GetGroups()
                 .Select(g => new GroupDto
                 {
+                    Id = g.Id,
                     CodeName = g.CodeName,
                     DisplayName = g.DisplayName,
                     Description = g.Description
@@ -249,6 +250,7 @@ namespace OwinFramework.Authorization.UI
                 var groupDto = GetBody<GroupDto>(context);
                 var group = new Group
                 {
+                    Id = groupDto.Id,
                     CodeName = groupDto.CodeName,
                     DisplayName = groupDto.DisplayName,
                     Description = groupDto.Description
@@ -295,6 +297,7 @@ namespace OwinFramework.Authorization.UI
                 Roles = _authorizationData.GetRoles()
                 .Select(r => new RoleDto
                 {
+                    Id = r.Id,
                     CodeName = r.CodeName,
                     DisplayName = r.DisplayName,
                     Description = r.Description
@@ -314,6 +317,7 @@ namespace OwinFramework.Authorization.UI
                 var roleDto = GetBody<RoleDto>(context);
                 var role = new Role
                 {
+                    Id = roleDto.Id,
                     CodeName = roleDto.CodeName,
                     DisplayName = roleDto.DisplayName,
                     Description = roleDto.Description
@@ -352,32 +356,28 @@ namespace OwinFramework.Authorization.UI
         {
             var response = new GetPermissionResponse();
 
-            var codeName = context.Request.Query["codename"];
-            if (string.IsNullOrEmpty(codeName))
+            long id;
+            if (!ParseIdFromPath(context, _permissionPath, response, "permission", out id))
+                return Json(context, response);
+
+            var permission = _authorizationData.GetPermission(id);
+            if (permission == null)
             {
-                response.Result = ApiResult.BadRequest;
-                response.ErrorMessage = "The codename of the permission must be passed in the query string";
+                response.Result = ApiResult.NotFound;
+                response.ErrorMessage = "There is no permission with id " + id;
             }
             else
             {
-                var permission = _authorizationData.GetPermission(codeName);
-                if (permission == null)
+                response.Permission = new PermissionDto
                 {
-                    response.Result = ApiResult.NotFound;
-                    response.ErrorMessage = "There is no permission with the code name " + codeName;
-                }
-                else
-                {
-                    response.Permission = new PermissionDto
-                    {
-                        CodeName = permission.CodeName,
-                        DisplayName = permission.DisplayName,
-                        Description = permission.Description,
-                        Resource = permission.Resource
-                    };
-                }
+                    Id = permission.Id,
+                    CodeName = permission.CodeName,
+                    DisplayName = permission.DisplayName,
+                    Description = permission.Description,
+                    Resource = permission.Resource
+                };
             }
-        
+
             return Json(context, response);
         }
 
@@ -388,6 +388,7 @@ namespace OwinFramework.Authorization.UI
                 Permissions = _authorizationData.GetPermissions()
                 .Select(p => new PermissionDto
                 {
+                    Id = p.Id,
                     CodeName = p.CodeName,
                     Resource = p.Resource,
                     DisplayName = p.DisplayName,
@@ -408,6 +409,7 @@ namespace OwinFramework.Authorization.UI
                 var permissionDto = GetBody<PermissionDto>(context);
                 var permission = new Permission
                 {
+                    Id = permissionDto.Id,
                     CodeName = permissionDto.CodeName,
                     DisplayName = permissionDto.DisplayName,
                     Description = permissionDto.Description,
@@ -426,7 +428,7 @@ namespace OwinFramework.Authorization.UI
 
         private Task NewPermissionHandler(IOwinContext context)
         {
-            var response = new ApiResponse();
+            var response = new NewRecordResponse();
             var permissionDto = GetBody<PermissionDto>(context);
 
             var permission = new Permission
@@ -439,7 +441,8 @@ namespace OwinFramework.Authorization.UI
 
             try
             {
-                _authorizationData.NewPermission(permission);
+                permission = _authorizationData.NewPermission(permission);
+                response.Id = permission.Id;
             }
             catch (Exception ex)
             {
@@ -457,14 +460,15 @@ namespace OwinFramework.Authorization.UI
             var response = new ApiResponse();
             var permissionDto = GetBody<PermissionDto>(context);
 
-            var permission = _authorizationData.GetPermission(permissionDto.CodeName);
+            var permission = _authorizationData.GetPermission(permissionDto.Id);
             if (permission == null)
             {
                 response.Result = ApiResult.NotFound;
-                response.ErrorMessage = "No permission found with code name " + permissionDto.CodeName;
+                response.ErrorMessage = "No permission found with id " + permissionDto.Id;
             }
             else
             {
+                permission.CodeName = permissionDto.CodeName;
                 permission.DisplayName = permissionDto.DisplayName;
                 permission.Description = permissionDto.Description;
                 permission.Resource = permissionDto.Resource;
@@ -477,7 +481,7 @@ namespace OwinFramework.Authorization.UI
                 {
                     response.Result = ApiResult.FatalError;
                     response.ErrorMessage =
-                        "Failed to update permission " + permission.CodeName +
+                        "Failed to update permission " + permission.Id +
                         " in the database. " + ex.Message;
                 }
             }
@@ -488,27 +492,21 @@ namespace OwinFramework.Authorization.UI
         private Task DeletePermissionHandler(IOwinContext context)
         {
             var response = new ApiResponse();
-            var permissionDto = GetBody<PermissionDto>(context);
 
-            var permission = _authorizationData.GetPermission(permissionDto.CodeName);
-            if (permission == null)
+            long id;
+            if (!ParseIdFromPath(context, _permissionPath, response, "permission", out id))
+                return Json(context, response);
+
+            try
             {
-                response.Result = ApiResult.NotFound;
-                response.ErrorMessage = "No permission found with code name " + permissionDto.CodeName;
+                _authorizationData.DeletePermission(id);
             }
-            else
+            catch (Exception ex)
             {
-                try
-                {
-                    _authorizationData.DeletePermission(permission.Id);
-                }
-                catch (Exception ex)
-                {
-                    response.Result = ApiResult.FatalError;
-                    response.ErrorMessage =
-                        "Failed to delete permission " + permission.CodeName +
-                        " from the database. " + ex.Message;
-                }
+                response.Result = ApiResult.FatalError;
+                response.ErrorMessage =
+                    "Failed to delete permission " + id +
+                    " from the database. " + ex.Message;
             }
 
             return Json(context, response);
@@ -535,6 +533,31 @@ namespace OwinFramework.Authorization.UI
                     typeof(T).FullName + ". " + ex.Message);
             }
             return content;
+        }
+
+        private bool ParseIdFromPath(
+            IOwinContext context, 
+            PathString basePath, 
+            ApiResponse response, 
+            string name,
+            out long id)
+        {
+            PathString remainingPath;
+            if (context.Request.Path.StartsWithSegments(_permissionPath, out remainingPath) && remainingPath.HasValue)
+            {
+                if (long.TryParse(remainingPath.Value.Substring(1), out id))
+                    return true;
+
+                response.Result = ApiResult.BadRequest;
+                response.ErrorMessage = "The id of the " + name + " must be an integer";
+            }
+            else
+            {
+                response.Result = ApiResult.BadRequest;
+                response.ErrorMessage = "The id of the " + name + " must be passed in the url path";
+                id = 0;
+            }
+            return false;
         }
 
         #endregion
@@ -1024,6 +1047,9 @@ namespace OwinFramework.Authorization.UI
 
         private class GroupDto
         {
+            [JsonProperty("id")]
+            public long Id { get; set; }
+
             [JsonProperty("codeName")]
             public string CodeName { get; set; }
 
@@ -1036,6 +1062,9 @@ namespace OwinFramework.Authorization.UI
 
         private class RoleDto
         {
+            [JsonProperty("id")]
+            public long Id { get; set; }
+
             [JsonProperty("codeName")]
             public string CodeName { get; set; }
 
@@ -1048,6 +1077,9 @@ namespace OwinFramework.Authorization.UI
 
         private class PermissionDto
         {
+            [JsonProperty("id")]
+            public long Id { get; set; }
+
             [JsonProperty("codeName")]
             public string CodeName { get; set; }
 
@@ -1097,7 +1129,13 @@ namespace OwinFramework.Authorization.UI
             }
         }
 
-        private class GetGroupResponse: ApiResponse
+        private class NewRecordResponse: ApiResponse
+        {
+            [JsonProperty("id")]
+            public long Id { get; set; }
+        }
+
+        private class GetGroupResponse : ApiResponse
         {
             [JsonProperty("group")]
             public GroupDto Group { get; set; }

@@ -3,6 +3,7 @@ import 'dart:html';
 
 import '../MVVM/ViewModel.dart';
 import '../MVVM/Enums.dart';
+import '../MVVM/Events.dart';
 import '../MVVM/ModelList.dart';
 
 import '../ViewModels/PermissionViewModel.dart';
@@ -55,7 +56,7 @@ class PermissionListViewModel extends ViewModel
 	{
 		Server.getPermissionList()
 			.then((List<PermissionModel> m) => models = m)
-			.catchError((Error error) => window.alert(error.toString()));
+			.catchError((Error error) => MvvmEvents.alert.raise(error.toString()));
 	}
 
 	String toString() => 'permission list';

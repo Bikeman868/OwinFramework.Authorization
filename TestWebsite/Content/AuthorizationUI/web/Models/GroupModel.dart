@@ -4,6 +4,9 @@ class GroupModel extends Model
 {
 	GroupModel(Map json) : super(json);
 
+	int get id => getProperty('id');
+	set id(int value) { setProperty('id', value); }
+
 	String get codeName => getProperty('codeName');
 	set codeName(String value) { setProperty('codeName', value); }
   

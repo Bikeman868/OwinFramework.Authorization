@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'Models/ApiResponseModel.dart';
+import 'Models/NewRecordResponseModel.dart';
 import 'Models/GroupModel.dart';
 import 'Models/PermissionModel.dart';
 import 'Models/RoleModel.dart';
@@ -36,7 +37,7 @@ class Server
 	static Future<ApiResponseModel> validatePermission(PermissionModel permission) async
 	{
 		var request = await HttpRequest.request(
-			_apiUrl + '/validate/permission/', 
+			_apiUrl + '/validate/permission', 
 			method: 'POST',
 			sendData: JSON.encode(permission.json),
 			mimeType: 'application/json');
@@ -51,7 +52,7 @@ class Server
 	static Future<ApiResponseModel> createPermission(PermissionModel permission) async
 	{
 		var request = await HttpRequest.request(
-			_apiUrl + '/permissions/', 
+			_apiUrl + '/permissions', 
 			method: 'POST',
 			sendData: JSON.encode(permission.json),
 			mimeType: 'application/json');
@@ -60,13 +61,13 @@ class Server
 			throw 'Failed to create permission ' + request.statusText;
 
 		Map json = JSON.decode(request.responseText);
-		return new ApiResponseModel(json);
+		return new NewRecordResponseModel(json);
 	}
   
 	static Future<ApiResponseModel> updatePermission(PermissionModel permission) async
 	{
 		var request = await HttpRequest.request(
-			_apiUrl + '/permission/', 
+			_apiUrl + '/permission/' + permission.id.toString(), 
 			method: 'PUT',
 			sendData: JSON.encode(permission.json),
 			mimeType: 'application/json');
@@ -81,9 +82,8 @@ class Server
 	static Future<ApiResponseModel> deletePermission(PermissionModel permission) async
 	{
 		var request = await HttpRequest.request(
-			_apiUrl + '/permission/', 
+			_apiUrl + '/permission/' + permission.id.toString(), 
 			method: 'DELETE',
-			sendData: JSON.encode(permission.json),
 			mimeType: 'application/json');
 
 		if (request.status != 200)
