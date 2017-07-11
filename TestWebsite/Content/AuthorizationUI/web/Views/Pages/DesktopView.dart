@@ -9,9 +9,8 @@ import '../Permissions/PermissionListSelectView.dart';
 import '../Permissions/PermissionListEditView.dart';
 import '../Permissions/PermissionListNewView.dart';
 
-class ManageAuthorizationView extends View
+class DesktopView extends View
 {
-
 	Element _headerRegion;
 	Element _menuRegion;
 	Element _mainRegion;
@@ -22,7 +21,7 @@ class ManageAuthorizationView extends View
 
 	AuthorizationViewModel _viewModel;
 
-	ManageAuthorizationView(this._viewModel)
+	DesktopView(this._viewModel)
 	{
 		_desktopLayout();
 		_permissionsView();
@@ -44,6 +43,8 @@ class ManageAuthorizationView extends View
 		addButton('Groups', (MouseEvent e) => _groupsView(), parent: _menuRegion);
 		addButton('Roles', (MouseEvent e) => _rolesView(), parent: _menuRegion);
 		addButton('Permissions', (MouseEvent e) => _permissionsView(), parent: _menuRegion);
+
+		addHeading(3, 'Desktop', parent: _bodyRegion);
 	}
 
 	_usersView()

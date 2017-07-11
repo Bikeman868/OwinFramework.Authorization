@@ -236,7 +236,7 @@
     <Content Include="Content\AuthorizationUI\web\Models\IdentityModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Models\ClaimModel.dart" />
     <Content Include="Content\AuthorizationUI\web\ViewModels\AuthorizationViewModel.dart" />
-    <Content Include="Content\AuthorizationUI\web\Views\Pages\ManageAuthorizationView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Pages\DesktopView.dart" />
     <Content Include="Content\AuthorizationUI\web\ViewModels\PermissionListViewModel.dart" />
     <Content Include="Content\AuthorizationUI\web\ViewModels\PermissionViewModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionNameView.dart" />
@@ -247,6 +247,7 @@
     <Content Include="Content\AuthorizationUI\web\Events\AppEvents.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Base\EditView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\EditPermissionFormView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Pages\MobileView.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

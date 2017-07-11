@@ -1,10 +1,85 @@
-﻿body,html
+﻿@body-font: sans-serif;
+@heading-font: helvetica;
+
+@mobile-width: 500px;
+@tablet-width: 1200px;
+
+body,html
 {
+    font-family: @body-font;
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
-    font-size: 12px;
-    background: ghostwhite;
+    font-size: 10px;
+    background: white;
+}
+
+@media only screen and (min-width: @mobile-width)
+{
+    body,html
+    {
+        font-size: 12px;
+        background: ghostwhite;
+    }
+}
+
+h1
+{
+    font-family: @heading-font;
+    font-size:15px;
+    padding-left:5px;
+    padding-right:0;
+    padding-top:0;
+    padding-bottom:5px;
+}
+
+@media only screen and (min-width: @mobile-width)
+{
+    h1
+    {
+        font-size:25px;
+        padding-left:10px;
+        padding-bottom:20px;
+    }
+}
+
+h2
+{
+    font-family: @heading-font;
+    font-size:13px;
+    padding-left:3px;
+    padding-right:0;
+    padding-top:0;
+    padding-bottom:3px;
+}
+
+@media only screen and (min-width: @mobile-width)
+{
+    h2
+    {
+        font-size:18px;
+        padding-left:8px;
+        padding-bottom:10px;
+    }
+}
+
+h3
+{
+    font-family: @heading-font;
+    font-size:12px;
+    padding-left:3px;
+    padding-right:0;
+    padding-top:0;
+    padding-bottom:3px;
+}
+
+@media only screen and (min-width: @mobile-width)
+{
+    h3
+    {
+        font-size:14px;
+        padding-left:6px;
+        padding-bottom:6px;
+    }
 }
 
 div
@@ -13,39 +88,17 @@ div
     margin: 0;
 }
 
-h1
-{
-    font-size:25px;
-    padding-left:10px;
-    padding-right:0;
-    padding-top:0;
-    padding-bottom:20px;
-}
-
-h2
-{
-    font-size:18px;
-    padding-left:8px;
-    padding-right:0;
-    padding-top:0;
-    padding-bottom:10px;
-}
-
-h3
-{
-    font-size:14px;
-    padding-left:6px;
-    padding-right:0;
-    padding-top:0;
-    padding-bottom:6px;
-}
-
 td
 {
     vertical-align: top;
 }
 
-span.button
+textarea
+{
+    font-family: @body-font;
+}
+
+.button
 {
     cursor: pointer;
 }
@@ -61,17 +114,33 @@ span.button
     padding-bottom: 2px;
     padding-left: 10px;
     padding-right: 10px;
-    height:70px;
+    height:25px;
+
+    h2
+    {
+        font-size:15px;
+        padding-left:8px;
+        padding-right:0;
+        padding-bottom:2px;
+        padding-top:0;
+        margin:5px;
+    }
 }
 
-.header-region h2
+@media only screen and (min-width: @mobile-width)
 {
-    font-size:35px;
-    padding-left:12px;
-    padding-right:0;
-    padding-bottom:10px;
-    padding-top:0;
-    margin:5px;
+    .header-region
+    {
+        height:70px;
+
+        h2
+        {
+            font-size:40px;
+            padding-left:12px;
+            padding-bottom:10px;
+            margin:5px;
+        }
+    }
 }
 
 .menu-region
@@ -80,30 +149,50 @@ span.button
     clear: both;
     padding-top: 2px;
     padding-bottom: 2px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-bottom: 1px solid navy;
-    height:40px;
+    padding-left: 4px;
+    padding-right: 4px;
+    height:38px;
+
+    .button
+    {
+        padding: 6px;
+        font-size: 16px;
+        border: 1px solid navy;
+        border-radius: 6px;
+        background: cornflowerblue;
+        color: white;
+        margin-right: 5px;
+        position: relative;
+        top: 10px;
+    }
+
+    .button:hover
+    {
+        border: 1px solid white;
+    }
 }
 
-.menu-region .button
+@media only screen and (min-width: @mobile-width)
 {
-    padding: 6px;
-    font-size: 16px;
-    border: 1px solid navy;
-    border-radius: 6px;
-    background: cornflowerblue;
-    color: white;
-    margin-right: 5px;
-    position: relative;
-    top: 10px;
+    .menu-region
+    {
+        padding-left: 10px;
+        padding-right: 10px;
+        border-bottom: 1px solid navy;
+
+        .button
+        {
+            padding: 6px;
+            font-size: 16px;
+            border: 1px solid navy;
+            border-radius: 6px;
+            margin-right: 5px;
+            position: relative;
+            top: 10px;
+        }
+    }
 }
 
-.menu-region .button:hover
-{
-    cursor: pointer;
-    border: 1px solid white;
-}
 
 .main-region
 {
@@ -120,19 +209,51 @@ span.button
     clear: both;
     padding-top: 2px;
     padding-bottom: 2px;
-    padding-left: 10px;
-    padding-right: 10px;
-    height:20px;
+    padding-left: 4px;
+    padding-right: 4px;
+    height:10px;
+}
+
+@media only screen and (min-width: @mobile-width)
+{
+    .footer-region
+    {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 10px;
+        padding-right: 10px;
+        height:20px;
+    }
 }
 
 .nav-region
 {
-    display:inline-block;
+    display:block;
     vertical-align: top;
-    width: 300px;
-    padding: 4px;
+    width: auto;
+    padding: 2px;
     margin: 1px;
     white-space: normal;
+}
+
+@media only screen and (min-width: @mobile-width)
+{
+    .nav-region
+    {
+        display:inline-block;
+        width: 350px;
+        padding: 4px;
+    }
+}
+
+@media only screen and (min-width: @tablet-width)
+{
+    .nav-region
+    {
+        display:inline-block;
+        width: 600px;
+        padding: 4px;
+    }
 }
 
 .body-region
@@ -144,24 +265,12 @@ span.button
     width: auto;
 }
 
-// Full width bar of buttons
-
-.button-bar
+@media only screen and (min-width: @mobile-width)
 {
-    height: 40px;
-}
-
-.button-bar .button
-{
-    padding: 6px;
-    font-size: 12px;
-    border: 1px solid navy;
-    border-radius: 4px;
-    background: cornflowerblue;
-    color: white;
-    margin-right: 5px;
-    position: relative;
-    top: 16px;
+    .body-region
+    {
+        display:inline-block;
+    }
 }
 
 // Panels with tool bars
@@ -171,88 +280,107 @@ span.button
     background-color: whitesmoke;
     border-color: lightgray;
     border:outset;
-    border-width: 2px;
-    margin: 5px;
-    padding: 5px;
+    border-width: 1px;
+    margin: 3px;
+    padding: 3px;
+
+    h3
+    {
+        display: inline;
+    }
+
+    div.help-note
+    {
+        margin-top: 6px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 20px;
+    }
+
+    div.validation-error
+    {
+        margin-top: 6px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 20px;
+    }
 }
 
-.panel h3
+@media only screen and (min-width: @mobile-width)
 {
-    display: inline;
-    padding-bottom: 20px;
-}
+    .panel
+    {
+        border:outset;
+        border-width: 2px;
+        margin: 5px;
+        padding: 5px;
 
-.panel div.help-note
-{
-    margin-top: 6px;
-    margin-bottom: 10px;
-    margin-left: 10px;
-    margin-right: 20px;
-}
-
-.panel div.validation-error
-{
-    margin-top: 6px;
-    margin-bottom: 10px;
-    margin-left: 10px;
-    margin-right: 20px;
+        div.tool-bar
+        {
+            height: 15px;
+        }
+    }
 }
 
 .tool-bar
 {
+    height: 25px;
     float: right;
+
+    &:after
+    { 
+       content: " ";
+       display: block; 
+       height: 0; 
+       clear: both;
+    }
+
+    .button
+    {
+        padding: 5px;
+        font-size: 14px;
+        border: 1px solid #5b330b;
+        border-radius: 3px;
+        background: #eda864;
+        color: white;
+        margin-right: 3px;
+    }
+
+    .button:hover
+    {
+        cursor: pointer;
+        border: 1px solid white;
+    }
 }
 
-.tool-bar:after
-{ 
-   content: " ";
-   display: block; 
-   height: 0; 
-   clear: both;
-}
-
-.tool-bar .button
+@media only screen and (min-width: @mobile-width)
 {
-    padding: 3px;
-    font-size: 10px;
-    border: 1px solid navy;
-    border-radius: 3px;
-    background: cornflowerblue;
-    color: white;
-    margin-right: 3px;
-}
-
-.tool-bar .button:hover
-{
-    cursor: pointer;
-    border: 1px solid white;
+    .tool-bar
+    {
+        height: 15px;
+    
+        .button
+        {
+            padding: 3px;
+            font-size: 10px;
+            border: 1px solid navy;
+            border-radius: 3px;
+            margin-right: 3px;
+        }
+    }
 }
 
 // Bound lists
 
 .bound-list
 {
-}
-
-.selection-list
-{
-    margin: 10px;
-    position: relative;
-    padding: 4px 4px 4px 4px;
-    font-size: 14px;
-}
-
-.bound-list:after
-{ 
-   content: " ";
-   display: block; 
-   height: 0; 
-   clear: both;
-}
-
-.bound-list-item
-{
-    list-style: none;
+    &:after
+    { 
+       content: " ";
+       display: block; 
+       height: 0; 
+       clear: both;
+    }
 }
 
 .list-item
@@ -260,12 +388,57 @@ span.button
     list-style: none;
 }
 
-.bound-list-item:after
+.bound-list-item
 {
-   content: " ";
-   display: block; 
-   height: 0; 
-   clear: both;
+    list-style: none;
+    font-size: 12px;
+
+    &:after
+    {
+       content: " ";
+       display: block; 
+       height: 0; 
+       clear: both;
+    }
+
+}
+
+.selection-list
+{
+    margin: 4px;
+    position: relative;
+    padding: 6px 6px 6px 6px;
+
+    .bound-list-item
+    {
+        font-size: 16px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        border: 1px solid transparent;
+
+        &:hover
+        {
+            cursor: pointer;
+            border: 1px solid black;
+        }
+    }
+}
+
+@media only screen and (min-width: @mobile-width)
+{
+    .selection-list
+    {
+        margin: 10px;
+        position: relative;
+        padding: 4px 4px 4px 4px;
+
+        .bound-list-item
+        {
+            font-size: 14px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+    }
 }
 
 .bound-list-view 
@@ -278,17 +451,6 @@ span.button
 {
     display: block;
     float: left;
-}
-
-.selection-list .bound-list-item
-{
-    border: 1px solid transparent;
-}
-
-.selection-list .bound-list-item:hover
-{
-    cursor: pointer;
-    border: 1px solid black;
 }
 
 .bound-list-delete
@@ -311,22 +473,22 @@ span.button
     position: relative;
     padding: 1px;
     border: 1px solid transparent;
-}
 
-.image-button:hover
-{
-    cursor: pointer;
-    border: 1px solid white;
-}
+    &:hover
+    {
+        cursor: pointer;
+        border: 1px solid white;
+    }
 
-.image-button:active
-{
-    cursor: pointer;
-    border: 1px solid white;
-    padding-left: 2px;
-    padding-top: 2px;
-    padding-right:0px;
-    padding-bottom:0px;
+    &:active
+    {
+        cursor: pointer;
+        border: 1px solid white;
+        padding-left: 2px;
+        padding-top: 2px;
+        padding-right:0px;
+        padding-bottom:0px;
+    }
 }
 
 .selection-item
@@ -334,38 +496,41 @@ span.button
     margin: 4px;
     padding: 2px;
     border: 1px solid transparent;
+
+    &:hover
+    {
+        cursor: pointer;
+        border: 1px solid navy;
+    }
 }
 
-.selection-item:hover
-{
-    cursor: pointer;
-    border: 1px solid navy;
-}
+// Forms
 
 .data-form
 {
-    display: table;
+    display: block;
     width: auto;
-    border-spacing: 3px;
 }
 
 .data-row 
 {
-    display: table-row;
+    display: block;
     width: auto;
 }
 
 .data-label
 {
-    display: table-cell;
-    width: 140px;
+    display: block;
+    width: 300px;
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: 4px;
+    margin-bottom: 2px;
 }
 
 .data-field
 {
-    display: table-cell;
+    display: block;
     font-weight: bold;
     width: 300px;
     margin-left: 10px;
@@ -375,17 +540,78 @@ span.button
 .input-field 
 {
     vertical-align: top;
-    display: inline;
+    display: block;
     font-weight: bold;
-    width: 150px;
+    width: 300px;
     margin-left: 10px;
     margin-right: 10px;
 }
 
 textarea.input-field
 {
-    width: 150px;
     height: 80px;
+}
+
+@media only screen and (min-width: @mobile-width)
+{
+    .data-form
+    {
+        display: table;
+        width: auto;
+        border-spacing: 3px;
+    }
+
+    .data-row 
+    {
+        display: table-row;
+        width: auto;
+    }
+
+    .data-label
+    {
+        display: table-cell;
+        width: 140px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .data-field
+    {
+        display: table-cell;
+        width: 300px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .input-field 
+    {
+        display: inline;
+        width: 150px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}
+
+@media only screen and (min-width: @tablet-width)
+{
+    .data-field
+    {
+        display: table-cell;
+        width: 500px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .input-field 
+    {
+        display: inline;
+        width: 350px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
 }
 
 span.saved
@@ -409,12 +635,12 @@ span.modified
     border-radius: 6px;
     background: cornflowerblue;
     color:white;
-}
 
-.form-button:hover
-{
-    cursor: pointer;
-    border: 1px solid red;
+    &:hover
+    {
+        cursor: pointer;
+        border: 1px solid red;
+    }
 }
 
 .instruction
