@@ -6,14 +6,13 @@ import '../../Views/Base/EditView.dart';
 
 class EditableListView extends View
 {
+	ViewModel viewModel;
+
+	View selectView;
+	EditView editView;
+	EditView addView;
+
 	Element _viewPanel;
-
-	ViewModel _viewModel;
-
-	View _selectView;
-	EditView _editView;
-	EditView _addView;
-
 	EditView _currentEditView;
 
 	Element _refreshButton;
@@ -22,7 +21,7 @@ class EditableListView extends View
 	Element _saveButton;
 	Element _cancelButton;
 
-	EditableListView(String title, this._viewModel, this._selectView, this._editView, this._addView)
+	EditableListView(String title, this.viewModel, this.selectView, this.editView, this.addView)
 	{
 		var panel = addContainer(classNames: ['panel', 'editable-list-view']);
 
@@ -44,12 +43,12 @@ class EditableListView extends View
 	void done()
 	{
 		_refreshButton.hidden = false;
-		_editButton.hidden = _editView == null;
-		_newButton.hidden = _addView == null;
+		_editButton.hidden = editView == null;
+		_newButton.hidden = addView == null;
 		_saveButton.hidden = true;
 		_cancelButton.hidden = true;
 
-		_changeView(_selectView);
+		_changeView(selectView);
 	}
 
 	void edit()
@@ -60,8 +59,8 @@ class EditableListView extends View
 		_saveButton.hidden = false;
 		_cancelButton.hidden = false;
 
-		_changeView(_editView);
-		_currentEditView = _editView;
+		_changeView(editView);
+		_currentEditView = editView;
 	}
 
 	void addNew()
@@ -72,14 +71,14 @@ class EditableListView extends View
 		_saveButton.hidden = false;
 		_cancelButton.hidden = false;
 
-		_changeView(_addView);
-		_addView.clearForm();
-		_currentEditView = _addView;
+		_changeView(addView);
+		addView.clearForm();
+		_currentEditView = addView;
 	}
 
 	void refresh()
 	{
-		_viewModel.reload();
+		viewModel.reload();
 	}
 
 	void save()
