@@ -2,8 +2,6 @@
 
 import '../../MVVM/View.dart';
 
-import '../../Models/PermissionModel.dart';
-
 class EditPermissionFormView extends View
 {
 	InputElement displayName;
@@ -107,20 +105,4 @@ class EditPermissionFormView extends View
 		});
 	}
 
-	PermissionModel get permissionModel
-	{
-		return new PermissionModel(null)
-			..codeName = codeName.value
-			..displayName = displayName.value
-			..description = description.value
-			..resource = resource.value;
-	}
-
-	void set permissionModel(PermissionModel value)
-	{
-		codeName.value = value.codeName;
-		displayName.value = value.displayName;
-		description.value = value.description;
-		resource.value = value.resource;
-	}
 }

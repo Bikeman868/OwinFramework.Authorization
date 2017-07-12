@@ -10,15 +10,15 @@ class EditableView extends View
 
 	ViewModel _viewModel;
 
-	View _displayView;
-	EditView _editView;
+	View displayView;
+	EditView editView;
 
 	Element _refreshButton;
 	Element _editButton;
 	Element _saveButton;
 	Element _cancelButton;
 
-	EditableView(String title, this._viewModel, this._displayView, this._editView)
+	EditableView(String title, this._viewModel, this.displayView, this.editView)
 	{
 		var panel = addContainer(classNames: ['panel', 'editable-view']);
 
@@ -43,7 +43,7 @@ class EditableView extends View
 		_saveButton.hidden = true;
 		_cancelButton.hidden = true;
 
-		_changeView(_displayView);
+		_changeView(displayView);
 	}
 
 	void edit()
@@ -53,7 +53,7 @@ class EditableView extends View
 		_saveButton.hidden = false;
 		_cancelButton.hidden = false;
 
-		_changeView(_editView);
+		_changeView(editView);
 	}
 
 	void refresh()
@@ -63,12 +63,12 @@ class EditableView extends View
 
 	void save()
 	{
-		_editView.saveEdits(display);
+		editView.saveEdits(display);
 	}
 
 	void cancel()
 	{
-		_editView.cancelEdits(display);
+		editView.cancelEdits(display);
 	}
 
 	_changeView(View view)
