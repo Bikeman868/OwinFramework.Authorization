@@ -2,6 +2,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'MVVM/Events.dart';
+
 import 'Models/ApiResponseModel.dart';
 import 'Models/NewRecordResponseModel.dart';
 import 'Models/GroupModel.dart';
@@ -22,7 +24,13 @@ class Server
 		Map responseJson = JSON.decode(responseString);
 
 		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) return null;
+		if (!response.isSuccess) 
+		{
+			MvvmEvents.alert.raise(
+				'Failed to retrieve a list of permissions. ' + 
+				response.result + ' - ' + response.error);
+			return null;
+		}
 
 		List<Map> permissionsJson = responseJson['permissions'];
 
@@ -40,7 +48,13 @@ class Server
 		Map responseJson = JSON.decode(responseString);
 
 		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) return null;
+		if (!response.isSuccess) 
+		{
+			MvvmEvents.alert.raise(
+				'Failed to retrieve permission. ' + 
+				response.result + ' - ' + response.error);
+			return null;
+		}
 
 		Map permissionJson = responseJson['permission'];
 		return new PermissionModel(permissionJson);
@@ -114,7 +128,13 @@ class Server
 		Map responseJson = JSON.decode(responseString);
 
 		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) return null;
+		if (!response.isSuccess) 
+		{
+			MvvmEvents.alert.raise(
+				'Failed to retrieve the list of roles. ' + 
+				response.result + ' - ' + response.error);
+			return null;
+		}
 
 		List<Map> rolesJson = responseJson['roles'];
 
@@ -132,7 +152,13 @@ class Server
 		Map responseJson = JSON.decode(responseString);
 
 		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) return null;
+		if (!response.isSuccess) 
+		{
+			MvvmEvents.alert.raise(
+				'Failed to retrieve the role. ' + 
+				response.result + ' - ' + response.error);
+			return null;
+		}
 
 		Map roleJson = responseJson['role'];
 		return new RoleModel(roleJson);
@@ -206,7 +232,13 @@ class Server
 		Map responseJson = JSON.decode(responseString);
 
 		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) return null;
+		if (!response.isSuccess) 
+		{
+			MvvmEvents.alert.raise(
+				'Failed to retrieve the list of groups. ' + 
+				response.result + ' - ' + response.error);
+			return null;
+		}
 
 		List<Map> groupsJson = responseJson['groups'];
 
@@ -224,7 +256,13 @@ class Server
 		Map responseJson = JSON.decode(responseString);
 
 		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) return null;
+		if (!response.isSuccess) 
+		{
+			MvvmEvents.alert.raise(
+				'Failed to retrieve the group. ' + 
+				response.result + ' - ' + response.error);
+			return null;
+		}
 
 		Map groupJson = responseJson['group'];
 		return new GroupModel(groupJson);
