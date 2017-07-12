@@ -20,6 +20,12 @@ class PermissionDisplayView extends View
 		_codeNameBinding = new BoundLabel<String>(addLabeledField(form, 'Code name'));
 		_resourceBinding = new BoundLabel<String>(addLabeledField(form, 'Resource expression'));
 
+		addHeading(3, 'Roles that have this permission');
+
+		addBlockText('Role 1');
+		addBlockText('Role 2');
+		addBlockText('Role 3');
+
 		this.viewModel = viewModel;
 	}
 

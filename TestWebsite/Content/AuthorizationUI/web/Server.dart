@@ -34,6 +34,18 @@ class Server
 		return permissions;
 	}
 
+	static Future<PermissionModel> getPermission(int permissionId) async
+	{
+		String responseString = await HttpRequest.getString(_apiUrl + '/permission/' + permissionId.toString());
+		Map responseJson = JSON.decode(responseString);
+
+		var response = new ApiResponseModel(responseJson);
+		if (!response.isSuccess) return null;
+
+		Map permissionJson = responseJson['permission'];
+		return new PermissionModel(permissionJson);
+	}
+
 	static Future<ApiResponseModel> validatePermission(PermissionModel permission) async
 	{
 		var request = await HttpRequest.request(
