@@ -198,7 +198,7 @@ textarea
 {
     background: whitesmoke;
     clear: both;
-    overflow: hidden;
+    overflow: auto;
     white-space : nowrap;
 }
 
@@ -241,8 +241,9 @@ textarea
     .nav-region
     {
         display:inline-block;
-        width: 350px;
+        width: 29%;
         padding: 4px;
+        min-width: 250px;
     }
 }
 
@@ -250,15 +251,13 @@ textarea
 {
     .nav-region
     {
-        display:inline-block;
-        width: 600px;
-        padding: 4px;
+        width: 24%;
     }
 }
 
 .body-region
 {
-    display:inline-block;
+    display:block;
     vertical-align: top;
     overflow: visible;
     white-space: normal;
@@ -269,7 +268,17 @@ textarea
 {
     .body-region
     {
-        display:inline-block;
+        display: inline-block;
+        width: 69%;
+        min-width: 300px;
+    }
+}
+
+@media only screen and (min-width: @tablet-width)
+{
+    .body-region
+    {
+        width: 74%;
     }
 }
 

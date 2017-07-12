@@ -4,7 +4,7 @@ description: For managing permissions in the OWIN Framework
 author: Martin Halliday
 
 environment:
-  sdk: '>=1.0.0 <2.0.0'
+  sdk: '>=1.24.2'
 
 dependencies:
   browser: '>=0.10.0 <0.11.0'

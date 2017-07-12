@@ -61,3 +61,5 @@ packages:
     description: utf
     source: hosted
     version: "0.9.0+3"
+sdks:
+  dart: ">=1.24.2 <2.0.0"

@@ -1,24 +1,33 @@
 ﻿import 'dart:html';
 
 import '../../MVVM/View.dart';
+import '../../MVVM/Events.dart';
+
+import '../../Events/AppEvents.dart';
 
 import '../../ViewModels/AuthorizationViewModel.dart';
+import '../../ViewModels/PermissionViewModel.dart';
 
 import '../Panels/EditableListView.dart';
+import '../Panels/EditableView.dart';
+
 import '../Permissions/PermissionListSelectView.dart';
 import '../Permissions/PermissionListEditView.dart';
 import '../Permissions/PermissionListNewView.dart';
+import '../Permissions/PermissionDisplayView.dart';
+import '../Permissions/PermissionEditView.dart';
 
 class MobileView extends View
 {
 	Element _menuRegion;
 	Element _navRegion;
-	Element _bodyRegion;
 
 	AuthorizationViewModel _viewModel;
 
 	MobileView(this._viewModel)
 	{
+		AppEvents.permissionSelected.listen((vm) => _permissionSelected(vm));
+
 		_mobileLayout();
 		_permissionsView();
 	}
@@ -26,16 +35,12 @@ class MobileView extends View
 	_mobileLayout()
 	{
 		_menuRegion = addContainer(classNames:['page-region', 'menu-region']);
-
 		_navRegion = addContainer(classNames:['page-region', 'nav-region']);
-		_bodyRegion = addContainer(classNames:['page-region', 'body-region']);
 
 		addButton('Users', (MouseEvent e) => _usersView(), parent: _menuRegion);
 		addButton('Groups', (MouseEvent e) => _groupsView(), parent: _menuRegion);
 		addButton('Roles', (MouseEvent e) => _rolesView(), parent: _menuRegion);
 		addButton('Permissions', (MouseEvent e) => _permissionsView(), parent: _menuRegion);
-
-		addHeading(3, 'Mobile', parent: _bodyRegion);
 	}
 
 	_usersView()
@@ -65,6 +70,17 @@ class MobileView extends View
 			new PermissionListNewView(permissions));
 
 		permissionListView.displayIn(_navRegion);
+	}
+
+	_permissionSelected(PermissionViewModel permission)
+	{
+		var permissionView = new EditableView(
+			'Permission',
+			permission,
+			new PermissionDisplayView(permission),
+			new PermissionEditView(permission));
+
+		permissionView.displayIn(_navRegion);
 	}
 }
 

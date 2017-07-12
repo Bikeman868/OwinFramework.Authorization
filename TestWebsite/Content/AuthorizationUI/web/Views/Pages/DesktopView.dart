@@ -3,12 +3,19 @@
 import '../../MVVM/View.dart';
 import '../../MVVM/Events.dart';
 
+import '../../Events/AppEvents.dart';
+
 import '../../ViewModels/AuthorizationViewModel.dart';
+import '../../ViewModels/PermissionViewModel.dart';
 
 import '../Panels/EditableListView.dart';
+import '../Panels/EditableView.dart';
+
 import '../Permissions/PermissionListSelectView.dart';
 import '../Permissions/PermissionListEditView.dart';
 import '../Permissions/PermissionListNewView.dart';
+import '../Permissions/PermissionDisplayView.dart';
+import '../Permissions/PermissionEditView.dart';
 
 class DesktopView extends View
 {
@@ -26,6 +33,8 @@ class DesktopView extends View
 	{
 		// TODO: use hidden panel instead of window.alert
 		MvvmEvents.alert.listen((message) => window.alert(message));
+
+		AppEvents.permissionSelected.listen((vm) => _permissionSelected(vm));
 
 		_desktopLayout();
 		_permissionsView();
@@ -78,6 +87,17 @@ class DesktopView extends View
 			new PermissionListNewView(permissions));
 
 		permissionListView.displayIn(_navRegion);
+	}
+
+	_permissionSelected(PermissionViewModel permission)
+	{
+		var permissionView = new EditableView(
+			'Permission',
+			permission,
+			new PermissionDisplayView(permission),
+			new PermissionEditView(permission));
+
+		permissionView.displayIn(_bodyRegion);
 	}
 }
 
