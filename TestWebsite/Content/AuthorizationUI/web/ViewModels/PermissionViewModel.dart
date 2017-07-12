@@ -141,7 +141,7 @@ class PermissionViewModel extends ViewModel
 		}
 		else if (state == ChangeState.deleted)
 		{
-			var response = await Server.deletePermission(model);
+			var response = await Server.deletePermission(model.id);
 			if (response.isSuccess)
 			{
 				result = SaveResult.saved;

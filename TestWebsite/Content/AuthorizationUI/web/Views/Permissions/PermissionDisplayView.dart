@@ -14,13 +14,31 @@ class PermissionDisplayView extends View
 
 	PermissionDisplayView([PermissionViewModel viewModel])
 	{
+		addBlockText(
+			'<p>A <b>Permission</b> is something that is tested by the system before allowing access ' +
+			'to a specific feature. For example when the logged on user invokes the "delete order" feature ' +
+			'the system will check that the user has permission to delete orders before continuing.</p>', 
+			className: 'help-note');
+
 		var form = addForm();
 		_displayNameBinding = new BoundLabel<String>(addLabeledField(form, 'Display name'));
 		_descriptionBinding = new BoundLabel<String>(addLabeledField(form, 'Description'));
 		_codeNameBinding = new BoundLabel<String>(addLabeledField(form, 'Code name'));
 		_resourceBinding = new BoundLabel<String>(addLabeledField(form, 'Resource expression'));
 
-		addHeading(3, 'Roles that have this permission');
+		addBlockText(
+			'<p>When the system tests if the user has a specific permission it is usually in the context ' +
+			'of a protected resource. When you create permissions here you can optionally specify a '
+			'resource expression, in which case the user is only granted this permission on resources ' +
+			'that match the resource expression.</p>', 
+			className: 'help-note');
+
+		addHeading(3, 'Permission roles');
+
+		addBlockText(
+			'<p>These are the roles that grant this permission If you modify this permission then '
+			'groups that have any of these roles assigned to them will be affacted.</p>', 
+			className: 'help-note');
 
 		addBlockText('Role 1');
 		addBlockText('Role 2');

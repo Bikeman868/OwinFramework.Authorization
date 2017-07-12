@@ -130,7 +130,7 @@ class RoleViewModel extends ViewModel
 		}
 		else if (state == ChangeState.deleted)
 		{
-			var response = await Server.deleteRole(model);
+			var response = await Server.deleteRole(model.id);
 			if (response.isSuccess)
 			{
 				result = SaveResult.saved;

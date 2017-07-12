@@ -23,6 +23,16 @@ class MobileView extends PageView
 		_displayPermissions();
 	}
 
+	groupSelected(GroupViewModel groupViewModel)
+	{
+		displayGroup(groupViewModel, _navRegion);
+	}
+
+	roleSelected(RoleViewModel roleViewModel)
+	{
+		displayRole(roleViewModel, _navRegion);
+	}
+
 	permissionSelected(PermissionViewModel permissionViewModel)
 	{
 		displayPermission(permissionViewModel, _navRegion);
@@ -41,14 +51,17 @@ class MobileView extends PageView
 
 	_displayUsers()
 	{
+		_navRegion.children.clear();
 	}
 
 	_displayGroups()
 	{
+		displayGroupList(_viewModel.groupList, _navRegion);
 	}
 
 	_displayRoles()
 	{
+		displayRoleList(_viewModel.roleList, _navRegion);
 	}
 
 	_displayPermissions()

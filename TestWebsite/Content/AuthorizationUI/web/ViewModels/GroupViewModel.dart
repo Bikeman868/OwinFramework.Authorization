@@ -130,7 +130,7 @@ class GroupViewModel extends ViewModel
 		else if (state == ChangeState.deleted)
 		{
 			/*
-			var response = await Server.deleteGroup(model);
+			var response = await Server.deleteGroup(model.id);
 			if (response.isSuccess)
 			{
 				result = SaveResult.saved;

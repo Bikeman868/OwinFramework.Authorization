@@ -77,7 +77,9 @@ BEGIN
 		g.`groupDisplayName`,
 		g.`groupDescription`
 	FROM
-		`tbl_groups` g;
+		`tbl_groups` g
+	ORDER BY
+		g.`groupDisplayName`;
 END//
 DELIMITER ;
 
@@ -290,7 +292,9 @@ BEGIN
 		r.`roleDisplayName`,
 		r.`roleDescription`
 	FROM
-		`tbl_roles` r;
+		`tbl_roles` r
+	ORDER BY
+		r.`roleDisplayName`;
 END//
 DELIMITER ;
 
@@ -482,7 +486,9 @@ BEGIN
 		p.`permissionDisplayName`,
 		p.`permissionDescription`
 	FROM
-		`tbl_permissions` p;
+		`tbl_permissions` p
+	ORDER BY
+		p.`permissionDisplayName`;
 END//
 DELIMITER ;
 

@@ -34,6 +34,16 @@ class DesktopView extends PageView
 		window.alert(message);
 	}
 
+	groupSelected(GroupViewModel groupViewModel)
+	{
+		displayGroup(groupViewModel, _bodyRegion);
+	}
+
+	roleSelected(RoleViewModel roleViewModel)
+	{
+		displayRole(roleViewModel, _bodyRegion);
+	}
+
 	permissionSelected(PermissionViewModel permissionViewModel)
 	{
 		displayPermission(permissionViewModel, _bodyRegion);
@@ -59,14 +69,17 @@ class DesktopView extends PageView
 
 	_displayUsers()
 	{
+		_navRegion.children.clear();
 	}
 
 	_displayGroups()
 	{
+		displayGroupList(_viewModel.groupList, _navRegion);
 	}
 
 	_displayRoles()
 	{
+		displayRoleList(_viewModel.roleList, _navRegion);
 	}
 
 	_displayPermissions()
