@@ -26,7 +26,7 @@ class MobileView extends View
 
 	MobileView(this._viewModel)
 	{
-		AppEvents.permissionSelected.listen((vm) => _permissionSelected(vm));
+		AppEvents.permissionSelected.listen((e) => _permissionSelected(e.permission));
 
 		_mobileLayout();
 		_permissionsView();
@@ -58,29 +58,44 @@ class MobileView extends View
 		_navRegion.children.clear();
 	}
 
+	EditableListView _permissionListView;
+
 	_permissionsView()
 	{
-		var permissions = _viewModel.permissionList;
+		if (_permissionListView == null)
+		{
+			var permissions = _viewModel.permissionList;
 
-		var permissionListView = new EditableListView(
-			'Permissions',
-			permissions,
-			new PermissionListSelectView(permissions),
-			new PermissionListEditView(permissions),
-			new PermissionListNewView(permissions));
+			_permissionListView = new EditableListView(
+				'Permissions',
+				permissions,
+				new PermissionListSelectView(permissions),
+				new PermissionListEditView(permissions),
+				new PermissionListNewView(permissions));
+		}
 
-		permissionListView.displayIn(_navRegion);
+		_permissionListView.displayIn(_navRegion);
 	}
+
+	EditableView _permissionView;
 
 	_permissionSelected(PermissionViewModel permission)
 	{
-		var permissionView = new EditableView(
-			'Permission',
-			permission,
-			new PermissionDisplayView(permission),
-			new PermissionEditView(permission));
+		if (_permissionView == null)
+		{
+			_permissionView = new EditableView(
+				'Permission',
+				permission,
+				new PermissionDisplayView(permission),
+				new PermissionEditView(permission));
+		}
+		else
+		{
+			(_permissionView.displayView as PermissionDisplayView).viewModel = permission;
+			(_permissionView.editView as PermissionEditView).viewModel = permission;
+		}
 
-		permissionView.displayIn(_navRegion);
+		_permissionView.displayIn(_navRegion);
 	}
 }
 

@@ -44,8 +44,8 @@ class EditableListView extends View
 	void done()
 	{
 		_refreshButton.hidden = false;
-		_editButton.hidden = false;
-		_newButton.hidden = false;
+		_editButton.hidden = _editView == null;
+		_newButton.hidden = _addView == null;
 		_saveButton.hidden = true;
 		_cancelButton.hidden = true;
 

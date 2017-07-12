@@ -2,6 +2,8 @@
 
 import '../../MVVM/View.dart';
 import '../../MVVM/Enums.dart';
+import '../../MVVM/BoundTextInput.dart';
+import '../../MVVM/BoundTextArea.dart';
 
 import '../../Server.dart';
 
@@ -17,12 +19,19 @@ import '../../Views/Permissions/EditPermissionFormView.dart';
 
 class PermissionEditView extends EditView
 {
-	EditPermissionFormView _formView;
+	BoundTextInput<String> _displayNameBinding;
+	BoundTextArea<String> _descriptionBinding;
+	BoundTextInput<String> _codeNameBinding;
+	BoundTextInput<String> _resourceBinding;
 
 	PermissionEditView([PermissionViewModel viewModel])
 	{
-		_formView = new EditPermissionFormView();
-		merge(_formView);
+		var formView = merge(new EditPermissionFormView()) as EditPermissionFormView;
+
+		_displayNameBinding = new BoundTextInput<String>(formView.displayName);
+		_descriptionBinding = new BoundTextArea<String>(formView.description);
+		_codeNameBinding = new BoundTextInput<String>(formView.codeName);
+		_resourceBinding = new BoundTextInput<String>(formView.resource);
 
 		this.viewModel = viewModel;
 	}
@@ -33,6 +42,20 @@ class PermissionEditView extends EditView
 	void set viewModel(PermissionViewModel value)
 	{
 		_viewModel = value;
+		if (value == null)
+		{
+			_displayNameBinding.binding = null;
+			_descriptionBinding.binding = null;
+			_codeNameBinding.binding = null;
+			_resourceBinding.binding = null;
+		}
+		else
+		{
+			_displayNameBinding.binding = value.displayName;
+			_descriptionBinding.binding = value.description;
+			_codeNameBinding.binding = value.codeName;
+			_resourceBinding.binding = value.resource;
+		}
 	}
 
 	void saveEdits(void onSuccess())
@@ -40,5 +63,4 @@ class PermissionEditView extends EditView
 		_viewModel.save();
 		onSuccess();
 	}
-
 }

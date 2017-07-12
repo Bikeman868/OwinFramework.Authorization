@@ -96,6 +96,15 @@ class PermissionViewModel extends ViewModel
 		return [];
 	}
 
+	void reload()
+	{
+		if (_model != null)
+		{
+			Server.getPermission(_model.id)
+				.then((m) => model = m);
+		}
+	}
+
 	Future<SaveResult> saveChanges(ChangeState state, bool alert) async
 	{
 		SaveResult result = SaveResult.unmodified;

@@ -24,8 +24,7 @@ class PermissionListNewView extends EditView
 
 	PermissionListNewView([PermissionListViewModel viewModel])
 	{
-		_formView = new EditPermissionFormView();
-		merge(_formView);
+		_formView = merge(new EditPermissionFormView()) as EditPermissionFormView;
 
 		this.viewModel = viewModel;
 	}
@@ -40,13 +39,21 @@ class PermissionListNewView extends EditView
 
 	void clearForm()
 	{
-		_formView.permissionModel = new PermissionModel(null);
+		_formView.codeName.value = '';
+		_formView.displayName.value = '';
+		_formView.description.value = '';
+		_formView.resource.value = '';
+
 		_formView.displayName.focus();
 	}
 
 	void saveEdits(void onSuccess())
 	{
-		var permission = _formView.permissionModel;
+		var permission = new PermissionModel(null)
+			..codeName = _formView.codeName.value
+			..displayName = _formView.displayName.value
+			..description = _formView.description.value
+			..resource = _formView.resource.value;
 
 		Server.validatePermission(permission)
 			.then((ApiResponseModel r)
@@ -67,5 +74,4 @@ class PermissionListNewView extends EditView
 			})
 			.catchError((Error error) => _formView.fieldValidationError.innerHtml = error.toString());
 	}
-
 }
