@@ -89,4 +89,10 @@ class GroupDisplayView extends View
 		}
 	}
 
+	reload()
+	{
+		if (_viewModel != null)
+			_viewModel.reload();
+	}
+
 }

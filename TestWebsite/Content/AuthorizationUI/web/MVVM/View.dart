@@ -12,4 +12,6 @@ class View extends HtmlBuilder
 	{
 		element.style.display = '';
 	}
+
+	void reload() { }
 }

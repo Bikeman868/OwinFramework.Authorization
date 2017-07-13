@@ -220,7 +220,30 @@ namespace OwinFramework.Authorization.UI
 
         private Task GetGroupHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new GetGroupResponse();
+
+            long id;
+            if (!ParseIdFromPath(context, _groupPath, response, "group", out id))
+                return Json(context, response);
+
+            var group = _authorizationData.GetGroup(id);
+            if (group == null)
+            {
+                response.Result = ApiResult.NotFound;
+                response.ErrorMessage = "There is no group with id " + id;
+            }
+            else
+            {
+                response.Group = new GroupDto
+                {
+                    Id = group.Id,
+                    CodeName = group.CodeName,
+                    DisplayName = group.DisplayName,
+                    Description = group.Description
+                };
+            }
+
+            return Json(context, response);
         }
 
         private Task GetGroupListHandler(IOwinContext context)
@@ -268,17 +291,102 @@ namespace OwinFramework.Authorization.UI
 
         private Task NewGroupHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new NewRecordResponse();
+            var groupDto = GetBody<GroupDto>(context);
+
+            var group = new Group
+            {
+                CodeName = groupDto.CodeName,
+                DisplayName = groupDto.DisplayName,
+                Description = groupDto.Description
+            };
+
+            try
+            {
+                group = _authorizationData.NewGroup(group);
+                response.Id = group.Id;
+            }
+            catch (Exception ex)
+            {
+                response.Result = ApiResult.FatalError;
+                response.ErrorMessage =
+                    "Failed to add group " + group.CodeName +
+                    " to the database. " + ex.Message;
+            }
+
+            return Json(context, response);
         }
 
         private Task UpdateGroupHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse();
+            var groupDto = GetBody<GroupDto>(context);
+
+            var group = _authorizationData.GetGroup(groupDto.Id);
+            if (group == null)
+            {
+                response.Result = ApiResult.NotFound;
+                response.ErrorMessage = "No group found with id " + groupDto.Id;
+            }
+            else
+            {
+                group.CodeName = groupDto.CodeName;
+                group.DisplayName = groupDto.DisplayName;
+                group.Description = groupDto.Description;
+
+                try
+                {
+                    _authorizationData.UpdateGroup(group);
+                }
+                catch (Exception ex)
+                {
+                    response.Result = ApiResult.FatalError;
+                    response.ErrorMessage =
+                        "Failed to update group " + group.Id +
+                        " in the database. " + ex.Message;
+                }
+            }
+
+            return Json(context, response);
         }
 
         private Task DeleteGroupHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse();
+
+            long id;
+            if (!ParseIdFromPath(context, _groupPath, response, "group", out id))
+                return Json(context, response);
+
+            var replacementParam = context.Request.Query["replacement"];
+            if (string.IsNullOrEmpty(replacementParam))
+            {
+                response.Result = ApiResult.BadRequest;
+                response.ErrorMessage = "When deleting a group users in that group must be reassigned to a different group";
+                return Json(context, response);
+            }
+
+            long replacementId;
+            if (!long.TryParse(replacementParam, out replacementId))
+            {
+                response.Result = ApiResult.BadRequest;
+                response.ErrorMessage = "The replacement group id must be a valid integer";
+                return Json(context, response);
+            }
+
+            try
+            {
+                _authorizationData.DeleteGroup(id, replacementId);
+            }
+            catch (Exception ex)
+            {
+                response.Result = ApiResult.FatalError;
+                response.ErrorMessage =
+                    "Failed to delete group " + id +
+                    " from the database. " + ex.Message;
+            }
+
+            return Json(context, response);
         }
 
         #endregion
@@ -293,8 +401,8 @@ namespace OwinFramework.Authorization.UI
             if (!ParseIdFromPath(context, _rolePath, response, "role", out id))
                 return Json(context, response);
 
-            var permission = _authorizationData.GetPermission(id);
-            if (permission == null)
+            var role = _authorizationData.GetRole(id);
+            if (role == null)
             {
                 response.Result = ApiResult.NotFound;
                 response.ErrorMessage = "There is no role with id " + id;
@@ -303,10 +411,10 @@ namespace OwinFramework.Authorization.UI
             {
                 response.Role = new RoleDto
                 {
-                    Id = permission.Id,
-                    CodeName = permission.CodeName,
-                    DisplayName = permission.DisplayName,
-                    Description = permission.Description
+                    Id = role.Id,
+                    CodeName = role.CodeName,
+                    DisplayName = role.DisplayName,
+                    Description = role.Description
                 };
             }
 

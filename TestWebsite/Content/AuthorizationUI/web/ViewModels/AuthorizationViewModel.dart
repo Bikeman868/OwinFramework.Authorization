@@ -6,6 +6,7 @@ import '../MVVM/Enums.dart';
 import '../ViewModels/GroupListViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
 import '../ViewModels/PermissionListViewModel.dart';
+import '../ViewModels/GroupRoleListViewModel.dart';
 
 class AuthorizationViewModel extends ViewModel
 {
@@ -36,6 +37,15 @@ class AuthorizationViewModel extends ViewModel
 		return _groupList;
 	}
 
+	GroupRoleListViewModel _groupRoleList;
+	GroupRoleListViewModel get groupRoleList
+	{
+		if (_groupRoleList == null)
+			_groupRoleList = new GroupRoleListViewModel(groupList, roleList);
+
+		return _groupRoleList;
+	}
+
 	dispose()
 	{
 		if (_permissionList != null)
@@ -46,11 +56,14 @@ class AuthorizationViewModel extends ViewModel
 	 
 	 	if (_groupList != null)
 	 		_groupList.dispose();
+	 
+	 	if (_groupRoleList != null)
+	 		_groupRoleList.dispose();
 	}
 
 	List<ViewModel> getChildViewModels()
 	{
-		return [_permissionList, _roleList, _groupList];
+		return [_permissionList, _roleList, _groupList, _groupRoleList];
 	}
 
 	String toString() => 'authorization data';

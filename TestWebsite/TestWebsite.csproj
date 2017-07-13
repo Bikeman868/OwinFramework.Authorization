@@ -204,6 +204,7 @@
     <Content Include="Content\AuthorizationUI\web\main.dart" />
     <Content Include="Content\AuthorizationUI\web\Models\ApiResponseModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Models\NewRecordResponseModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\Models\ParentChildModel.dart" />
     <None Include="Content\AuthorizationUI\web\styles.less" />
     <Content Include="Content\AuthorizationUI\build\web\styles.less" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundContainer.dart" />
@@ -274,6 +275,8 @@
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleDeleteView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionDeleteView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupDeleteView.dart" />
+    <Content Include="Content\AuthorizationUI\web\ViewModels\GroupRoleListViewModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\ViewModels\GroupRoleViewModel.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
