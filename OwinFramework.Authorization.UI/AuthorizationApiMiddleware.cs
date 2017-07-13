@@ -287,7 +287,30 @@ namespace OwinFramework.Authorization.UI
 
         private Task GetRoleHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new GetRoleResponse();
+
+            long id;
+            if (!ParseIdFromPath(context, _rolePath, response, "role", out id))
+                return Json(context, response);
+
+            var permission = _authorizationData.GetPermission(id);
+            if (permission == null)
+            {
+                response.Result = ApiResult.NotFound;
+                response.ErrorMessage = "There is no role with id " + id;
+            }
+            else
+            {
+                response.Role = new RoleDto
+                {
+                    Id = permission.Id,
+                    CodeName = permission.CodeName,
+                    DisplayName = permission.DisplayName,
+                    Description = permission.Description
+                };
+            }
+
+            return Json(context, response);
         }
 
         private Task GetRoleListHandler(IOwinContext context)
@@ -335,17 +358,86 @@ namespace OwinFramework.Authorization.UI
 
         private Task NewRoleHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new NewRecordResponse();
+            var roleDto = GetBody<RoleDto>(context);
+
+            var role = new Role
+            {
+                CodeName = roleDto.CodeName,
+                DisplayName = roleDto.DisplayName,
+                Description = roleDto.Description
+            };
+
+            try
+            {
+                role = _authorizationData.NewRole(role);
+                response.Id = role.Id;
+            }
+            catch (Exception ex)
+            {
+                response.Result = ApiResult.FatalError;
+                response.ErrorMessage =
+                    "Failed to add role " + role.CodeName +
+                    " to the database. " + ex.Message;
+            }
+
+            return Json(context, response);
         }
 
         private Task UpdateRoleHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse();
+            var roleDto = GetBody<RoleDto>(context);
+
+            var role = _authorizationData.GetRole(roleDto.Id);
+            if (role == null)
+            {
+                response.Result = ApiResult.NotFound;
+                response.ErrorMessage = "No role found with id " + roleDto.Id;
+            }
+            else
+            {
+                role.CodeName = roleDto.CodeName;
+                role.DisplayName = roleDto.DisplayName;
+                role.Description = roleDto.Description;
+
+                try
+                {
+                    _authorizationData.UpdateRole(role);
+                }
+                catch (Exception ex)
+                {
+                    response.Result = ApiResult.FatalError;
+                    response.ErrorMessage =
+                        "Failed to update role " + role.Id +
+                        " in the database. " + ex.Message;
+                }
+            }
+
+            return Json(context, response);
         }
 
         private Task DeleteRoleHandler(IOwinContext context)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse();
+
+            long id;
+            if (!ParseIdFromPath(context, _rolePath, response, "role", out id))
+                return Json(context, response);
+
+            try
+            {
+                _authorizationData.DeleteRole(id);
+            }
+            catch (Exception ex)
+            {
+                response.Result = ApiResult.FatalError;
+                response.ErrorMessage =
+                    "Failed to delete role " + id +
+                    " from the database. " + ex.Message;
+            }
+
+            return Json(context, response);
         }
 
         #endregion
@@ -543,7 +635,7 @@ namespace OwinFramework.Authorization.UI
             out long id)
         {
             PathString remainingPath;
-            if (context.Request.Path.StartsWithSegments(_permissionPath, out remainingPath) && remainingPath.HasValue)
+            if (context.Request.Path.StartsWithSegments(basePath, out remainingPath) && remainingPath.HasValue)
             {
                 if (long.TryParse(remainingPath.Value.Substring(1), out id))
                     return true;

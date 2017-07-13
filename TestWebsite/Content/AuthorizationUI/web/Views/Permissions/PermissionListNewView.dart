@@ -16,15 +16,15 @@ import '../../ViewModels/PermissionListViewModel.dart';
 
 import '../../Views/Base/EditView.dart';
 import '../../Views/Permissions/PermissionNameView.dart';
-import '../../Views/Permissions/EditPermissionFormView.dart';
+import '../../Views/Permissions/PermissionEditFormView.dart';
 
 class PermissionListNewView extends EditView
 {
-	EditPermissionFormView _formView;
+	PermissionEditFormView _formView;
 
 	PermissionListNewView([PermissionListViewModel viewModel])
 	{
-		_formView = merge(new EditPermissionFormView()) as EditPermissionFormView;
+		_formView = merge(new PermissionEditFormView()) as PermissionEditFormView;
 
 		this.viewModel = viewModel;
 	}

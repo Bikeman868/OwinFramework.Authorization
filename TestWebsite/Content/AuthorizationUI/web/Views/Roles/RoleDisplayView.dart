@@ -11,6 +11,11 @@ class RoleDisplayView extends View
 	BoundLabel<String> _descriptionBinding;
 	BoundLabel<String> _codeNameBinding;
 
+	BoundLabel<String> _nameBinding1;
+	BoundLabel<String> _nameBinding2;
+	BoundLabel<String> _nameBinding3;
+	BoundLabel<String> _nameBinding4;
+
 	RoleDisplayView([RoleViewModel viewModel])
 	{
 		addBlockText(
@@ -25,22 +30,33 @@ class RoleDisplayView extends View
 		_descriptionBinding = new BoundLabel<String>(addLabeledField(form, 'Description'));
 		_codeNameBinding = new BoundLabel<String>(addLabeledField(form, 'Code name'));
 
-		addHeading(3, 'Role groups');
+		addHR();
 
-		addBlockText(
-			'<p>These are the groups that will be affected by any changes you make to this role.</p>', 
-			className: 'help-note');
+		_nameBinding1 = new BoundLabel<String>(
+			addHeading(3, 'Role groups'), 
+			formatMethod: (s) => s + ' groups');
+		
+		_nameBinding2 = new BoundLabel<String>(
+			addBlockText('', className: 'help-note'),
+			formatMethod: (s) => 
+				'<p>These are the groups that will be affected by ' +
+				'any changes you make to the "' + s + '" role.</p>');
 
 		addBlockText('Group 1');
 		addBlockText('Group 2');
 		addBlockText('Group 3');
 
-		addHeading(3, 'Role permissions');
+		addHR();
 
-		addBlockText(
-			'<p>These are the permissions that will be granted when this role is assigned to a '
-			'group of users.</p>', 
-			className: 'help-note');
+		_nameBinding3 = new BoundLabel<String>(
+			addHeading(3, 'Role permissions'), 
+			formatMethod: (s) => s + ' permissions');
+
+		_nameBinding4 = new BoundLabel<String>(
+			addBlockText('', className: 'help-note'),
+			formatMethod: (s) => 
+				'<p>These are the permissions that will be granted when the "' + s +
+				'" role is assigned to a group of users.</p>');
 
 		addBlockText('Permission 1');
 		addBlockText('Permission 2');
@@ -60,12 +76,22 @@ class RoleDisplayView extends View
 			_displayNameBinding.binding = null;
 			_descriptionBinding.binding = null;
 			_codeNameBinding.binding = null;
+
+			_nameBinding1.binding = null;
+			_nameBinding2.binding = null;
+			_nameBinding3.binding = null;
+			_nameBinding4.binding = null;
 		}
 		else
 		{
 			_displayNameBinding.binding = value.displayName;
 			_descriptionBinding.binding = value.description;
 			_codeNameBinding.binding = value.codeName;
+
+			_nameBinding1.binding = value.displayName;
+			_nameBinding2.binding = value.displayName;
+			_nameBinding3.binding = value.displayName;
+			_nameBinding4.binding = value.displayName;
 		}
 	}
 

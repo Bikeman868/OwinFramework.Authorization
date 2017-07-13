@@ -18,4 +18,10 @@ class EditView extends View
 	{
 		onSuccess();
 	}
+
+	// Override in derrived classes to delete the record
+	void deleteRecord(void onSuccess())
+	{
+		onSuccess();
+	}
 }

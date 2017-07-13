@@ -15,7 +15,7 @@ import '../../Models/ApiResponseModel.dart';
 import '../../ViewModels/GroupViewModel.dart';
 
 import '../../Views/Base/EditView.dart';
-import '../../Views/Groups/EditGroupFormView.dart';
+import '../../Views/Groups/GroupEditFormView.dart';
 
 class GroupEditView extends EditView
 {
@@ -25,7 +25,7 @@ class GroupEditView extends EditView
 
 	GroupEditView([GroupViewModel viewModel])
 	{
-		var formView = merge(new EditGroupFormView()) as EditGroupFormView;
+		var formView = merge(new GroupEditFormView()) as GroupEditFormView;
 
 		_displayNameBinding = new BoundTextInput<String>(formView.displayName);
 		_descriptionBinding = new BoundTextArea<String>(formView.description);

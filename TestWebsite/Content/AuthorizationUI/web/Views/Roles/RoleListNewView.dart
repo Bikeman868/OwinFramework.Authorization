@@ -16,15 +16,15 @@ import '../../ViewModels/RoleListViewModel.dart';
 
 import '../../Views/Base/EditView.dart';
 import '../../Views/Roles/RoleNameView.dart';
-import '../../Views/Roles/EditRoleFormView.dart';
+import '../../Views/Roles/RoleEditFormView.dart';
 
 class RoleListNewView extends EditView
 {
-	EditRoleFormView _formView;
+	RoleEditFormView _formView;
 
 	RoleListNewView([RoleListViewModel viewModel])
 	{
-		_formView = merge(new EditRoleFormView()) as EditRoleFormView;
+		_formView = merge(new RoleEditFormView()) as RoleEditFormView;
 
 		this.viewModel = viewModel;
 	}

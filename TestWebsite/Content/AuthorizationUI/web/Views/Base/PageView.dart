@@ -21,18 +21,21 @@ import '../Permissions/PermissionListEditView.dart';
 import '../Permissions/PermissionListNewView.dart';
 import '../Permissions/PermissionDisplayView.dart';
 import '../Permissions/PermissionEditView.dart';
+import '../Permissions/PermissionDeleteView.dart';
 
 import '../Groups/GroupListSelectView.dart';
 import '../Groups/GroupListEditView.dart';
 import '../Groups/GroupListNewView.dart';
 import '../Groups/GroupDisplayView.dart';
 import '../Groups/GroupEditView.dart';
+import '../Groups/GroupDeleteView.dart';
 
 import '../Roles/RoleListSelectView.dart';
 import '../Roles/RoleListEditView.dart';
 import '../Roles/RoleListNewView.dart';
 import '../Roles/RoleDisplayView.dart';
 import '../Roles/RoleEditView.dart';
+import '../Roles/RoleDeleteView.dart';
 
 class PageView extends View
 {
@@ -85,14 +88,13 @@ class PageView extends View
 				'Groups',
 				groupListViewModel,
 				new GroupListSelectView(groupListViewModel),
-				new GroupListEditView(groupListViewModel),
+				null,
 				new GroupListNewView(groupListViewModel));
 		}
 		else
 		{
 			_groupListView.viewModel = groupListViewModel;
 			(_groupListView.selectView as GroupListSelectView).viewModel = groupListViewModel;
-			(_groupListView.editView as GroupListEditView).viewModel = groupListViewModel;
 			(_groupListView.addView as GroupListNewView).viewModel = groupListViewModel;
 		}
 
@@ -125,7 +127,7 @@ class PageView extends View
 
 	EditableView _groupView;
 
-	displayGroup(GroupViewModel groupViewModel, Element container)
+	displayGroup(GroupListViewModel groupListViewModel, GroupViewModel groupViewModel, Element container)
 	{
 		if (_groupView == null)
 		{
@@ -133,12 +135,14 @@ class PageView extends View
 				'Group',
 				groupViewModel,
 				new GroupDisplayView(groupViewModel),
-				new GroupEditView(groupViewModel));
+				new GroupEditView(groupViewModel),
+				new GroupDeleteView(groupListViewModel, groupViewModel));
 		}
 		else
 		{
 			(_groupView.displayView as GroupDisplayView).viewModel = groupViewModel;
 			(_groupView.editView as GroupEditView).viewModel = groupViewModel;
+			(_groupView.deleteView as GroupDeleteView).viewModel = groupViewModel;
 		}
 
 		_groupView.displayIn(container);
@@ -146,7 +150,7 @@ class PageView extends View
 
 	EditableView _roleView;
 
-	displayRole(RoleViewModel roleViewModel, Element container)
+	displayRole(RoleListViewModel roleListViewModel, RoleViewModel roleViewModel, Element container)
 	{
 		if (_roleView == null)
 		{
@@ -154,12 +158,14 @@ class PageView extends View
 				'Role',
 				roleViewModel,
 				new RoleDisplayView(roleViewModel),
-				new RoleEditView(roleViewModel));
+				new RoleEditView(roleViewModel),
+				new RoleDeleteView(roleListViewModel, roleViewModel));
 		}
 		else
 		{
 			(_roleView.displayView as RoleDisplayView).viewModel = roleViewModel;
 			(_roleView.editView as RoleEditView).viewModel = roleViewModel;
+			(_roleView.deleteView as RoleDeleteView).viewModel = roleViewModel;
 		}
 
 		_roleView.displayIn(container);
@@ -167,7 +173,7 @@ class PageView extends View
 
 	EditableView _permissionView;
 
-	displayPermission(PermissionViewModel permissionViewModel, Element container)
+	displayPermission(PermissionListViewModel permissionListViewModel, PermissionViewModel permissionViewModel, Element container)
 	{
 		if (_permissionView == null)
 		{
@@ -175,12 +181,14 @@ class PageView extends View
 				'Permission',
 				permissionViewModel,
 				new PermissionDisplayView(permissionViewModel),
-				new PermissionEditView(permissionViewModel));
+				new PermissionEditView(permissionViewModel),
+				new PermissionDeleteView(permissionListViewModel, permissionViewModel));
 		}
 		else
 		{
 			(_permissionView.displayView as PermissionDisplayView).viewModel = permissionViewModel;
 			(_permissionView.editView as PermissionEditView).viewModel = permissionViewModel;
+			(_permissionView.deleteView as PermissionDeleteView).viewModel = permissionViewModel;
 		}
 
 		_permissionView.displayIn(container);

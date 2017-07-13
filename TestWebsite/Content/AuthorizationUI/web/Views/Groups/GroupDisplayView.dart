@@ -11,6 +11,9 @@ class GroupDisplayView extends View
 	BoundLabel<String> _descriptionBinding;
 	BoundLabel<String> _codeNameBinding;
 
+	BoundLabel<String> _nameBinding1;
+	BoundLabel<String> _nameBinding2;
+
 	GroupDisplayView([GroupViewModel viewModel])
 	{
 		addBlockText(
@@ -26,7 +29,11 @@ class GroupDisplayView extends View
 		_descriptionBinding = new BoundLabel<String>(addLabeledField(form, 'Description'));
 		_codeNameBinding = new BoundLabel<String>(addLabeledField(form, 'Code name'));
 
-		addHeading(3, 'Group roles');
+		addHR();
+
+		_nameBinding1 = new BoundLabel<String>(
+			addHeading(3, 'Group roles'), 
+			formatMethod: (s) => s + ' roles');
 
 		addBlockText(
 			'<p>Roles are assigned to groups to give all of the users in that group access to ' +
@@ -37,7 +44,11 @@ class GroupDisplayView extends View
 		addBlockText('Role 2');
 		addBlockText('Role 3');
 
-		addHeading(3, 'Group permissions');
+		addHR();
+
+		_nameBinding2 = new BoundLabel<String>(
+			addHeading(3, 'Group permissions'), 
+			formatMethod: (s) => s + ' permissions');
 
 		addBlockText(
 			'<p>This is a combination of all of the permissions assigned to all of the roles ' +
@@ -63,12 +74,18 @@ class GroupDisplayView extends View
 			_displayNameBinding.binding = null;
 			_descriptionBinding.binding = null;
 			_codeNameBinding.binding = null;
+
+			_nameBinding1.binding = null;
+			_nameBinding2.binding = null;
 		}
 		else
 		{
 			_displayNameBinding.binding = value.displayName;
 			_descriptionBinding.binding = value.description;
 			_codeNameBinding.binding = value.codeName;
+
+			_nameBinding1.binding = value.displayName;
+			_nameBinding2.binding = value.displayName;
 		}
 	}
 

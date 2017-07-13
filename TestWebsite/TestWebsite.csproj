@@ -247,7 +247,7 @@
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionListNewView.dart" />
     <Content Include="Content\AuthorizationUI\web\Events\AppEvents.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Base\EditView.dart" />
-    <Content Include="Content\AuthorizationUI\web\Views\Permissions\EditPermissionFormView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionEditFormView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Pages\MobileView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Panels\EditableView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionEditView.dart" />
@@ -257,20 +257,23 @@
     <Content Include="Content\AuthorizationUI\web\ViewModels\RoleListViewModel.dart" />
     <Content Include="Content\AuthorizationUI\web\ViewModels\RoleViewModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Base\PageView.dart" />
-    <Content Include="Content\AuthorizationUI\web\Views\Roles\EditRoleFormView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleEditFormView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleDisplayView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleEditView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleListEditView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleListNewView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleListSelectView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleNameView.dart" />
-    <Content Include="Content\AuthorizationUI\web\Views\Groups\EditGroupFormView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupEditFormView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupDisplayView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupEditView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupListEditView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupListNewView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupListSelectView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupNameView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleDeleteView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionDeleteView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupDeleteView.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

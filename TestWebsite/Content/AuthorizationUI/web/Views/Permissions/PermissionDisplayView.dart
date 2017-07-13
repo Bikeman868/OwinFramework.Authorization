@@ -33,6 +33,7 @@ class PermissionDisplayView extends View
 			'that match the resource expression.</p>', 
 			className: 'help-note');
 
+		addHR();
 		addHeading(3, 'Permission roles');
 
 		addBlockText(

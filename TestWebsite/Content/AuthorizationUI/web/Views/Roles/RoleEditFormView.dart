@@ -2,7 +2,7 @@
 
 import '../../MVVM/View.dart';
 
-class EditRoleFormView extends View
+class RoleEditFormView extends View
 {
 	InputElement displayName;
 	TextAreaElement description;
@@ -10,7 +10,7 @@ class EditRoleFormView extends View
 
 	Element fieldValidationError;
 
-	EditRoleFormView()
+	RoleEditFormView()
 	{
 		addBlockText(
 			'<p>Create a new role. After creating the role you can assign permissions to it then ' +

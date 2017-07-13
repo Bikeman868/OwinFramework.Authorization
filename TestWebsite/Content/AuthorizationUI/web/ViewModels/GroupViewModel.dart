@@ -143,7 +143,7 @@ class GroupViewModel extends ViewModel
 			}
 			*/
 			result = SaveResult.failed;
-			alertMessage = 'Deleting groups requires another group to assign users to';
+			alertMessage = 'Deleting groups requires another group to assign the users to';
 		}
 		else
 		{

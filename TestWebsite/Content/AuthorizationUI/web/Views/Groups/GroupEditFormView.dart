@@ -2,7 +2,7 @@
 
 import '../../MVVM/View.dart';
 
-class EditGroupFormView extends View
+class GroupEditFormView extends View
 {
 	InputElement displayName;
 	TextAreaElement description;
@@ -10,7 +10,7 @@ class EditGroupFormView extends View
 
 	Element fieldValidationError;
 
-	EditGroupFormView()
+	GroupEditFormView()
 	{
 		addBlockText(
 			'<p>Create a new group. After creating the group you can assign roles to the group ' +

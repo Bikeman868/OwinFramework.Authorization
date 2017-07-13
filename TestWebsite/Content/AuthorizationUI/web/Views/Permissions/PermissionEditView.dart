@@ -15,7 +15,7 @@ import '../../Models/ApiResponseModel.dart';
 import '../../ViewModels/PermissionViewModel.dart';
 
 import '../../Views/Base/EditView.dart';
-import '../../Views/Permissions/EditPermissionFormView.dart';
+import '../../Views/Permissions/PermissionEditFormView.dart';
 
 class PermissionEditView extends EditView
 {
@@ -26,7 +26,7 @@ class PermissionEditView extends EditView
 
 	PermissionEditView([PermissionViewModel viewModel])
 	{
-		var formView = merge(new EditPermissionFormView()) as EditPermissionFormView;
+		var formView = merge(new PermissionEditFormView()) as PermissionEditFormView;
 
 		_displayNameBinding = new BoundTextInput<String>(formView.displayName);
 		_descriptionBinding = new BoundTextArea<String>(formView.description);

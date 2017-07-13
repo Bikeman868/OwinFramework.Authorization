@@ -2,7 +2,7 @@
 
 import '../../MVVM/View.dart';
 
-class EditPermissionFormView extends View
+class PermissionEditFormView extends View
 {
 	InputElement displayName;
 	TextAreaElement description;
@@ -11,7 +11,7 @@ class EditPermissionFormView extends View
 
 	Element fieldValidationError;
 
-	EditPermissionFormView()
+	PermissionEditFormView()
 	{
 		addBlockText(
 			'<p>Create a new permission. After creating the permission you must assign it to one or more roles ' +

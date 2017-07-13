@@ -16,15 +16,15 @@ import '../../ViewModels/GroupListViewModel.dart';
 
 import '../../Views/Base/EditView.dart';
 import '../../Views/Groups/GroupNameView.dart';
-import '../../Views/Groups/EditGroupFormView.dart';
+import '../../Views/Groups/GroupEditFormView.dart';
 
 class GroupListNewView extends EditView
 {
-	EditGroupFormView _formView;
+	GroupEditFormView _formView;
 
 	GroupListNewView([GroupListViewModel viewModel])
 	{
-		_formView = merge(new EditGroupFormView()) as EditGroupFormView;
+		_formView = merge(new GroupEditFormView()) as GroupEditFormView;
 
 		this.viewModel = viewModel;
 	}

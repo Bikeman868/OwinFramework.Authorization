@@ -113,12 +113,34 @@ class ModelList<TM extends Model, TVM extends ViewModel>
 
 		return viewModel;
 	}
+
+	void deleteViewModel(TVM viewModel)
+	{
+		delete(findIndex(viewModel));
+	}
+
+	// Use this to find the index position of a view model so that you
+	// can delete it from the list
+	int findIndex(TVM viewModel)
+	{
+		if (_viewModels != null)
+		{
+			for (var index = _viewModels.length - 1; index >= 0; index--)
+			{
+				if (_viewModels[index] == viewModel)
+					return index;
+			}
+		}
+		return -1;
+	}
   
 	// Call this to mark a model for deletion upon save
 	// The index positions don't change and view models can be un-deleted
 	// before saving.
 	void delete(int index)
 	{
+		if (index < 0) return;
+
 		TVM viewModel = _viewModels[index];
 
 		if (viewModel.getState() == ChangeState.added)
@@ -146,11 +168,8 @@ class ModelList<TM extends Model, TVM extends ViewModel>
 	{
 		SaveResult result = SaveResult.saved;
 
-		int index = 1;
 		for (ViewModel vm in _viewModels)
 		{
-			index++;
-
 			ChangeState vmState = vm.getState();
 			SaveResult vmResult = await vm.saveChanges(vmState, false);
 			if (vmResult == SaveResult.failed)
@@ -164,7 +183,7 @@ class ModelList<TM extends Model, TVM extends ViewModel>
 	// serializes the parent and child models in one large JSON PUT then you should
 	// remove deleted models before serializing the JSON. If your saving mechanism
 	// is to send DELETE requests to the server then you should leave the deleted
-	// modles in place until after the save is complete.
+	// models in place until after the save is complete.
 	void removeDeleted()
 	{
 		if (_models != null)

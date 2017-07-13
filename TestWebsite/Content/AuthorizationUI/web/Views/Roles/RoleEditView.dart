@@ -15,23 +15,21 @@ import '../../Models/ApiResponseModel.dart';
 import '../../ViewModels/RoleViewModel.dart';
 
 import '../../Views/Base/EditView.dart';
-import '../../Views/Roles/EditRoleFormView.dart';
+import '../../Views/Roles/RoleEditFormView.dart';
 
 class RoleEditView extends EditView
 {
 	BoundTextInput<String> _displayNameBinding;
 	BoundTextArea<String> _descriptionBinding;
 	BoundTextInput<String> _codeNameBinding;
-	BoundTextInput<String> _resourceBinding;
 
 	RoleEditView([RoleViewModel viewModel])
 	{
-		var formView = merge(new EditRoleFormView()) as EditRoleFormView;
+		var formView = merge(new RoleEditFormView()) as RoleEditFormView;
 
 		_displayNameBinding = new BoundTextInput<String>(formView.displayName);
 		_descriptionBinding = new BoundTextArea<String>(formView.description);
 		_codeNameBinding = new BoundTextInput<String>(formView.codeName);
-		_resourceBinding = new BoundTextInput<String>(formView.resource);
 
 		this.viewModel = viewModel;
 	}
@@ -47,14 +45,12 @@ class RoleEditView extends EditView
 			_displayNameBinding.binding = null;
 			_descriptionBinding.binding = null;
 			_codeNameBinding.binding = null;
-			_resourceBinding.binding = null;
 		}
 		else
 		{
 			_displayNameBinding.binding = value.displayName;
 			_descriptionBinding.binding = value.description;
 			_codeNameBinding.binding = value.codeName;
-			_resourceBinding.binding = value.resource;
 		}
 	}
 

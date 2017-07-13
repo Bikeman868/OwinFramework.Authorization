@@ -36,17 +36,17 @@ class DesktopView extends PageView
 
 	groupSelected(GroupViewModel groupViewModel)
 	{
-		displayGroup(groupViewModel, _bodyRegion);
+		displayGroup(_viewModel.groupList, groupViewModel, _bodyRegion);
 	}
 
 	roleSelected(RoleViewModel roleViewModel)
 	{
-		displayRole(roleViewModel, _bodyRegion);
+		displayRole(_viewModel.roleList, roleViewModel, _bodyRegion);
 	}
 
 	permissionSelected(PermissionViewModel permissionViewModel)
 	{
-		displayPermission(permissionViewModel, _bodyRegion);
+		displayPermission(_viewModel.permissionList, permissionViewModel, _bodyRegion);
 	}
 
 	_createLayout()

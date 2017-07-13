@@ -12,13 +12,17 @@ class EditableView extends View
 
 	View displayView;
 	EditView editView;
+	EditView deleteView;
+
+	EditView _currentEditView;
 
 	Element _refreshButton;
 	Element _editButton;
+	Element _deleteButton;
 	Element _saveButton;
 	Element _cancelButton;
 
-	EditableView(String title, this._viewModel, this.displayView, this.editView)
+	EditableView(String title, this._viewModel, this.displayView, [this.editView = null, this.deleteView = null])
 	{
 		var panel = addContainer(classNames: ['panel', 'editable-view']);
 
@@ -28,6 +32,7 @@ class EditableView extends View
 		var toolbar = addContainer(className: 'tool-bar', parent: header);
 		_refreshButton = addButton('Refresh', (MouseEvent e) => refresh(), parent: toolbar);
 		_editButton = addButton('Edit', (MouseEvent e) => edit(), parent: toolbar);
+		_deleteButton = addButton('Delete', (MouseEvent e) => delete(), parent: toolbar);
 		_saveButton = addButton('Save', (MouseEvent e) => save(), parent: toolbar);
 		_cancelButton = addButton('Cancel', (MouseEvent e) => cancel(), parent: toolbar);
 
@@ -39,7 +44,8 @@ class EditableView extends View
 	void display()
 	{
 		_refreshButton.hidden = false;
-		_editButton.hidden = false;
+		_editButton.hidden = editView == null;
+		_deleteButton.hidden = deleteView == null;
 		_saveButton.hidden = true;
 		_cancelButton.hidden = true;
 
@@ -50,10 +56,31 @@ class EditableView extends View
 	{
 		_refreshButton.hidden = true;
 		_editButton.hidden = true;
+		_deleteButton.hidden = true;
 		_saveButton.hidden = false;
 		_cancelButton.hidden = false;
 
 		_changeView(editView);
+		_currentEditView = editView;
+	}
+
+	void delete()
+	{
+		if (_currentEditView == deleteView)
+		{
+			deleteView.deleteRecord(display);
+		}
+		else
+		{
+			_refreshButton.hidden = true;
+			_editButton.hidden = true;
+			_deleteButton.hidden = false;
+			_saveButton.hidden = true;
+			_cancelButton.hidden = false;
+
+			_changeView(deleteView);
+			_currentEditView = deleteView;
+		}
 	}
 
 	void refresh()
@@ -74,5 +101,6 @@ class EditableView extends View
 	_changeView(View view)
 	{
 		view.displayIn(_viewPanel);
+		_currentEditView = null;
 	}
 }
