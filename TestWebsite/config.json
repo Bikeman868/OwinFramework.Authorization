@@ -35,11 +35,8 @@
             "path": "/pipeline"
         },
         "authorizationUi": {
-            "defaultDocument": "index.html",
             "documentationRootUrl": "/owin/authorizationUi",
-            "uiRootUrl": "/authorizationUi",
-            "dartUiRootUrl": "/authorizationUi/web",
-            "compiledUiRootUrl": "/authorizationUi/build/web"
+            "apiRootUrl": "/api/authorization"
         },
         "dart": {
             "defaultDocument": "index.html",
