@@ -13,18 +13,16 @@ class RoleGroupView extends View
 
 	RoleGroupView([GroupRoleViewModel viewModel])
 	{
-		var div = addDiv();
+		var tableRow = addDiv(className: 'table-row');
 
 		_codeNameBinding = new BoundLabel<String>(
-			addSpan(classNames: ['group', 'code-name'], parent: div), 
-			formatMethod: (s) => s + ' ');
+			addDiv(classNames: ['group', 'code-name', 'table-column'], parent: tableRow));
 
 		_displayNameBinding = new BoundLabel<String>(
-			addSpan(classNames: ['group', 'display-name'], parent: div), 
-			formatMethod: (s) => s + ' ');
+			addDiv(classNames: ['group', 'display-name', 'table-column'], parent: tableRow));
 
 		_descriptionBinding = new BoundLabel<String>(
-			addSpan(classNames: ['group', 'description'], parent: div));
+			addDiv(classNames: ['group', 'description', 'table-column'], parent: tableRow));
 
 		this.viewModel = viewModel;
 	}
