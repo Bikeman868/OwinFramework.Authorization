@@ -61,22 +61,9 @@ class GroupRoleListViewModel extends ViewModel
 
 	void reload()
 	{
-		/*
 		Server.getGroupRoles()
 			.then((List<ParentChildModel> m) => models = m)
 			.catchError((Error error) => MvvmEvents.alert.raise(error.toString()));
-		*/
-
-		models = 
-		[
-			new ParentChildModel(null)..childId = 1..parentId = 1,
-			new ParentChildModel(null)..childId = 1..parentId = 2,
-			new ParentChildModel(null)..childId = 1..parentId = 4,
-			new ParentChildModel(null)..childId = 2..parentId = 2,
-			new ParentChildModel(null)..childId = 2..parentId = 3,
-			new ParentChildModel(null)..childId = 3..parentId = 1,
-			new ParentChildModel(null)..childId = 4..parentId = 4
-		];
 	}
 
 	String toString() => 'group roles';

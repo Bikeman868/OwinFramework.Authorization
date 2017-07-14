@@ -794,6 +794,44 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
+        public IEnumerable<Tuple<long, long>> GetAllGroupRoles()
+        {
+            using (var context = _contextFactory.Create(_repositoryName))
+            {
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetAllGroupRoles"))
+                {
+                    using (var reader = context.ExecuteReader(command))
+                    {
+                        var result = new List<Tuple<long, long>>();
+                        while (reader.Read())
+                        {
+                            result.Add(new Tuple<long, long>(reader.Get<long>(0), reader.Get<long>(1)));
+                        }
+                        return result;
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<Tuple<long, long>> GetAllRolePermissions()
+        {
+            using (var context = _contextFactory.Create(_repositoryName))
+            {
+                using (var command = _commandFactory.CreateStoredProcedure("sp_GetAllRolePermissions"))
+                {
+                    using (var reader = context.ExecuteReader(command))
+                    {
+                        var result = new List<Tuple<long, long>>();
+                        while (reader.Read())
+                        {
+                            result.Add(new Tuple<long, long>(reader.Get<long>(0), reader.Get<long>(1)));
+                        }
+                        return result;
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Validation

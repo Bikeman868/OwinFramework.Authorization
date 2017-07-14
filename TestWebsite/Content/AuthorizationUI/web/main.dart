@@ -14,7 +14,7 @@ main()
 	_uiDiv = querySelector('#auth-ui');
 	_viewModel = new AuthorizationViewModel();
 
-	if (_uiDiv.clientWidth > 500)
+	if (_uiDiv.clientWidth > 760)
 		_view = new DesktopView(_viewModel);
 	else
 		_view = new MobileView(_viewModel);

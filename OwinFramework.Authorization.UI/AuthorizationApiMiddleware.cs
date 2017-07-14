@@ -90,10 +90,14 @@ namespace OwinFramework.Authorization.UI
             {
                 if (path.Equals(_documentationPath))
                     apiContext.Handler = DocumentConfiguration;
+                else if (path.StartsWithSegments(_groupRoleListPath))
+                    apiContext.Handler = GetGroupRoleListHandler;
                 else if (path.StartsWithSegments(_groupPath))
                     apiContext.Handler = GetGroupHandler;
                 else if (path.StartsWithSegments(_groupListPath))
                     apiContext.Handler = GetGroupListHandler;
+                else if (path.StartsWithSegments(_rolePermissionListPath))
+                    apiContext.Handler = GetRolePermissionListHandler;
                 else if (path.StartsWithSegments(_rolePath))
                     apiContext.Handler = GetRoleHandler;
                 else if (path.StartsWithSegments(_roleListPath))
@@ -259,6 +263,42 @@ namespace OwinFramework.Authorization.UI
                     Description = g.Description
                 })
                 .ToList()
+            };
+
+            return Json(context, result);
+        }
+
+        private Task GetGroupRoleListHandler(IOwinContext context)
+        {
+            var result = new GetRelationListResponse();
+
+            long? groupId = null;
+            var residualPath = context.Request.Path.Value.Substring(_groupRoleListPath.Value.Length);
+            if (residualPath.Length > 0)
+            {
+                if (residualPath.StartsWith("/")) residualPath = residualPath.Substring(1);
+
+                long id;
+                if (!long.TryParse(residualPath, out id))
+                {
+                    result.Result = ApiResult.BadRequest;
+                    result.ErrorMessage = "The group ID in the URL must be a valid integer";
+                    return Json(context, result);
+                }
+                groupId = id;
+            }
+
+            if (groupId.HasValue)
+            {
+                result.Relations = _authorizationData.GetGroupRoles(groupId.Value)
+                    .Select(r => new RelationDto{ParentId = groupId.Value, ChildId = r.Id })
+                    .ToList();
+            }
+            else
+            {
+                result.Relations = _authorizationData.GetAllGroupRoles()
+                    .Select(gr => new RelationDto { ParentId = gr.Item1, ChildId = gr.Item2 })
+                    .ToList();
             };
 
             return Json(context, result);
@@ -434,6 +474,42 @@ namespace OwinFramework.Authorization.UI
                     Description = r.Description
                 })
                 .ToList()
+            };
+
+            return Json(context, result);
+        }
+
+        private Task GetRolePermissionListHandler(IOwinContext context)
+        {
+            var result = new GetRelationListResponse();
+
+            long? roleId = null;
+            var residualPath = context.Request.Path.Value.Substring(_rolePermissionListPath.Value.Length);
+            if (residualPath.Length > 0)
+            {
+                if (residualPath.StartsWith("/")) residualPath = residualPath.Substring(1);
+
+                long id;
+                if (!long.TryParse(residualPath, out id))
+                {
+                    result.Result = ApiResult.BadRequest;
+                    result.ErrorMessage = "The role ID in the URL must be a valid integer";
+                    return Json(context, result);
+                }
+                roleId = id;
+            }
+
+            if (roleId.HasValue)
+            {
+                result.Relations = _authorizationData.GetRolePermissions(roleId.Value)
+                    .Select(p => new RelationDto { ParentId = roleId.Value, ChildId = p.Id })
+                    .ToList();
+            }
+            else
+            {
+                result.Relations = _authorizationData.GetAllRolePermissions()
+                    .Select(rp => new RelationDto { ParentId = rp.Item1, ChildId = rp.Item2 })
+                    .ToList();
             };
 
             return Json(context, result);
@@ -1314,6 +1390,15 @@ namespace OwinFramework.Authorization.UI
             public ClaimStatus Status { get; set; }
         }
 
+        private class RelationDto
+        {
+            [JsonProperty("parentId")]
+            public long ParentId { get; set; }
+
+            [JsonProperty("childId")]
+            public long ChildId { get; set; }
+        }
+
         private class ApiResponse
         {
             [JsonConverter(typeof(StringEnumConverter))]
@@ -1379,6 +1464,12 @@ namespace OwinFramework.Authorization.UI
 
         private class ValidationResponse : ApiResponse
         {
+        }
+
+        private class GetRelationListResponse: ApiResponse
+        {
+            [JsonProperty("relations")]
+            public List<RelationDto> Relations { get; set; }
         }
 
         #endregion

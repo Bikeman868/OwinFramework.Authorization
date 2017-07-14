@@ -10,6 +10,7 @@ import 'Models/GroupModel.dart';
 import 'Models/PermissionModel.dart';
 import 'Models/RoleModel.dart';
 import 'Models/IdentityModel.dart';
+import 'Models/ParentChildModel.dart';
 
 class Server
 {
@@ -346,6 +347,33 @@ class Server
 			identities.add(new IdentityModel(identityJson));
 		}
 		return identities;
+	}
+
+//
+//-- Many-to-many relationships -----------------------------------------------------------------
+//
+	static Future<List<ParentChildModel>> getGroupRoles() async
+	{
+		String responseString = await HttpRequest.getString(_apiUrl + '/group/roles');
+		Map responseJson = JSON.decode(responseString);
+
+		var response = new ApiResponseModel(responseJson);
+		if (!response.isSuccess) 
+		{
+			MvvmEvents.alert.raise(
+				'Failed to retrieve the list of group-role assignments. ' + 
+				response.result + ' - ' + response.error);
+			return null;
+		}
+
+		List<Map> relationsJson = responseJson['relations'];
+
+		var relations = new List<ParentChildModel>();
+		for (Map relationJson in relationsJson)
+		{
+			relations.add(new ParentChildModel(relationJson));
+		}
+		return relations;
 	}
 
 }

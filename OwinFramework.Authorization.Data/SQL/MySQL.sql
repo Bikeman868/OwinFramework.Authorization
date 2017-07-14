@@ -845,6 +845,39 @@ DELIMITER ;
 
 /********************************************************************/
 
+DELIMITER //
+CREATE PROCEDURE `sp_GetAllGroupRoles`
+(
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		gr.`groupId`,
+		gr.`roleId`
+	FROM
+		`tbl_group_roles` gr;
+END//
+DELIMITER ;
+
+
+/********************************************************************/
+
+DELIMITER //
+CREATE PROCEDURE `sp_GetAllRolePermissions`
+(
+)
+DETERMINISTIC
+BEGIN
+	SELECT
+		rp.`roleId`,
+		rp.`permissionId`
+	FROM
+		`tbl_role_permissions` rp;
+END//
+DELIMITER ;
+
+/********************************************************************/
+
 -- Permissions with no resource restrictions
 CALL sp_AddPermission('auth:api', NULL, 'Auth: Management UI', 'Allows users to call the authorization API and use the authorization management tools');
 CALL sp_AddPermission('auth:permission.edit', NULL, 'Auth: Edit permission', 'Allows users to modify permission records in the authorization system. Changing permissions allows users to give themselves access to anything on the system.');
