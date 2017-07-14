@@ -7,6 +7,7 @@ import '../ViewModels/GroupListViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
 import '../ViewModels/PermissionListViewModel.dart';
 import '../ViewModels/GroupRoleListViewModel.dart';
+import '../ViewModels/RolePermissionListViewModel.dart';
 
 class AuthorizationViewModel extends ViewModel
 {
@@ -46,6 +47,15 @@ class AuthorizationViewModel extends ViewModel
 		return _groupRoleList;
 	}
 
+	RolePermissionListViewModel _rolePermissionList;
+	RolePermissionListViewModel get rolePermissionList
+	{
+		if (_rolePermissionList == null)
+			_rolePermissionList = new RolePermissionListViewModel(roleList, permissionList);
+
+		return _rolePermissionList;
+	}
+
 	dispose()
 	{
 		if (_permissionList != null)
@@ -59,11 +69,14 @@ class AuthorizationViewModel extends ViewModel
 	 
 	 	if (_groupRoleList != null)
 	 		_groupRoleList.dispose();
+	 
+	 	if (_rolePermissionList != null)
+	 		_rolePermissionList.dispose();
 	}
 
 	List<ViewModel> getChildViewModels()
 	{
-		return [_permissionList, _roleList, _groupList, _groupRoleList];
+		return [_permissionList, _roleList, _groupList, _groupRoleList, _rolePermissionList];
 	}
 
 	String toString() => 'authorization data';

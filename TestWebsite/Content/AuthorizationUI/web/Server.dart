@@ -352,6 +352,7 @@ class Server
 //
 //-- Many-to-many relationships -----------------------------------------------------------------
 //
+
 	static Future<List<ParentChildModel>> getGroupRoles() async
 	{
 		String responseString = await HttpRequest.getString(_apiUrl + '/group/roles');
@@ -376,4 +377,27 @@ class Server
 		return relations;
 	}
 
+	static Future<List<ParentChildModel>> getRolePermissions() async
+	{
+		String responseString = await HttpRequest.getString(_apiUrl + '/role/permissions');
+		Map responseJson = JSON.decode(responseString);
+
+		var response = new ApiResponseModel(responseJson);
+		if (!response.isSuccess) 
+		{
+			MvvmEvents.alert.raise(
+				'Failed to retrieve the list of role-permission assignments. ' + 
+				response.result + ' - ' + response.error);
+			return null;
+		}
+
+		List<Map> relationsJson = responseJson['relations'];
+
+		var relations = new List<ParentChildModel>();
+		for (Map relationJson in relationsJson)
+		{
+			relations.add(new ParentChildModel(relationJson));
+		}
+		return relations;
+	}
 }

@@ -6,11 +6,16 @@ import '../../MVVM/BoundRepeater.dart';
 
 import '../../Models/ParentChildModel.dart';
 
+import '../../ViewModels/AuthorizationViewModel.dart';
 import '../../ViewModels/RoleViewModel.dart';
 import '../../ViewModels/GroupRoleViewModel.dart';
 import '../../ViewModels/GroupRoleListViewModel.dart';
 
+import '../../ViewModels/RolePermissionViewModel.dart';
+import '../../ViewModels/RolePermissionListViewModel.dart';
+
 import '../../Views/Roles/RoleGroupView.dart';
+import '../../Views/Roles/RolePermissionView.dart';
 
 class RoleDisplayView extends View
 {
@@ -24,15 +29,20 @@ class RoleDisplayView extends View
 	BoundLabel<String> _nameBinding4;
 
 	BoundRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView> _groupListBinding;
+	BoundRepeater<ParentChildModel, RolePermissionViewModel, RolePermissionView> _permissionListBinding;
 
 	GroupRoleListViewModel _groupRoleListViewModel;
+	RolePermissionListViewModel _rolePermissionListViewModel;
 
 	RoleDisplayView(
-		this._groupRoleListViewModel,
+		AuthorizationViewModel authorizationViewModel,
 		[
 			RoleViewModel viewModel
 		])
 	{
+		_groupRoleListViewModel = authorizationViewModel.groupRoleList;
+		_rolePermissionListViewModel = authorizationViewModel.rolePermissionList;
+
 		addBlockText(
 			'<p>A <b>Role</b> is a set of permissions that are required to perform a specific function. ' +
 			'For example in order to do the job of customer service representative users must ' +
@@ -57,9 +67,9 @@ class RoleDisplayView extends View
 				'<p>These are the groups that will be affected by ' +
 				'any changes you make to the "' + s + '" role.</p>');
 
-		var tableRow = addDiv(className: 'tr', parent: addDiv(className: 'table'));
-		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: tableRow);
-		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: tableRow);
+		var groupTableHeader = addDiv(className: 'tr', parent: addDiv(className: 'table'));
+		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: groupTableHeader);
+		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: groupTableHeader);
 
 		_groupListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView>(
 			(vm) => new RoleGroupView(vm), addDiv(className: 'table'))
@@ -77,9 +87,13 @@ class RoleDisplayView extends View
 				'<p>These are the permissions that will be granted when the "' + s +
 				'" role is assigned to a group of users.</p>');
 
-		addBlockText('Permission 1');
-		addBlockText('Permission 2');
-		addBlockText('Permission 3');
+		var permissionTableHeader = addDiv(className: 'tr', parent: addDiv(className: 'table'));
+		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: permissionTableHeader);
+		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: permissionTableHeader);
+
+		_permissionListBinding = new BoundRepeater<ParentChildModel, RolePermissionViewModel, RolePermissionView>
+			((vm) => new RolePermissionView(vm), addDiv(className: 'table'))
+			..binding = _rolePermissionListViewModel.rolePermissions;
 
 		this.viewModel = viewModel;
 	}
@@ -102,6 +116,7 @@ class RoleDisplayView extends View
 			_nameBinding4.binding = null;
 
 			_groupListBinding.viewModelFilter = (vm) => false;
+			_permissionListBinding.viewModelFilter = (vm) => false;
 		}
 		else
 		{
@@ -116,6 +131,9 @@ class RoleDisplayView extends View
 
 			_groupListBinding.viewModelFilter = (vm) => vm.model.childId == value.model.id;
 			_groupListBinding.refresh();
+
+			_permissionListBinding.viewModelFilter = (vm) => vm.model.parentId == value.model.id;
+			_permissionListBinding.refresh();
 		}
 	}
 

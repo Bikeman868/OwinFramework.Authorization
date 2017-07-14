@@ -22,6 +22,8 @@ class PermissionViewModel extends ViewModel
     StringBinding resource;
     StringBinding description;
 
+	int id;
+
 	PermissionViewModel([PermissionModel model])
 	{
 		codeName = new StringBinding();
@@ -60,6 +62,8 @@ class PermissionViewModel extends ViewModel
 		}
 		else
 		{
+			id = value.id;
+
 			codeName.setter = (String text) 
 			{ 
 				value.codeName = text;

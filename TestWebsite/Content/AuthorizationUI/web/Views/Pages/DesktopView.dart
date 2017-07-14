@@ -25,7 +25,7 @@ class DesktopView extends PageView
 	DesktopView(this._viewModel)
 	{
 		_createLayout();
-		_displayPermissions();
+		_displayUsers();
 	}
 
 	alert(String message)

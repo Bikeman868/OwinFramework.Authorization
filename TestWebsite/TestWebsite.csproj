@@ -279,6 +279,10 @@
     <Content Include="Content\AuthorizationUI\web\ViewModels\GroupRoleViewModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleGroupView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupRoleView.dart" />
+    <Content Include="Content\AuthorizationUI\web\ViewModels\RolePermissionListViewModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\ViewModels\RolePermissionViewModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Roles\RolePermissionView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionRoleView.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -20,7 +20,7 @@ class MobileView extends PageView
 	MobileView(this._viewModel)
 	{
 		_createLayout();
-		_displayPermissions();
+		_displayUsers();
 	}
 
 	groupSelected(GroupViewModel groupViewModel)

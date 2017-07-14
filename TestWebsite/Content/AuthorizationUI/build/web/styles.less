@@ -1,0 +1,691 @@
+﻿@body-font: Gibson Helvetica Neue Arial sans-serif;
+@heading-font: helvetica;
+@base-font-size: 16px;
+
+@phone-width: 760px;
+@tablet-width: 1024px;
+
+body,html
+{
+    font-family: @body-font;
+    margin: 0;
+    padding: 0;
+    font-size: @base-font-size;
+    background: white;
+    -webkit-font-smoothing: antialiased;
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    body,html
+    {
+        font-size: @base-font-size * 1.2;
+        background: ghostwhite;
+    }
+}
+
+h1
+{
+    font-family: @heading-font;
+    font-size:@base-font-size * 1.5;
+    padding-left:5px;
+    padding-right:0;
+    padding-top:0;
+    padding-bottom:5px;
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    h1
+    {
+        font-size:@base-font-size * 2.5;
+        padding-left:10px;
+        padding-bottom:20px;
+    }
+}
+
+h2
+{
+    font-family: @heading-font;
+    font-size:@base-font-size * 1.3;
+    padding-left:3px;
+    padding-right:0;
+    padding-top:0;
+    padding-bottom:3px;
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    h2
+    {
+        font-size: @base-font-size * 1.8;
+        padding-left:8px;
+        padding-bottom:10px;
+    }
+}
+
+h3
+{
+    font-family: @heading-font;
+    font-size: @base-font-size * 1.2;
+    padding-left: 3px;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 3px;
+    color: #154eb7;
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    h3
+    {
+        font-size: @base-font-size * 1.4;
+        padding-left: 6px;
+        padding-bottom: 6px;
+    }
+}
+
+div
+{
+    padding: 0;
+    margin: 0;
+}
+
+td
+{
+    vertical-align: top;
+}
+
+textarea
+{
+    font-family: @body-font;
+}
+
+.button
+{
+    cursor: pointer;
+}
+
+// Page layout
+
+.header-region
+{
+    background: gray;
+    color: whitesmoke;
+    clear: both;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height:25px;
+
+    h2
+    {
+        font-size: 15px;
+        padding-left: 8px;
+        padding-right: 0;
+        padding-bottom: 2px;
+        padding-top: 0;
+        margin: 5px;
+    }
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .header-region
+    {
+        height:70px;
+
+        h2
+        {
+            font-size:40px;
+            padding-left:12px;
+            padding-bottom:10px;
+            margin:5px;
+        }
+    }
+}
+
+.menu-region
+{
+    background: aliceblue;
+    clear: both;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    height:38px;
+
+    .button
+    {
+        padding: 6px;
+        font-size: 16px;
+        border: 1px solid navy;
+        border-radius: 6px;
+        background: cornflowerblue;
+        color: white;
+        margin-right: 5px;
+        position: relative;
+        top: 10px;
+    }
+
+    .button:hover
+    {
+        border: 1px solid white;
+    }
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .menu-region
+    {
+        padding-left: 10px;
+        padding-right: 10px;
+        border-bottom: 1px solid navy;
+
+        .button
+        {
+            top: 5px;
+        }
+    }
+}
+
+
+.main-region
+{
+    background: whitesmoke;
+    clear: both;
+    overflow: auto;
+    white-space : nowrap;
+}
+
+.footer-region
+{
+    background: gray;
+    color: whitesmoke;
+    clear: both;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    height:10px;
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .footer-region
+    {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 10px;
+        padding-right: 10px;
+        height:20px;
+    }
+}
+
+.nav-region
+{
+    display:block;
+    vertical-align: top;
+    width: auto;
+    padding: 2px;
+    margin: 1px;
+    white-space: normal;
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .nav-region
+    {
+        width: 350px;
+        padding: 4px;
+        float: left;
+    }
+}
+
+@media only screen and (min-width: @tablet-width)
+{
+    .nav-region
+    {
+        width: 500px;
+    }
+}
+
+.body-region
+{
+    display:block;
+    vertical-align: top;
+    overflow: visible;
+    white-space: normal;
+    width: auto;
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .body-region
+    {
+        margin-left: 350px;
+        min-width: 600px;
+    }
+}
+
+@media only screen and (min-width: @tablet-width)
+{
+    .body-region
+    {
+        margin-left: 500px;
+        min-width: 750px;
+    }
+}
+
+// Panels with tool bars
+
+.panel
+{
+    h3
+    {
+        display: inline;
+    }
+
+    div.help-note
+    {
+        margin-top: 6px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 20px;
+    }
+
+    div.validation-error
+    {
+        margin-top: 6px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 20px;
+    }
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .panel
+    {
+        background-color: whitesmoke;
+        border-color: lightgray;
+        border:outset;
+        border-width: 2px;
+        margin: 5px;
+        padding: 5px;
+    }
+}
+
+.tool-bar
+{
+    height: 25px;
+    float: right;
+
+    &:after
+    { 
+       content: " ";
+       display: block; 
+       height: 0; 
+       clear: both;
+    }
+
+    .button
+    {
+        padding: 5px;
+        font-size: 16px;
+        border: 1px solid #5b330b;
+        border-radius: 4px;
+        background: #eda864;
+        color: white;
+        margin-right: 4px;
+        margin-left: 4px;
+    }
+
+    .button:hover
+    {
+        border: 1px solid white;
+    }
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .tool-bar
+    {
+        height: 15px;
+    
+        .button
+        {
+            padding: 3px;
+            font-size: @base-font-size;
+            border-radius: 3px;
+            margin-right: 3px;
+        }
+    }
+}
+
+// Bound lists
+
+.bound-list
+{
+    &:after
+    { 
+       content: " ";
+       display: block; 
+       height: 0; 
+       clear: both;
+    }
+}
+
+.list-item
+{
+    list-style: none;
+}
+
+.bound-list-item
+{
+    list-style: none;
+    font-size: @base-font-size * 1.2;
+
+    &:after
+    {
+       content: " ";
+       display: block; 
+       height: 0; 
+       clear: both;
+    }
+
+}
+
+.selection-list
+{
+    margin: 4px;
+    position: relative;
+    padding: 6px 6px 6px 6px;
+
+    .bound-list-item
+    {
+        font-size: @base-font-size * 1.6;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        border: 1px solid transparent;
+        cursor: pointer;
+
+        &:hover
+        {
+            border: 1px solid black;
+        }
+    }
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .selection-list
+    {
+        margin: 10px;
+        position: relative;
+        padding: 4px 4px 4px 4px;
+
+        .bound-list-item
+        {
+            font-size: @base-font-size * 1.4;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+    }
+}
+
+.bound-list-view 
+{
+    display: block;
+    float: left;
+}
+
+.list-view 
+{
+    display: block;
+    float: left;
+}
+
+.bound-list-delete
+{
+    display: block;
+    width: 20px;
+    float: right;
+}
+
+.bound-list-add
+{
+    display: block;
+    width: 20px;
+    float: right;
+}
+
+.image-button
+{
+    margin: 1px;
+    position: relative;
+    padding: 1px;
+    border: 1px solid transparent;
+    cursor: pointer;
+
+    &:hover
+    {
+        border: 1px solid white;
+    }
+
+    &:active
+    {
+        border: 1px solid white;
+        padding-left: 2px;
+        padding-top: 2px;
+        padding-right:0px;
+        padding-bottom:0px;
+    }
+}
+
+.selection-item
+{
+    margin: 4px;
+    padding: 2px;
+    border: 1px solid transparent;
+    cursor: pointer;
+
+    &:hover
+    {
+        border: 1px solid navy;
+    }
+}
+
+// Forms
+
+.data-form
+{
+    display: block;
+    width: auto;
+}
+
+.data-row 
+{
+    display: block;
+    width: auto;
+}
+
+.data-label
+{
+    display: block;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+.data-field
+{
+    display: block;
+    font-weight: bold;
+    width: 90%;
+    margin-left: 10%;
+    margin-right: 5%;
+}
+
+.input-field 
+{
+    vertical-align: top;
+    display: block;
+    font-weight: bold;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+textarea.input-field
+{
+    height: 80px;
+}
+
+@media only screen and (min-width: @phone-width)
+{
+    .data-form
+    {
+        display: table;
+        width: 95%;
+        border-spacing: 3px;
+    }
+
+    .data-row 
+    {
+        display: table-row;
+        width: 100%;
+    }
+
+    .data-label
+    {
+        display: table-cell;
+        width: 30%;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        max-width: 300px;
+    }
+
+    .data-field
+    {
+        display: table-cell;
+        width: 95%;
+        margin-left: 5%;
+    }
+
+    .input-field 
+    {
+        display: inline;
+        width: 95%;
+    }
+}
+
+@media only screen and (min-width: @tablet-width)
+{
+    .data-label
+    {
+        width: 20%;
+    }
+}
+
+span.saved
+{
+    color: greenyellow;
+}
+
+span.modified
+{
+    color: yellow;
+    background: darkred;
+}
+
+.form-button
+{
+    display: table-cell;
+    padding: 10px;
+    height:15px;
+    font-size: @base-font-size * 1.5;
+    border: 1px solid navy;
+    border-radius: 6px;
+    background: cornflowerblue;
+    color:white;
+    cursor: pointer;
+
+    &:hover
+    {
+        border: 1px solid red;
+    }
+}
+
+.instruction
+{
+    font-size: @base-font-size * 1.5;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+div.help-note
+{
+    font-weight: lighter;
+    font-size: smaller;
+    margin-bottom: 10px;   
+}
+
+div.validation-error
+{
+    font-weight: bolder;
+    font-size: larger;
+    margin-bottom: 14px;
+    background-color: lightpink;
+}
+
+// Tables
+
+div.table
+{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+div.tr
+{
+    border-bottom: 1px solid lightgray;
+    border-left: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+
+    div.th
+    {
+        display: inline-block;
+        vertical-align: bottom;
+        background: aliceblue;
+        border-top: 1px solid lightgray;
+        font-weight: bolder;
+        padding-left: 0.5%;
+        padding-right: 0.5%;
+        padding-top: 1%;
+        padding-bottom: 1%;
+    }
+
+    div.td
+    {
+        display: inline-block;
+        vertical-align: top;
+        padding: 0.5%;
+    }
+
+    .display-name
+    {
+        width: 34%;
+    }
+
+    .description
+    {
+        width: 63%;
+    }
+}
+

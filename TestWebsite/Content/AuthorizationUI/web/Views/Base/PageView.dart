@@ -167,7 +167,7 @@ class PageView extends View
 		{
 			_roleView = new EditableView(
 				'Role',
-				new RoleDisplayView(authorizationViewModel.groupRoleList, roleViewModel),
+				new RoleDisplayView(authorizationViewModel, roleViewModel),
 				new RoleEditView(roleViewModel),
 				new RoleDeleteView(authorizationViewModel.roleList, roleViewModel));
 		}
@@ -192,7 +192,7 @@ class PageView extends View
 		{
 			_permissionView = new EditableView(
 				'Permission',
-				new PermissionDisplayView(permissionViewModel),
+				new PermissionDisplayView(authorizationViewModel.rolePermissionList, permissionViewModel),
 				new PermissionEditView(permissionViewModel),
 				new PermissionDeleteView(authorizationViewModel.permissionList, permissionViewModel));
 		}

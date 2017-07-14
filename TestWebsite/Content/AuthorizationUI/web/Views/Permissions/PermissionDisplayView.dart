@@ -2,8 +2,15 @@
 
 import '../../MVVM/View.dart';
 import '../../MVVM/BoundLabel.dart';
+import '../../MVVM/BoundRepeater.dart';
+
+import '../../Models/ParentChildModel.dart';
 
 import '../../ViewModels/PermissionViewModel.dart';
+import '../../ViewModels/RolePermissionViewModel.dart';
+import '../../ViewModels/RolePermissionListViewModel.dart';
+
+import '../../Views/Permissions/PermissionRoleView.dart';
 
 class PermissionDisplayView extends View
 {
@@ -12,7 +19,15 @@ class PermissionDisplayView extends View
 	BoundLabel<String> _codeNameBinding;
 	BoundLabel<String> _resourceBinding;
 
-	PermissionDisplayView([PermissionViewModel viewModel])
+	BoundRepeater<ParentChildModel, RolePermissionViewModel, PermissionRoleView> _permissionListBinding;
+
+	RolePermissionListViewModel _rolePermissionListViewModel;
+
+	PermissionDisplayView(
+		this._rolePermissionListViewModel,
+		[
+			PermissionViewModel viewModel
+		])
 	{
 		addBlockText(
 			'<p>A <b>Permission</b> is something that is tested by the system before allowing access ' +
@@ -38,12 +53,17 @@ class PermissionDisplayView extends View
 
 		addBlockText(
 			'<p>These are the roles that grant this permission. If you modify this permission then '
-			'groups that have any of these roles assigned to them will be affacted.</p>', 
+			'groups that have any of these roles assigned to them will be affected.</p>', 
 			className: 'help-note');
 
-		addBlockText('Role 1');
-		addBlockText('Role 2');
-		addBlockText('Role 3');
+		var permissionTableHeading = addDiv(className: 'tr', parent: addDiv(className: 'table'));
+		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: permissionTableHeading);
+		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: permissionTableHeading);
+
+		_permissionListBinding = new BoundRepeater<ParentChildModel, RolePermissionViewModel, PermissionRoleView>
+			((vm) => new PermissionRoleView(vm), addDiv(className: 'table'))
+			..binding = _rolePermissionListViewModel.rolePermissions;
+
 
 		this.viewModel = viewModel;
 	}
@@ -60,6 +80,8 @@ class PermissionDisplayView extends View
 			_descriptionBinding.binding = null;
 			_codeNameBinding.binding = null;
 			_resourceBinding.binding = null;
+
+			_permissionListBinding.viewModelFilter = (vm) => false;
 		}
 		else
 		{
@@ -67,6 +89,9 @@ class PermissionDisplayView extends View
 			_descriptionBinding.binding = value.description;
 			_codeNameBinding.binding = value.codeName;
 			_resourceBinding.binding = value.resource;
+
+			_permissionListBinding.viewModelFilter = (vm) => vm.model.childId == value.model.id;
+			_permissionListBinding.refresh();
 		}
 	}
 

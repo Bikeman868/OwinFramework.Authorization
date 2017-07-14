@@ -51,12 +51,12 @@ class GroupDisplayView extends View
 
 		addBlockText(
 			'<p>Roles are assigned to groups to give all of the users in that group access to ' +
-			'specific functions within the system.</p>', 
+			'specific functions within the system. These are the roles assigned to this group.</p>', 
 			className: 'help-note');
 
-		var tableRow = addDiv(className: 'tr', parent: addDiv(className: 'table'));
-		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: tableRow);
-		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: tableRow);
+		var roleTableHeading = addDiv(className: 'tr', parent: addDiv(className: 'table'));
+		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: roleTableHeading);
+		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: roleTableHeading);
 
 		_roleListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView>
 			((vm) => new GroupRoleView(vm), addDiv(className: 'table'))
