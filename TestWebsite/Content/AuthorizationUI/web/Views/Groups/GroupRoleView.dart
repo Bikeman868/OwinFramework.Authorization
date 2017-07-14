@@ -7,22 +7,18 @@ import '../../ViewModels/GroupRoleViewModel.dart';
 
 class GroupRoleView extends View
 {
-	BoundLabel<String> _codeNameBinding;
 	BoundLabel<String> _displayNameBinding;
 	BoundLabel<String> _descriptionBinding;
 
 	GroupRoleView([GroupRoleViewModel viewModel])
 	{
-		var tableRow = addDiv(className: 'table-row');
-
-		_codeNameBinding = new BoundLabel<String>(
-			addDiv(classNames: ['role', 'code-name', 'table-column'], parent: tableRow));
+		var tableRow = addDiv(className: 'tr');
 
 		_displayNameBinding = new BoundLabel<String>(
-			addDiv(classNames: ['role', 'display-name', 'table-column'], parent: tableRow));
+			addDiv(classNames: ['td', 'display-name', 'role'], parent: tableRow));
 
 		_descriptionBinding = new BoundLabel<String>(
-			addDiv(classNames: ['role', 'description', 'table-column'], parent: tableRow));
+			addDiv(classNames: ['td', 'description', 'role'], parent: tableRow));
 
 		this.viewModel = viewModel;
 	}
@@ -35,13 +31,11 @@ class GroupRoleView extends View
 		_viewModel = value;
 		if (value == null)
 		{
-			_codeNameBinding.binding = null;
 			_displayNameBinding.binding = null;
 			_descriptionBinding.binding = null;
 		}
 		else
 		{
-			_codeNameBinding.binding = value.roleCodeName;
 			_displayNameBinding.binding = value.roleDisplayName;
 			_descriptionBinding.binding = value.roleDescription;
 		}

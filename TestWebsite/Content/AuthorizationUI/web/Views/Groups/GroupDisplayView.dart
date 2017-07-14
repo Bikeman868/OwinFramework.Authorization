@@ -54,8 +54,12 @@ class GroupDisplayView extends View
 			'specific functions within the system.</p>', 
 			className: 'help-note');
 
-		_roleListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView>(
-			(vm) => new GroupRoleView(vm), addList())
+		var tableRow = addDiv(className: 'tr', parent: addDiv(className: 'table'));
+		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: tableRow);
+		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: tableRow);
+
+		_roleListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView>
+			((vm) => new GroupRoleView(vm), addDiv(className: 'table'))
 			..binding = _groupRoleListViewModel.groupRoles;
 
 		this.viewModel = viewModel;

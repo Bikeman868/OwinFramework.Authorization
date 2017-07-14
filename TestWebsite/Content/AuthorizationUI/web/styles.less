@@ -653,25 +653,46 @@ div.validation-error
 
 // Tables
 
-div.table-row
+div.table
 {
-    div.table-column
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+div.tr
+{
+    border-bottom: 1px solid lightgray;
+    border-left: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+
+    div.th
     {
         display: inline-block;
+        vertical-align: bottom;
+        background: aliceblue;
+        border-top: 1px solid lightgray;
+        font-weight: bolder;
+        padding-left: 0.5%;
+        padding-right: 0.5%;
+        padding-top: 1%;
+        padding-bottom: 1%;
     }
 
-    .code-name
+    div.td
     {
-        width:100px;
+        display: inline-block;
+        vertical-align: top;
+        padding: 0.5%;
     }
 
     .display-name
     {
-        width:150px;
+        width: 34%;
     }
 
     .description
     {
-        width:400px;
+        width: 63%;
     }
 }
+

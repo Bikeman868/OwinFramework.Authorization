@@ -133,6 +133,15 @@ class ModelList<TM extends Model, TVM extends ViewModel>
 		}
 		return -1;
 	}
+
+	// Finds the first view model that matches the predicate function
+	TVM findViewModel(bool predicate(TVM))
+	{
+		var i = viewModels.iterator;
+		while (i.moveNext())
+			if (predicate(i.current)) return i.current;
+		return null;
+	}
   
 	// Call this to mark a model for deletion upon save
 	// The index positions don't change and view models can be un-deleted

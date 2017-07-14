@@ -6,12 +6,15 @@ import '../MVVM/Enums.dart';
 import '../MVVM/ModelList.dart';
 import '../MVVM/StringBinding.dart';
 import '../MVVM/Events.dart';
+import '../MVVM/Types.dart';
 
 import '../Server.dart';
 import '../Events/AppEvents.dart';
 
 import '../ViewModels/GroupListViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
+import '../ViewModels/GroupViewModel.dart';
+import '../ViewModels/RoleViewModel.dart';
 
 import '../Models/ApiResponseModel.dart';
 import '../Models/ParentChildModel.dart';
@@ -64,41 +67,67 @@ class GroupRoleViewModel extends ViewModel
 			groupCodeName.getter = null;
 			groupDisplayName.getter = null;
 			groupDescription.getter = null;
+
 			roleCodeName.getter = null;
 			roleDisplayName.getter = null;
 			roleDescription.getter = null;
 		}
 		else
 		{
-			var groupViewModel = _groupListViewModel.groups.viewModels.firstWhere((vm) => vm.id == value.parentId);
+			var groupId = value.parentId;
+			var roleId = value.childId;
 
-			if (groupViewModel == null)
+			ViewModelGetter<GroupViewModel> groupViewModel = ()
 			{
-				groupCodeName.getter = null;
-				groupDisplayName.getter = null;
-				groupDescription.getter = null;
-			}
-			else
-			{
-				groupCodeName.getter = () => groupViewModel.codeName.getter();
-				groupDisplayName.getter = () => groupViewModel.displayName.getter();
-				groupDescription.getter = () => groupViewModel.description.getter();
-			}
+				return _groupListViewModel.groups.findViewModel((groupViewModel) => groupViewModel.id == groupId);
+			};
 
-			var roleViewModel = _roleListViewModel.roles.viewModels.firstWhere((vm) => vm.id == value.childId);
+			ViewModelGetter<RoleViewModel> roleViewModel = ()
+			{
+				return _roleListViewModel.roles.findViewModel((roleViewModel) => roleViewModel.id == roleId);
+			};
 
-			if (roleViewModel == null)
+			groupCodeName.getter = ()
 			{
-				roleCodeName.getter = null;
-				roleDisplayName.getter = null;
-				roleDescription.getter = null;
-			}
-			else
+				var vm  = groupViewModel();
+				if (vm == null) return '';
+				return vm.codeName.getter();
+			};
+
+			groupDisplayName.getter = ()
 			{
-				roleCodeName.getter = () => roleViewModel.codeName.getter();
-				roleDisplayName.getter = () => roleViewModel.displayName.getter();
-				roleDescription.getter = () => roleViewModel.description.getter();
-			}
+				var vm  = groupViewModel();
+				if (vm == null) return '';
+				return vm.displayName.getter();
+			};
+
+			groupDescription.getter = ()
+			{
+				var vm  = groupViewModel();
+				if (vm == null) return '';
+				return vm.description.getter();
+			};
+
+			roleCodeName.getter = ()
+			{
+				var vm  = roleViewModel();
+				if (vm == null) return '';
+				return vm.codeName.getter();
+			};
+
+			roleDisplayName.getter = ()
+			{
+				var vm  = roleViewModel();
+				if (vm == null) return '';
+				return vm.displayName.getter();
+			};
+
+			roleDescription.getter = ()
+			{
+				var vm  = roleViewModel();
+				if (vm == null) return '';
+				return vm.description.getter();
+			};
 		}
 
 		loaded();

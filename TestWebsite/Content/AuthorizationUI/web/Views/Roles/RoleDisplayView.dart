@@ -57,8 +57,12 @@ class RoleDisplayView extends View
 				'<p>These are the groups that will be affected by ' +
 				'any changes you make to the "' + s + '" role.</p>');
 
+		var tableRow = addDiv(className: 'tr', parent: addDiv(className: 'table'));
+		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: tableRow);
+		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: tableRow);
+
 		_groupListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView>(
-			(vm) => new RoleGroupView(vm), addList())
+			(vm) => new RoleGroupView(vm), addDiv(className: 'table'))
 			..binding = _groupRoleListViewModel.groupRoles;
 
 		addHR();

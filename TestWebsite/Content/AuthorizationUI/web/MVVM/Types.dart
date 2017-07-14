@@ -16,6 +16,7 @@ typedef TV ViewFactory<TVM extends ViewModel, TV extends View>(TVM viewModel);
 typedef void ViewModelUpdater<TM extends Model, TVM extends ViewModel>(TVM viewModel, TM model);
 
 typedef void ViewModelMethod<TVM extends ViewModel>(TVM viewModel);
+typedef TVM ViewModelGetter<TVM extends ViewModel>();
 
 typedef Formatter(String text, Element container);
 
