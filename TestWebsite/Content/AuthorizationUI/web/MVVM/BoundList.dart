@@ -8,7 +8,7 @@ import 'Types.dart';
 import 'BoundContainer.dart';
 import 'Enums.dart';
 
-// Provides tw-way binding of a list of view models to a list of views
+// Provides two-way binding of a list of view models to a list of views
 // * Generates <li> elements and adds them to the list container
 // * Wraps each view in a container that provides a list selection mechanism
 // * Can optionally display add/remove buttons to manage the list

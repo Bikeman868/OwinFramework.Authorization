@@ -25,17 +25,17 @@ class MobileView extends PageView
 
 	groupSelected(GroupViewModel groupViewModel)
 	{
-		displayGroup(_viewModel.groupList, groupViewModel, _navRegion);
+		displayGroup(_viewModel, groupViewModel, _navRegion);
 	}
 
 	roleSelected(RoleViewModel roleViewModel)
 	{
-		displayRole(_viewModel.roleList, roleViewModel, _navRegion);
+		displayRole(_viewModel, roleViewModel, _navRegion);
 	}
 
 	permissionSelected(PermissionViewModel permissionViewModel)
 	{
-		displayPermission(_viewModel.permissionList, permissionViewModel, _navRegion);
+		displayPermission(_viewModel, permissionViewModel, _navRegion);
 	}
 
 	_createLayout()

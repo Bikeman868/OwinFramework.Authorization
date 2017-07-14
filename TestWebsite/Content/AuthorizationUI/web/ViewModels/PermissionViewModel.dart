@@ -116,7 +116,7 @@ class PermissionViewModel extends ViewModel
 			if (response.isSuccess)
 			{
 				result = SaveResult.saved;
-				alertMessage = 'Changes to "' + model.displayName + '" permission successfully saved';
+				// alertMessage = 'Changes to "' + model.displayName + '" permission successfully saved';
 			}
 			else
 			{
@@ -158,7 +158,8 @@ class PermissionViewModel extends ViewModel
 			alertMessage = 'There were no changes to the "' + model.displayName + '" permission to save';
 		}
 
-		if (alert) MvvmEvents.alert.raise(alertMessage);
+		if (alert && alertMessage != null && alertMessage.length > 0)
+			MvvmEvents.alert.raise(alertMessage);
 
 		return result;
 	}

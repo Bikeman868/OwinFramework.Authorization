@@ -12,7 +12,7 @@ class RoleNameView extends View
 	RoleNameView([RoleViewModel viewModel])
 	{
 		_displayNameBinding = new BoundLabel<String>(
-			addSpan(classNames: ['role', 'codeName']), 
+			addSpan(classNames: ['role', 'display-name']), 
 			formatMethod: (s) => s + ' ');
 
 		this.viewModel = viewModel;

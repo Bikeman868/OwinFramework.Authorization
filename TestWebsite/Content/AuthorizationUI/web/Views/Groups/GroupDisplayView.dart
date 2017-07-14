@@ -2,8 +2,15 @@
 
 import '../../MVVM/View.dart';
 import '../../MVVM/BoundLabel.dart';
+import '../../MVVM/BoundRepeater.dart';
+
+import '../../Models/ParentChildModel.dart';
 
 import '../../ViewModels/GroupViewModel.dart';
+import '../../ViewModels/GroupRoleViewModel.dart';
+import '../../ViewModels/GroupRoleListViewModel.dart';
+
+import '../../Views/Groups/GroupRoleView.dart';
 
 class GroupDisplayView extends View
 {
@@ -12,9 +19,16 @@ class GroupDisplayView extends View
 	BoundLabel<String> _codeNameBinding;
 
 	BoundLabel<String> _nameBinding1;
-	BoundLabel<String> _nameBinding2;
 
-	GroupDisplayView([GroupViewModel viewModel])
+	BoundRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView> _roleListBinding;
+
+	GroupRoleListViewModel _groupRoleListViewModel;
+
+	GroupDisplayView(
+		this._groupRoleListViewModel,
+		[
+			GroupViewModel viewModel
+		])
 	{
 		addBlockText(
 			'<p>A <b>Group</b> is a set of users that have identical permissions, i.e. all users in ' +
@@ -40,25 +54,9 @@ class GroupDisplayView extends View
 			'specific functions within the system.</p>', 
 			className: 'help-note');
 
-		addBlockText('Role 1');
-		addBlockText('Role 2');
-		addBlockText('Role 3');
-
-		addHR();
-
-		_nameBinding2 = new BoundLabel<String>(
-			addHeading(3, 'Group permissions'), 
-			formatMethod: (s) => s + ' permissions');
-
-		addBlockText(
-			'<p>This is a combination of all of the permissions assigned to all of the roles ' +
-			'assigned to this group. To alter this list of permissions either add/remove roles ' +
-			'on the group, or modify the permissions assigned to the roles.</p>', 
-			className: 'help-note');
-
-		addBlockText('Permission 1');
-		addBlockText('Permission 2');
-		addBlockText('Permission 3');
+		_roleListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView>(
+			(vm) => new GroupRoleView(vm), addList())
+			..binding = _groupRoleListViewModel.groupRoles;
 
 		this.viewModel = viewModel;
 	}
@@ -76,7 +74,8 @@ class GroupDisplayView extends View
 			_codeNameBinding.binding = null;
 
 			_nameBinding1.binding = null;
-			_nameBinding2.binding = null;
+
+			_roleListBinding.viewModelFilter = (vm) => false;
 		}
 		else
 		{
@@ -85,7 +84,9 @@ class GroupDisplayView extends View
 			_codeNameBinding.binding = value.codeName;
 
 			_nameBinding1.binding = value.displayName;
-			_nameBinding2.binding = value.displayName;
+
+			_roleListBinding.viewModelFilter = (vm) => vm.model.parentId == value.model.id;
+			_roleListBinding.refresh();
 		}
 	}
 

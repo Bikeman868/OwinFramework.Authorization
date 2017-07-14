@@ -846,21 +846,21 @@ DELIMITER ;
 /********************************************************************/
 
 -- Permissions with no resource restrictions
-CALL sp_AddPermission('auth:api', NULL, 'Authorization API', 'Allows users to call the authorization API, required to use the UI');
-CALL sp_AddPermission('auth:permission.edit', NULL, 'Edit any permission', 'Allows users to save changes to permission records');
-CALL sp_AddPermission('auth:role.edit', NULL, 'Edit any role', 'Allows users to save changes to role records');
-CALL sp_AddPermission('auth:group.edit', NULL, 'Edit any group', 'Allows users to save changes to group records');
-CALL sp_AddPermission('auth:permission.assign', NULL, 'Assign any permission', 'Allows users to assign any permission to any role');
-CALL sp_AddPermission('auth:role.assign', NULL, 'Assign any role', 'Allows users to assign any role to any group');
-CALL sp_AddPermission('auth:group.assign', NULL, 'Assign any group', 'Allows users to assign any group to any user');
+CALL sp_AddPermission('auth:api', NULL, 'Auth: Management UI', 'Allows users to call the authorization API and use the authorization management tools');
+CALL sp_AddPermission('auth:permission.edit', NULL, 'Auth: Edit permission', 'Allows users to modify permission records in the authorization system. Changing permissions allows users to give themselves access to anything on the system.');
+CALL sp_AddPermission('auth:role.edit', NULL, 'Auth: Edit role', 'Allows users to modify role records. This does not include assigning permissions to roles, which is a separate permission.');
+CALL sp_AddPermission('auth:group.edit', NULL, 'Auth: Edit group', 'Allows users to modify group records. This does not include assigning roles to groups, which is  aseparate permission');
+CALL sp_AddPermission('auth:permission.assign', NULL, 'Auth: Assign permission', 'Allows users to assign any permission to any role. Users with this permission can grant anyone in the system access to any feature.');
+CALL sp_AddPermission('auth:role.assign', NULL, 'Auth: Assign role', 'Allows users to assign any role to any group. Only grant this permission to fully trusted users.');
+CALL sp_AddPermission('auth:group.assign', NULL, 'Auth: Assign group', 'Allows users to place users into groups. Since this will allow placing of users into the system administrators group this permission should only be granted to system administrators.');
 
 -- Permissions restricted to specific resources
-CALL sp_AddPermission('auth:group.assign', 'group:{my.group}', 'Assign user to my group', 'Allows users to add other users into their group');
+CALL sp_AddPermission('auth:group.assign', 'group:{my.group}', 'Auth: Assign to my group', 'Allows users to add other users into their own group. Users with this permission can give other users the same permissions as themselves but they can not give access to anything that they don''t have access to themselves.');
 
 -- Roles
-CALL sp_AddRole('sys.user', 'User of the system', 'Allows users to use the system');
-CALL sp_AddRole('auth.admin', 'Administrator of the authentication system', 'Allows users to manage groups, roles and permissions');
-CALL sp_AddRole('auth.super', 'Supervisor of the authentication system', 'Allows users to view the authentication system UI and give other users to this role');
+CALL sp_AddRole('sys.user', 'User', 'Allows users to use the system. You can give everyone this permission, or you can assign it only to logged on users.');
+CALL sp_AddRole('auth.admin', 'Authorization administrator', 'Allows users to manage groups, roles and permissions in the authorization system');
+CALL sp_AddRole('auth.super', 'Authorization supervisor', 'Allows users to view the authentication system UI and give other users to this role');
 
 CALL sp_AddRolePermission(2, 1);
 CALL sp_AddRolePermission(2, 2);
@@ -876,8 +876,8 @@ CALL sp_AddRolePermission(3, 8);
 -- User groups
 CALL sp_AddGroup('sys.admins', 'Administrators', 'Users who have full control over everything in the system. These users can give anyone access to anything.');
 CALL sp_AddGroup('sys.users',  'Users', 'Default group for all new users');
-CALL sp_AddGroup('auth.admins',  'Auth users', 'Users who manage the authentication system');
-CALL sp_AddGroup('auth.super',  'Auth supervisors', 'Users who can perform basic authentication system tasks');
+CALL sp_AddGroup('auth.admins',  'Authorization users', 'Users who manage all aspects of the authentication system');
+CALL sp_AddGroup('auth.super',  'Authorization supervisors', 'Users who can perform basic authentication system tasks');
 
 -- Note that sys admins don't need roles assigned, they automatically have all permissions
 CALL sp_AddGroupRole(2, 1);

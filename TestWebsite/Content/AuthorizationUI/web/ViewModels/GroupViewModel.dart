@@ -11,6 +11,7 @@ import '../Server.dart';
 import '../Events/AppEvents.dart';
 
 import '../ViewModels/GroupListViewModel.dart';
+import '../ViewModels/GroupRoleListViewModel.dart';
 
 import '../Models/ApiResponseModel.dart';
 import '../Models/GroupModel.dart';
@@ -20,6 +21,8 @@ class GroupViewModel extends ViewModel
     StringBinding codeName;
     StringBinding displayName;
     StringBinding description;
+
+	int id;
 
 	GroupViewModel([GroupModel model])
 	{
@@ -55,6 +58,8 @@ class GroupViewModel extends ViewModel
 		}
 		else
 		{
+			id = value.id;
+
 			codeName.setter = (String text) 
 			{ 
 				value.codeName = text;
@@ -76,6 +81,7 @@ class GroupViewModel extends ViewModel
 			};
 			description.getter = () => value.description;
 		}
+
 		loaded();
 	}
 
@@ -104,7 +110,7 @@ class GroupViewModel extends ViewModel
 			if (response.isSuccess)
 			{
 				result = SaveResult.saved;
-				alertMessage = 'Changes to "' + model.displayName + '" group successfully saved';
+				// alertMessage = 'Changes to "' + model.displayName + '" group successfully saved';
 			}
 			else
 			{
@@ -129,19 +135,6 @@ class GroupViewModel extends ViewModel
 		}
 		else if (state == ChangeState.deleted)
 		{
-			/*
-			var response = await Server.deleteGroup(model.id);
-			if (response.isSuccess)
-			{
-				result = SaveResult.saved;
-				alertMessage = 'The "' + model.displayName + '" group was successfully deleted';
-			}
-			else
-			{
-				result = SaveResult.failed;
-				alertMessage = 'The "' + model.displayName + '" group was not deleted. ' + response.error;
-			}
-			*/
 			result = SaveResult.failed;
 			alertMessage = 'Deleting groups requires another group to assign the users to';
 		}
@@ -150,7 +143,8 @@ class GroupViewModel extends ViewModel
 			alertMessage = 'There were no changes to the "' + model.displayName + '" group to save';
 		}
 
-		if (alert) MvvmEvents.alert.raise(alertMessage);
+		if (alert && alertMessage != null && alertMessage.length > 0)
+			MvvmEvents.alert.raise(alertMessage);
 
 		return result;
 	}

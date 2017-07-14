@@ -19,8 +19,9 @@ class RoleViewModel extends ViewModel
 {
     StringBinding codeName;
     StringBinding displayName;
-    StringBinding resource;
     StringBinding description;
+
+	int id;
 
 	RoleViewModel([RoleModel model])
 	{
@@ -56,6 +57,8 @@ class RoleViewModel extends ViewModel
 		}
 		else
 		{
+			id = value.id;
+
 			codeName.setter = (String text) 
 			{ 
 				value.codeName = text;
@@ -77,6 +80,7 @@ class RoleViewModel extends ViewModel
 			};
 			description.getter = () => value.description;
 		}
+
 		loaded();
 	}
 
@@ -105,7 +109,7 @@ class RoleViewModel extends ViewModel
 			if (response.isSuccess)
 			{
 				result = SaveResult.saved;
-				alertMessage = 'Changes to "' + model.displayName + '" role successfully saved';
+				// alertMessage = 'Changes to "' + model.displayName + '" role successfully saved';
 			}
 			else
 			{
@@ -147,7 +151,8 @@ class RoleViewModel extends ViewModel
 			alertMessage = 'There were no changes to the "' + model.displayName + '" role to save';
 		}
 
-		if (alert) MvvmEvents.alert.raise(alertMessage);
+		if (alert && alertMessage != null && alertMessage.length > 0)
+			MvvmEvents.alert.raise(alertMessage);
 
 		return result;
 	}

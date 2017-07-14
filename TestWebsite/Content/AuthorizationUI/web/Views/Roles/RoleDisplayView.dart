@@ -2,8 +2,15 @@
 
 import '../../MVVM/View.dart';
 import '../../MVVM/BoundLabel.dart';
+import '../../MVVM/BoundRepeater.dart';
+
+import '../../Models/ParentChildModel.dart';
 
 import '../../ViewModels/RoleViewModel.dart';
+import '../../ViewModels/GroupRoleViewModel.dart';
+import '../../ViewModels/GroupRoleListViewModel.dart';
+
+import '../../Views/Roles/RoleGroupView.dart';
 
 class RoleDisplayView extends View
 {
@@ -16,7 +23,15 @@ class RoleDisplayView extends View
 	BoundLabel<String> _nameBinding3;
 	BoundLabel<String> _nameBinding4;
 
-	RoleDisplayView([RoleViewModel viewModel])
+	BoundRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView> _groupListBinding;
+
+	GroupRoleListViewModel _groupRoleListViewModel;
+
+	RoleDisplayView(
+		this._groupRoleListViewModel,
+		[
+			RoleViewModel viewModel
+		])
 	{
 		addBlockText(
 			'<p>A <b>Role</b> is a set of permissions that are required to perform a specific function. ' +
@@ -42,9 +57,9 @@ class RoleDisplayView extends View
 				'<p>These are the groups that will be affected by ' +
 				'any changes you make to the "' + s + '" role.</p>');
 
-		addBlockText('Group 1');
-		addBlockText('Group 2');
-		addBlockText('Group 3');
+		_groupListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView>(
+			(vm) => new RoleGroupView(vm), addList())
+			..binding = _groupRoleListViewModel.groupRoles;
 
 		addHR();
 
@@ -81,6 +96,8 @@ class RoleDisplayView extends View
 			_nameBinding2.binding = null;
 			_nameBinding3.binding = null;
 			_nameBinding4.binding = null;
+
+			_groupListBinding.viewModelFilter = (vm) => false;
 		}
 		else
 		{
@@ -92,6 +109,9 @@ class RoleDisplayView extends View
 			_nameBinding2.binding = value.displayName;
 			_nameBinding3.binding = value.displayName;
 			_nameBinding4.binding = value.displayName;
+
+			_groupListBinding.viewModelFilter = (vm) => vm.model.childId == value.model.id;
+			_groupListBinding.refresh();
 		}
 	}
 

@@ -277,6 +277,8 @@
     <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupDeleteView.dart" />
     <Content Include="Content\AuthorizationUI\web\ViewModels\GroupRoleListViewModel.dart" />
     <Content Include="Content\AuthorizationUI\web\ViewModels\GroupRoleViewModel.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Roles\RoleGroupView.dart" />
+    <Content Include="Content\AuthorizationUI\web\Views\Groups\GroupRoleView.dart" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -56,7 +56,9 @@ class PageView extends View
 
 	EditableListView _permissionListView;
 
-	displayPermissionList(PermissionListViewModel permissionListViewModel, Element container)
+	displayPermissionList(
+		PermissionListViewModel permissionListViewModel, 
+		Element container)
 	{
 		if (_permissionListView == null)
 		{
@@ -80,7 +82,9 @@ class PageView extends View
 
 	EditableListView _groupListView;
 
-	displayGroupList(GroupListViewModel groupListViewModel, Element container)
+	displayGroupList(
+		GroupListViewModel groupListViewModel, 
+		Element container)
 	{
 		if (_groupListView == null)
 		{
@@ -103,7 +107,9 @@ class PageView extends View
 
 	EditableListView _roleListView;
 
-	displayRoleList(RoleListViewModel roleListViewModel, Element container)
+	displayRoleList(
+		RoleListViewModel roleListViewModel, 
+		Element container)
 	{
 		if (_roleListView == null)
 		{
@@ -127,15 +133,18 @@ class PageView extends View
 
 	EditableView _groupView;
 
-	displayGroup(GroupListViewModel groupListViewModel, GroupViewModel groupViewModel, Element container)
+	displayGroup(
+		AuthorizationViewModel authorizationViewModel, 
+		GroupViewModel groupViewModel, 
+		Element container)
 	{
 		if (_groupView == null)
 		{
 			_groupView = new EditableView(
 				'Group',
-				new GroupDisplayView(groupViewModel),
+				new GroupDisplayView(authorizationViewModel.groupRoleList, groupViewModel),
 				new GroupEditView(groupViewModel),
-				new GroupDeleteView(groupListViewModel, groupViewModel));
+				new GroupDeleteView(authorizationViewModel.groupList, groupViewModel));
 		}
 		else
 		{
@@ -149,15 +158,18 @@ class PageView extends View
 
 	EditableView _roleView;
 
-	displayRole(RoleListViewModel roleListViewModel, RoleViewModel roleViewModel, Element container)
+	displayRole(
+		AuthorizationViewModel authorizationViewModel, 
+		RoleViewModel roleViewModel, 
+		Element container)
 	{
 		if (_roleView == null)
 		{
 			_roleView = new EditableView(
 				'Role',
-				new RoleDisplayView(roleViewModel),
+				new RoleDisplayView(authorizationViewModel.groupRoleList, roleViewModel),
 				new RoleEditView(roleViewModel),
-				new RoleDeleteView(roleListViewModel, roleViewModel));
+				new RoleDeleteView(authorizationViewModel.roleList, roleViewModel));
 		}
 		else
 		{
@@ -171,7 +183,10 @@ class PageView extends View
 
 	EditableView _permissionView;
 
-	displayPermission(PermissionListViewModel permissionListViewModel, PermissionViewModel permissionViewModel, Element container)
+	displayPermission(
+		AuthorizationViewModel authorizationViewModel, 
+		PermissionViewModel permissionViewModel, 
+		Element container)
 	{
 		if (_permissionView == null)
 		{
@@ -179,7 +194,7 @@ class PageView extends View
 				'Permission',
 				new PermissionDisplayView(permissionViewModel),
 				new PermissionEditView(permissionViewModel),
-				new PermissionDeleteView(permissionListViewModel, permissionViewModel));
+				new PermissionDeleteView(authorizationViewModel.permissionList, permissionViewModel));
 		}
 		else
 		{

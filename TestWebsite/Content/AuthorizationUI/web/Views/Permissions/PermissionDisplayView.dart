@@ -34,10 +34,10 @@ class PermissionDisplayView extends View
 			className: 'help-note');
 
 		addHR();
-		addHeading(3, 'Permission roles');
+		addHeading(3, 'Roles');
 
 		addBlockText(
-			'<p>These are the roles that grant this permission If you modify this permission then '
+			'<p>These are the roles that grant this permission. If you modify this permission then '
 			'groups that have any of these roles assigned to them will be affacted.</p>', 
 			className: 'help-note');
 
