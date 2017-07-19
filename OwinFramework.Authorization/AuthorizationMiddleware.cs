@@ -23,11 +23,13 @@ namespace OwinFramework.Authorization
         IMiddleware<IAuthorization>,
         IUpstreamCommunicator<IUpstreamAuthorization>,
         IConfigurable,
-        ISelfDocumenting
+        ISelfDocumenting,
+        ITraceable
     {
         private readonly IList<IDependency> _dependencies = new List<IDependency>();
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
         string IMiddleware.Name { get; set; }
+        public Action<IOwinContext, Func<string>> Trace { get; set; }
 
         private readonly IAuthorizationData _authorizationData;
 
@@ -40,7 +42,7 @@ namespace OwinFramework.Authorization
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            var authorization = new Authorization(_authorizationData);
+            var authorization = new Authorization(_authorizationData, s => Trace(context, () => s));
             context.SetFeature<IUpstreamAuthorization>(authorization);
 
             return next();
@@ -51,6 +53,7 @@ namespace OwinFramework.Authorization
             if (!string.IsNullOrEmpty(_configuration.DocumentationRootUrl) &&
                 context.Request.Path.Value.Equals(_configuration.DocumentationRootUrl, StringComparison.OrdinalIgnoreCase))
             {
+                Trace(context, () => GetType().Name + " returning configuration documentation");
                 return DocumentConfiguration(context);
             }
 
@@ -58,19 +61,29 @@ namespace OwinFramework.Authorization
             var identification = context.GetFeature<IIdentification>();
 
             if (identification == null || authorization == null)
+            {
+                Trace(context, () => GetType().Name + " identification middleware is missing from the owin context");
                 throw new HttpException((int)HttpStatusCode.Forbidden, "Caller identification is missing");
+            }
 
             if (identification.IsAnonymous)
             {
+                Trace(context, () => GetType().Name + " caller is anonymous");
                 var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
                 if (upstreamIdentification != null && !upstreamIdentification.AllowAnonymous)
-                    throw new HttpException((int) HttpStatusCode.Forbidden, "Anonymous access is not permitted");
+                {
+                    Trace(context, () => GetType().Name + " anonymous access is not permitted to this resource");
+                    throw new HttpException((int)HttpStatusCode.Forbidden, "Anonymous access is not permitted");
+                }
             }
 
             authorization.Identification = identification;
             if (!authorization.IsAllowed())
-                throw new HttpException((int) HttpStatusCode.Forbidden,
+            {
+                Trace(context, () => GetType().Name + " returning a 403 Forbidden response");
+                throw new HttpException((int)HttpStatusCode.Forbidden,
                     "You do not have permission to perform this operation");
+            }
             context.SetFeature<IAuthorization>(authorization);
 
             return next();
@@ -188,18 +201,24 @@ namespace OwinFramework.Authorization
         private class Authorization : IUpstreamAuthorization, IAuthorization
         {
             private readonly IAuthorizationData _authorizationData;
+            private readonly Action<string> _trace;
             public IIdentification Identification;
 
             private readonly List<string> _requiredRoles = new List<string>();
             private readonly List<string> _requiredPermissions = new List<string>();
 
-            public Authorization(IAuthorizationData authorizationData)
+            public Authorization(
+                IAuthorizationData authorizationData, 
+                Action<string> trace)
             {
                 _authorizationData = authorizationData;
+                _trace = trace;
             }
 
             public void AddRequiredPermission(string permissionName)
             {
+                _trace(GetType().Name + " the '" + permissionName + "' permission is required for this request");
+
                 permissionName = string.Intern(permissionName.ToLower());
                 if (_requiredPermissions.Any(p => ReferenceEquals(p, permissionName)))
                     return;
@@ -208,6 +227,8 @@ namespace OwinFramework.Authorization
 
             public void AddRequiredRole(string roleName)
             {
+                _trace(GetType().Name + " the '" + roleName + "' role is required for this request");
+
                 roleName = string.Intern(roleName.ToLower());
                 if (_requiredRoles.Any(p => ReferenceEquals(p, roleName)))
                     return;
@@ -216,19 +237,51 @@ namespace OwinFramework.Authorization
 
             public bool HasPermission(string permissionName, string resourceName)
             {
-                return _authorizationData.HasPermission(Identification, permissionName, resourceName);
+                var result = _authorizationData.HasPermission(Identification, permissionName, resourceName);
+
+                if (!result)
+                    _trace(
+                        GetType().Name + " '" + Identification.Identity + 
+                        "' does not have '" + permissionName + "' permission" + 
+                        (string.IsNullOrEmpty(resourceName) ? "" : " on resource '" + 
+                        resourceName + "'"));
+
+                return result;
             }
 
             public bool IsInRole(string roleName)
             {
-                return _authorizationData.IsInRole(Identification, roleName);
+                var result = _authorizationData.IsInRole(Identification, roleName);
+
+                if (!result)
+                    _trace(GetType().Name + " '" + Identification.Identity + " does not have '" + roleName + "' role");
+
+                return result;
             }
 
             public bool IsAllowed()
             {
-                if (ReferenceEquals(Identification, null)) return false;
-                return _requiredRoles.All(IsInRole) && _requiredPermissions.All(r => HasPermission(r, null));
+                if (ReferenceEquals(Identification, null))
+                {
+                    _trace(GetType().Name + " not allowed because there is no identification");
+                    return false;
+                }
+
+                if (!_requiredRoles.All(IsInRole))
+                {
+                    _trace(GetType().Name + " not allowed because the user does not have all of the required roles");
+                    return false;
+                }
+
+                if (!_requiredPermissions.All(r => HasPermission(r, null)))
+                {
+                    _trace(GetType().Name + " not allowed because the user does not have all of the required permissions");
+                    return false;
+                }
+
+                return true;
             }
         }
+
     }
 }

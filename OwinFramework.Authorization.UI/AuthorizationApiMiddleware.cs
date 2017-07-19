@@ -26,11 +26,13 @@ namespace OwinFramework.Authorization.UI
         IMiddleware<IAuthorization>,
         IUpstreamCommunicator<IUpstreamAuthorization>,
         IConfigurable,
-        ISelfDocumenting
+        ISelfDocumenting,
+        ITraceable
     {
         private readonly IList<IDependency> _dependencies = new List<IDependency>();
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
         string IMiddleware.Name { get; set; }
+        public Action<IOwinContext, Func<string>> Trace { get; set; }
 
         private readonly IAuthorizationData _authorizationData;
 

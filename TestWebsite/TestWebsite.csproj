@@ -79,28 +79,28 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.2.5.2\lib\net40\OwinFramework.dll</HintPath>
+    <Reference Include="OwinFramework, Version=2.5.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.2.5.6\lib\net40\OwinFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.Configuration.Urchin, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.Urchin.2.5.0\lib\net40\OwinFramework.Configuration.Urchin.dll</HintPath>
+    <Reference Include="OwinFramework.Configuration.Urchin, Version=2.5.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.Urchin.2.5.6\lib\net40\OwinFramework.Configuration.Urchin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.Dart, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.Dart.2.5.0\lib\net40\OwinFramework.Dart.dll</HintPath>
+    <Reference Include="OwinFramework.Dart, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.Dart.2.5.1\lib\net40\OwinFramework.Dart.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.DefaultDocument, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.DefaultDocument.2.5.0\lib\net40\OwinFramework.DefaultDocument.dll</HintPath>
+    <Reference Include="OwinFramework.DefaultDocument, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.DefaultDocument.2.5.1\lib\net40\OwinFramework.DefaultDocument.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.Documenter, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.Documenter.2.5.0\lib\net40\OwinFramework.Documenter.dll</HintPath>
+    <Reference Include="OwinFramework.Documenter, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.Documenter.2.5.1\lib\net40\OwinFramework.Documenter.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.ExceptionReporter, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.ExceptionReporter.2.5.0\lib\net40\OwinFramework.ExceptionReporter.dll</HintPath>
+    <Reference Include="OwinFramework.ExceptionReporter, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.ExceptionReporter.2.5.2\lib\net40\OwinFramework.ExceptionReporter.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OwinFramework.Facilities.Cache.Local, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -115,24 +115,24 @@
       <HintPath>..\packages\Owin.Framework.Facilities.TokenStore.Prius.2.5.1\lib\net40\OwinFramework.Facilities.TokenStore.Prius.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.Less, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.Less.2.5.2\lib\net40\OwinFramework.Less.dll</HintPath>
+    <Reference Include="OwinFramework.Less, Version=2.5.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.Less.2.5.4\lib\net40\OwinFramework.Less.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.OutputCache, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.OutputCache.2.5.0\lib\net40\OwinFramework.OutputCache.dll</HintPath>
+    <Reference Include="OwinFramework.OutputCache, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.OutputCache.2.5.1\lib\net40\OwinFramework.OutputCache.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.RouteVisualizer, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.RouteVisualizer.2.5.0\lib\net40\OwinFramework.RouteVisualizer.dll</HintPath>
+    <Reference Include="OwinFramework.RouteVisualizer, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.RouteVisualizer.2.5.1\lib\net40\OwinFramework.RouteVisualizer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.StaticFiles, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.StaticFiles.2.5.0\lib\net40\OwinFramework.StaticFiles.dll</HintPath>
+    <Reference Include="OwinFramework.StaticFiles, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.StaticFiles.2.5.2\lib\net40\OwinFramework.StaticFiles.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.Versioning, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.Versioning.2.5.0\lib\net40\OwinFramework.Versioning.dll</HintPath>
+    <Reference Include="OwinFramework.Versioning, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.Versioning.2.5.1\lib\net40\OwinFramework.Versioning.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Prius.Contracts, Version=2.0.1.20, Culture=neutral, processorArchitecture=MSIL">
