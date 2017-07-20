@@ -71,7 +71,7 @@ namespace OwinFramework.Authorization.UI
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            if (context.Request.Path.StartsWithSegments(_rootPath))
+            if (!context.Request.Path.StartsWithSegments(_rootPath))
             {
                 Trace(context, () => GetType().Name + " this is not a request for the authorization API");
                 return next();

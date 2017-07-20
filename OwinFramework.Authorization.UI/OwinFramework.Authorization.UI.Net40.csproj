@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="AuthorizationApiMiddleware.cs" />
     <Compile Include="AuthorizationUiConfiguration.cs" />
+    <Compile Include="AuthorizationUiMiddleware.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -74,10 +75,34 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\TestWebsite\Content\AuthorizationUI\build\web\styles.less">
+      <Link>assets\styles.less</Link>
+    </EmbeddedResource>
     <None Include="packages.OwinFramework.Authorization.UI.Net40.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="assets\" />
+    <EmbeddedResource Include="..\TestWebsite\Content\AuthorizationUI\build\web\favicon.ico">
+      <Link>assets\favicon.ico</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestWebsite\Content\AuthorizationUI\build\web\images\add.gif">
+      <Link>assets\images\add.gif</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestWebsite\Content\AuthorizationUI\build\web\images\delete.gif">
+      <Link>assets\images\delete.gif</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestWebsite\Content\AuthorizationUI\build\web\index.html">
+      <Link>assets\index.html</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestWebsite\Content\AuthorizationUI\build\web\main.dart.js">
+      <Link>assets\main.dart.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestWebsite\Content\AuthorizationUI\build\web\packages\browser\dart.js">
+      <Link>assets\packages\browser\dart.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestWebsite\Content\AuthorizationUI\build\web\packages\browser\interop.js">
+      <Link>assets\packages\browser\interop.js</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
