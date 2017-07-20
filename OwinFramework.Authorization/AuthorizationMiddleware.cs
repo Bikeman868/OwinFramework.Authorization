@@ -78,7 +78,11 @@ namespace OwinFramework.Authorization
             }
 
             authorization.Identification = identification;
-            if (!authorization.IsAllowed())
+            if (authorization.IsAllowed())
+            {
+                Trace(context, () => GetType().Name + " the requesting identity is permitted to make this request");
+            }
+            else
             {
                 Trace(context, () => GetType().Name + " returning a 403 Forbidden response");
                 throw new HttpException((int)HttpStatusCode.Forbidden,

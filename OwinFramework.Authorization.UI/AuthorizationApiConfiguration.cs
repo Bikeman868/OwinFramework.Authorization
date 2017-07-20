@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OwinFramework.Authorization
+namespace OwinFramework.Authorization.UI
 {
     [Serializable]
     internal class AuthorizationApiConfiguration
