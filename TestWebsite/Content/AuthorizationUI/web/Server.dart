@@ -15,7 +15,7 @@ import 'Models/ParentChildModel.dart';
 class Server
 {
 
-	static String _apiUrl = '/api';
+	static String _apiUrl = '{_api-url_}';
 
 	static Initialize()
 	{

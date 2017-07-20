@@ -907,33 +907,51 @@ namespace OwinFramework.Authorization.UI
         {
             _configuration = configuration;
 
-            var root = string.IsNullOrEmpty(configuration.ApiRootUrl) ? "/" : configuration.ApiRootUrl;
-            if (!root.StartsWith("/")) root = "/" + root;
-            if (!root.EndsWith("/")) root = root + "/";
+            Func<string, PathString> normalizePath = p =>
+            {
+                if (string.IsNullOrEmpty(p)) return new PathString();
 
-            _rootPath = new PathString(root);
+                p = p.ToLower();
+                if (!p.StartsWith("/")) p = "/" + p;
+                if (p.Length == 1) return new PathString("/");
 
-            _groupListPath = new PathString(root + "groups");
-            _groupPath = new PathString(root + "group");
-            _groupRoleListPath = new PathString(root + "group/roles");
+                if (p.EndsWith("/")) p = p.Substring(0, p.Length - 1);
+                return new PathString(p);
+            };
 
-            _roleListPath = new PathString(root + "roles");
-            _rolePath = new PathString(root + "role");
-            _rolePermissionListPath = new PathString(root + "role/permissions");
+            Func<PathString, string, PathString> filePath = (p, f) =>
+            {
+                if (!p.HasValue || string.IsNullOrEmpty(f)) 
+                    return new PathString();
 
-            _permissionListPath = new PathString(root + "permissions");
-            _permissionPath = new PathString(root + "permission");
+                if (f.StartsWith("/")) f = f.Substring(1);
 
-            _searchIdentityListPath = new PathString(root + "identity/_search");
-            _identityGroupPath = new PathString(root + "identity/group");
+                return p.Value == "/" 
+                    ? new PathString("/" + f) 
+                    : new PathString(p.Value + "/" + f);
+            };
 
-            _documentationPath = string.IsNullOrEmpty(configuration.DocumentationRootUrl)
-                ? new PathString()
-                : new PathString(_configuration.DocumentationRootUrl.ToLower());
+            _documentationPath = normalizePath(_configuration.DocumentationRootUrl);
 
-            _validateGroupPath = new PathString(root + "validate/group");
-            _validateRolePath = new PathString(root + "validate/role");
-            _validatePermissionPath = new PathString(root + "validate/permission");
+            _rootPath = normalizePath(configuration.ApiRootUrl);
+
+            _groupListPath = filePath(_rootPath, "groups");
+            _groupPath = filePath(_rootPath, "group");
+            _groupRoleListPath = filePath(_rootPath, "group/roles");
+
+            _roleListPath = filePath(_rootPath, "roles");
+            _rolePath = filePath(_rootPath, "role");
+            _rolePermissionListPath = filePath(_rootPath, "role/permissions");
+
+            _permissionListPath = filePath(_rootPath, "permissions");
+            _permissionPath = filePath(_rootPath, "permission");
+
+            _searchIdentityListPath = filePath(_rootPath, "identity/_search");
+            _identityGroupPath = filePath(_rootPath, "identity/group");
+
+            _validateGroupPath = filePath(_rootPath, "validate/group");
+            _validateRolePath = filePath(_rootPath, "validate/role");
+            _validatePermissionPath = filePath(_rootPath, "validate/permission");
         }
 
 

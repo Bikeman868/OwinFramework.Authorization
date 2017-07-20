@@ -7,6 +7,8 @@ namespace OwinFramework.Authorization.UI
     {
         public string DocumentationRootUrl { get; set; }
         public string ApiRootUrl { get; set; }
+        public string UiRootUrl { get; set; }
+        public string AssetsPath { get; set; }
 
         public string PermissionToCallApi { get; set; }
         public string PermissionToEditPermissions { get; set; }
@@ -18,8 +20,10 @@ namespace OwinFramework.Authorization.UI
 
         public AuthorizationUiConfiguration()
         {
-            DocumentationRootUrl = "/owin/authorizationApi/config";
-            ApiRootUrl = "/api/authorization";
+            DocumentationRootUrl = "owin/authorizationApi/config";
+            ApiRootUrl = "api/authorization";
+            UiRootUrl = "ui/authorization";
+            AssetsPath = "assets";
 
             PermissionToCallApi = "auth:api";
             PermissionToEditPermissions = "auth:permission.edit";

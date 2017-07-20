@@ -36,7 +36,8 @@
         },
         "authorizationUi": {
             "documentationRootUrl": "/owin/authorizationUi",
-            "apiRootUrl": "/api/authorization"
+            "apiRootUrl": "/api/authorization",
+            "UiRootUrl": "/ui/auth"
         },
         "dart": {
             "defaultDocument": "index.html",

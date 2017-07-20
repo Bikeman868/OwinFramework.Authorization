@@ -65,10 +65,12 @@ namespace TestWebsite
 
             var apiPath = new PathString("/api");
             var uiPath = new PathString("/authorizationui");
+            var embeddedUiPath = new PathString("/ui");
 
             builder.Register(ninject.Get<IRouter>()
                 .AddRoute("api", c => c.Request.Path.StartsWithSegments(apiPath))
                 .AddRoute("ui", c => c.Request.Path.StartsWithSegments(uiPath))
+                .AddRoute("embeddedUi", c => c.Request.Path.StartsWithSegments(embeddedUiPath))
                 .AddRoute("default", c => true));
 
             // This is the authorization middleware we want to test
@@ -80,7 +82,14 @@ namespace TestWebsite
             // This is the REST api that supportes the authorization Dart UI
             builder.Register(ninject.Get<AuthorizationApiMiddleware>())
                 .As("Authorization API")
+                .ConfigureWith(config, "/middleware/authorizationUi")
                 .RunOnRoute("api");
+
+            // This is the REST api that supportes the authorization Dart UI
+            builder.Register(ninject.Get<AuthorizationUiMiddleware>())
+                .As("Authorization UI")
+                .ConfigureWith(config, "/middleware/authorizationUi")
+                .RunOnRoute("embeddedUi");
 
             // Output caching just makes the web site more efficient by capturing the output from
             // downstream middleware and reusing it for the next request. Note that the Dart middleware

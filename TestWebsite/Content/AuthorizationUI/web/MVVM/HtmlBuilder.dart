@@ -2,7 +2,7 @@ import 'dart:html';
 
 class HtmlBuilder
 {
-	static String imagesUrl = '/images';
+	static String imagesUrl = '{_images-url_}';
 	static String version = "";
 
 	static Initialize()
