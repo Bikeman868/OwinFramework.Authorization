@@ -36,6 +36,7 @@ namespace OwinFramework.Authorization.UI
 
         private readonly IAuthorizationData _authorizationData;
 
+        private PathString _rootPath;
         private PathString _documentationPath;
 
         private PathString _validateGroupPath;
@@ -63,13 +64,19 @@ namespace OwinFramework.Authorization.UI
             this.RunAfter<IAuthorization>(null, false);
             this.RunAfter<IIdentification>(null, false);
 
-            ConfigurationChanged(new AuthorizationApiConfiguration());
+            ConfigurationChanged(new AuthorizationUiConfiguration());
         }
 
         #region Request routing and permissions
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
+            if (context.Request.Path.StartsWithSegments(_rootPath))
+            {
+                Trace(context, () => GetType().Name + " this is not a request for the authorization API");
+                return next();
+            }
+
             var apiContext = new ApiContext();
             context.SetFeature(apiContext);
 
@@ -91,23 +98,50 @@ namespace OwinFramework.Authorization.UI
             if (method == "GET")
             {
                 if (path.Equals(_documentationPath))
+                {
                     apiContext.Handler = DocumentConfiguration;
+                    Trace(context, () => GetType().Name + " routing request to document configuration handler");
+                }
                 else if (path.StartsWithSegments(_groupRoleListPath))
+                {
                     apiContext.Handler = GetGroupRoleListHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET group role list handler");
+                }
                 else if (path.StartsWithSegments(_groupPath))
+                {
                     apiContext.Handler = GetGroupHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET group handler");
+                }
                 else if (path.StartsWithSegments(_groupListPath))
+                {
                     apiContext.Handler = GetGroupListHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET group list handler");
+                }
                 else if (path.StartsWithSegments(_rolePermissionListPath))
+                {
                     apiContext.Handler = GetRolePermissionListHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET role permission list handler");
+                }
                 else if (path.StartsWithSegments(_rolePath))
+                {
                     apiContext.Handler = GetRoleHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET role handler");
+                }
                 else if (path.StartsWithSegments(_roleListPath))
+                {
                     apiContext.Handler = GetRoleListHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET role list handler");
+                }
                 else if (path.StartsWithSegments(_permissionPath))
+                {
                     apiContext.Handler = GetPermissionHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET group permission handler");
+                }
                 else if (path.StartsWithSegments(_permissionListPath))
+                {
                     apiContext.Handler = GetPermissionListHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET permission list handler");
+                }
             }
             else if (context.Request.Method == "POST")
             {
@@ -116,36 +150,42 @@ namespace OwinFramework.Authorization.UI
                     apiContext.Handler = NewGroupHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
+                    Trace(context, () => GetType().Name + " routing request to POST new group handler");
                 }
                 else if (path.StartsWithSegments(_roleListPath))
                 {
                     apiContext.Handler = NewRoleHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
+                    Trace(context, () => GetType().Name + " routing request to POST new role handler");
                 }
                 else if (path.StartsWithSegments(_permissionListPath))
                 {
                     apiContext.Handler = NewPermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
+                    Trace(context, () => GetType().Name + " routing request to POST new permission handler");
                 }
                 else if (path.StartsWithSegments(_validateGroupPath))
                 {
                     apiContext.Handler = ValidateGroupHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
+                    Trace(context, () => GetType().Name + " routing request to POST validate group handler");
                 }
                 else if (path.StartsWithSegments(_validateRolePath))
                 {
                     apiContext.Handler = ValidateRoleHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
+                    Trace(context, () => GetType().Name + " routing request to POST validate role handler");
                 }
                 else if (path.StartsWithSegments(_validatePermissionPath))
                 {
                     apiContext.Handler = ValidatePermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
+                    Trace(context, () => GetType().Name + " routing request to POST validate permission handler");
                 }
             }
             else if (context.Request.Method == "PUT")
@@ -155,18 +195,21 @@ namespace OwinFramework.Authorization.UI
                     apiContext.Handler = UpdateGroupHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
+                    Trace(context, () => GetType().Name + " routing request to PUT group update handler");
                 }
                 else if (path.StartsWithSegments(_rolePath))
                 {
                     apiContext.Handler = UpdateRoleHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
+                    Trace(context, () => GetType().Name + " routing request to PUT role update handler");
                 }
                 else if (path.StartsWithSegments(_permissionPath))
                 {
                     apiContext.Handler = UpdatePermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
+                    Trace(context, () => GetType().Name + " routing request to PUT permission update handler");
                 }
             }
             else if (context.Request.Method == "DELETE")
@@ -176,18 +219,21 @@ namespace OwinFramework.Authorization.UI
                     apiContext.Handler = DeleteGroupHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
+                    Trace(context, () => GetType().Name + " routing request to DELETE group handler");
                 }
                 else if (path.StartsWithSegments(_rolePath))
                 {
                     apiContext.Handler = DeleteRoleHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
+                    Trace(context, () => GetType().Name + " routing request to DELETE role handler");
                 }
                 else if (path.StartsWithSegments(_permissionPath))
                 {
                     apiContext.Handler = DeletePermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
+                    Trace(context, () => GetType().Name + " routing request to DELETE permission handler");
                 }
             }
             return next();
@@ -197,8 +243,12 @@ namespace OwinFramework.Authorization.UI
         {
             var apiContext = context.GetFeature<ApiContext>();
             if (apiContext == null || apiContext.Handler == null)
+            {
+                Trace(context, () => GetType().Name + " this is not  arequest for the authorization API");
                 return next();
+            }
 
+            Trace(context, () => GetType().Name + " executing handler " + apiContext.Handler.Method.Name);
             try
             {
                 return apiContext.Handler(context);
@@ -843,23 +893,25 @@ namespace OwinFramework.Authorization.UI
         #region IConfigurable
 
         private IDisposable _configurationRegistration;
-        private AuthorizationApiConfiguration _configuration = new AuthorizationApiConfiguration();
+        private AuthorizationUiConfiguration _configuration = new AuthorizationUiConfiguration();
 
         void IConfigurable.Configure(IConfiguration configuration, string path)
         {
             _configurationRegistration = configuration.Register(
                 path,
                 ConfigurationChanged,
-                new AuthorizationApiConfiguration());
+                new AuthorizationUiConfiguration());
         }
 
-        private void ConfigurationChanged(AuthorizationApiConfiguration configuration)
+        private void ConfigurationChanged(AuthorizationUiConfiguration configuration)
         {
             _configuration = configuration;
 
             var root = string.IsNullOrEmpty(configuration.ApiRootUrl) ? "/" : configuration.ApiRootUrl;
             if (!root.StartsWith("/")) root = "/" + root;
             if (!root.EndsWith("/")) root = root + "/";
+
+            _rootPath = new PathString(root);
 
             _groupListPath = new PathString(root + "groups");
             _groupPath = new PathString(root + "group");
@@ -894,7 +946,7 @@ namespace OwinFramework.Authorization.UI
             var document = GetScriptResource("configuration.html");
             document = document.Replace("{documentationRootUrl}", _configuration.DocumentationRootUrl);
 
-            var defaultConfiguration = new AuthorizationApiConfiguration();
+            var defaultConfiguration = new AuthorizationUiConfiguration();
             document = document.Replace("{documentationRootUrl.default}", defaultConfiguration.DocumentationRootUrl);
 
             context.Response.ContentType = "text/html";

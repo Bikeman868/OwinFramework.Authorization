@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace OwinFramework.Authorization
+namespace OwinFramework.Authorization.UI
 {
     [Serializable]
-    internal class AuthorizationApiConfiguration
+    internal class AuthorizationUiConfiguration
     {
         public string DocumentationRootUrl { get; set; }
         public string ApiRootUrl { get; set; }
@@ -16,7 +16,7 @@ namespace OwinFramework.Authorization
         public string PermissionToAssignRoleToGroup { get; set; }
         public string PermissionToAssignUserToGroup { get; set; }
 
-        public AuthorizationApiConfiguration()
+        public AuthorizationUiConfiguration()
         {
             DocumentationRootUrl = "/owin/authorizationApi/config";
             ApiRootUrl = "/api/authorization";

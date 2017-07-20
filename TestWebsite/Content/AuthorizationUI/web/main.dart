@@ -1,6 +1,9 @@
 import 'dart:html';
 
+import 'MVVM/HtmlBuilder.dart';
 import 'MVVM/View.dart';
+import 'Server.dart';
+
 import 'ViewModels/AuthorizationViewModel.dart';
 import 'Views/Pages/DesktopView.dart';
 import 'Views/Pages/MobileView.dart';
@@ -11,6 +14,9 @@ View _view;
 
 main()
 { 
+	Server.Initialize();
+	HtmlBuilder.Initialize();
+
 	_uiDiv = querySelector('#auth-ui');
 	_viewModel = new AuthorizationViewModel();
 

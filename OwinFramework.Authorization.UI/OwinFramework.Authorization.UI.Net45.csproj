@@ -70,8 +70,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorizationApiConfiguration.cs" />
     <Compile Include="AuthorizationApiMiddleware.cs" />
+    <Compile Include="AuthorizationUiConfiguration.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -84,6 +84,9 @@
       <Project>{b5860f84-9158-4177-81df-9497f0a4ea20}</Project>
       <Name>OwinFramework.Authorization.Data.Net45</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

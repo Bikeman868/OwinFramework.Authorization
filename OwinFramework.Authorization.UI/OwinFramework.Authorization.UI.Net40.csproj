@@ -60,19 +60,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Urchin.Client, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Urchin.Client.1.2.0\lib\net40\Urchin.Client.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthorizationApiMiddleware.cs" />
-    <Compile Include="AuthorizationApiConfiguration.cs" />
+    <Compile Include="AuthorizationUiConfiguration.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.OwinFramework.Authorization.UI.Net40.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OwinFramework.Authorization.Data\OwinFramework.Authorization.Data.Net40.csproj">
@@ -80,7 +73,12 @@
       <Name>OwinFramework.Authorization.Data.Net40</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.OwinFramework.Authorization.UI.Net40.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

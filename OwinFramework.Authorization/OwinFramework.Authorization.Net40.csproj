@@ -72,13 +72,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.OwinFramework.Authorization.Net40.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\OwinFramework.Authorization.Data\OwinFramework.Authorization.Data.Net40.csproj">
       <Project>{b5860f84-9158-4177-81df-9497f0a4ea20}</Project>
       <Name>OwinFramework.Authorization.Data.Net40</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.OwinFramework.Authorization.Net40.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

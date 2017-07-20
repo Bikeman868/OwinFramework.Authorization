@@ -61,7 +61,7 @@ namespace TestWebsite
             var config = ninject.Get<IConfiguration>();
 
             // Get the Owin Framework builder registered with IoC
-            var builder = ninject.Get<IBuilder>();
+            var builder = ninject.Get<IBuilder>().EnableTracing();
 
             var apiPath = new PathString("/api");
             var uiPath = new PathString("/authorizationui");
@@ -74,6 +74,7 @@ namespace TestWebsite
             // This is the authorization middleware we want to test
             builder.Register(ninject.Get<AuthorizationMiddleware>())
                 .As("Authorization")
+                .RunOnRoute("api")
                 .RunOnRoute("default");
 
             // This is the REST api that supportes the authorization Dart UI
@@ -84,26 +85,26 @@ namespace TestWebsite
             // Output caching just makes the web site more efficient by capturing the output from
             // downstream middleware and reusing it for the next request. Note that the Dart middleware
             // produces different results for the same URL and therefore can not use output caching
-            builder.Register(ninject.Get<OwinFramework.OutputCache.OutputCacheMiddleware>())
-                .As("Output cache")
-                .ConfigureWith(config, "/middleware/outputCache")
-                .RunOnRoute("ui")
-                .RunAfter("Dart UI", false);
+            //builder.Register(ninject.Get<OwinFramework.OutputCache.OutputCacheMiddleware>())
+            //    .As("Output cache")
+            //    .ConfigureWith(config, "/middleware/outputCache")
+            //    .RunOnRoute("ui")
+            //    .RunAfter("Dart UI", false);
 
             // The Versioning middleware will add version numbers to static assets and
             // instruct the browser to cache them
             builder.Register(ninject.Get<OwinFramework.Versioning.VersioningMiddleware>())
                 .As("Versioning")
                 .ConfigureWith(config, "/middleware/versioning")
-                .RunOnRoute("ui")
-                .RunAfter<IOutputCache>();
+                .RunOnRoute("ui");
+                //.RunAfter<IOutputCache>();
 
             // The authorization user interface is written in the Dart programming language
             // This middleware will serve Dart files to browsers that natively support Dart
             // and compiled JavaScript to browsers that do not
             builder.Register(ninject.Get<OwinFramework.Dart.DartMiddleware>())
                 .As("Dart UI")
-                .ConfigureWith(config, "/middleware/authorizationUi")
+                .ConfigureWith(config, "/middleware/dart")
                 .RunOnRoute("ui");
 
             // The Less middleware will compile LESS into CSS on the fly

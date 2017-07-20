@@ -89,11 +89,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.OwinFramework.Authorization.Data.Net40.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="SQL\MySQL Tests.sql" />
     <Content Include="SQL\MySQL.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.OwinFramework.Authorization.Data.Net40.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

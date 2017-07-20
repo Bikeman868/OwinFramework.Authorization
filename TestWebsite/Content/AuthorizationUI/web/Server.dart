@@ -15,7 +15,15 @@ import 'Models/ParentChildModel.dart';
 class Server
 {
 
-	static String _apiUrl = '/api/authorization';
+	static String _apiUrl = '/api';
+
+	static Initialize()
+	{
+		InputElement apiUrl = querySelector('#api-url');
+		if (apiUrl != null)
+			_apiUrl = apiUrl.value;
+	}
+
 //
 //-- Permission related server methods -----------------------------------------------------------------
 //

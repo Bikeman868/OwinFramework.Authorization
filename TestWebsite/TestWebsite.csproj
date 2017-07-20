@@ -127,8 +127,8 @@
       <HintPath>..\packages\Owin.Framework.RouteVisualizer.2.5.1\lib\net40\OwinFramework.RouteVisualizer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OwinFramework.StaticFiles, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.StaticFiles.2.5.2\lib\net40\OwinFramework.StaticFiles.dll</HintPath>
+    <Reference Include="OwinFramework.StaticFiles, Version=2.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Framework.StaticFiles.2.5.3\lib\net40\OwinFramework.StaticFiles.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OwinFramework.Versioning, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -199,7 +199,6 @@
   <ItemGroup>
     <Content Include="Content\main.less" />
     <Content Include="config.json" />
-    <Content Include="packages.config" />
     <Content Include="Content\AuthorizationUI\pubspec.yaml" />
     <Content Include="Content\AuthorizationUI\web\main.dart" />
     <Content Include="Content\AuthorizationUI\web\Models\ApiResponseModel.dart" />
@@ -283,6 +282,7 @@
     <Content Include="Content\AuthorizationUI\web\ViewModels\RolePermissionViewModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Roles\RolePermissionView.dart" />
     <Content Include="Content\AuthorizationUI\web\Views\Permissions\PermissionRoleView.dart" />
+    <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -2,13 +2,24 @@ import 'dart:html';
 
 class HtmlBuilder
 {
+	static String imagesUrl = '/images';
+	static String version = "";
+
+	static Initialize()
+	{
+		InputElement imagesUrlElement = querySelector('#images-url');
+		if (imagesUrlElement != null)
+			imagesUrl = imagesUrlElement.value;
+
+		InputElement versionElement = querySelector('#version');
+		if (versionElement != null)
+			version = versionElement.value;
+	}
+
 	List<Element> _elements;
 
 	HtmlBuilder()
 	{
-		InputElement version = querySelector('#version');
-		_version = version.value;
-
 		clear();
 	}
 
@@ -38,11 +49,9 @@ class HtmlBuilder
 
 	/******************************************************************************/
 
-	String _version;
-
 	String versioned(String url)
 	{
-		return url.replaceAll(r'{_v_}', _version);
+		return url.replaceAll(r'{_v_}', version);
 	}
 
 	/******************************************************************************/
@@ -182,7 +191,7 @@ class HtmlBuilder
 		})
 	{
 		var img = new ImageElement();
-		if (url != null) img.src = url.replaceAll(r'{_v_}', _version);
+		if (url != null) img.src = url.replaceAll(r'{_v_}', version);
 		if (onClick != null) img.onClick.listen(onClick);
 		if (altText != null) img.alt = altText;
 		return _addElement(img, classNames, className, parent);
