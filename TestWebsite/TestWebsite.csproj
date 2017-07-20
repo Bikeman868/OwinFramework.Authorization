@@ -204,6 +204,7 @@
     <Content Include="Content\AuthorizationUI\web\Models\ApiResponseModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Models\NewRecordResponseModel.dart" />
     <Content Include="Content\AuthorizationUI\web\Models\ParentChildModel.dart" />
+    <Content Include="Assets\styles.less" />
     <None Include="Content\AuthorizationUI\web\styles.less" />
     <Content Include="Content\AuthorizationUI\build\web\styles.less" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundContainer.dart" />
