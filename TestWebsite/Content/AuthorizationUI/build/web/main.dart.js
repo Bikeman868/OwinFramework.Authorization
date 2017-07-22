@@ -691,7 +691,9 @@ O7:function(){return this.Sz.$0()}}}],["","",,T,{
 Ws:{
 "^":"a;vH:Q>"},
 wD:{
-"^":"a;Q"}}],["","",,X,{
+"^":"a;Q",
+yI:function(a){var z=this.Q
+return H.J(new P.Gm(z),[H.Kp(z,0)]).yI(a)}}}],["","",,X,{
 "^":"",
 B8:{
 "^":"UG;a,b,c,d,Q",
@@ -702,16 +704,21 @@ if(a==null){z.sCI(null)
 this.b.sCI(null)}else{z.sCI(a.gyH())
 this.b.sCI(a.gN0())}},
 aF:function(a){},
-IS:function(a,b){var z,y
+IS:function(a,b){var z,y,x,w
 z=this.kT()
 y=H.J(new V.h2(new X.DA(),null,null,null,null),[P.I])
 y.sFL(z)
 this.a=y
-this.Va("<p>Note that these users will have all of their permissions changed to the permissions assigned to their new group.")
-y=this.kT()
-z=H.J(new V.h2(null,null,null,null,null),[P.I])
+x=this.kT()
+this.SB("This group is for ",x)
+y=this.Ww(x)
+z=H.J(new V.h2(new X.H6(),null,null,null,null),[P.I])
 z.sFL(y)
 this.b=z
+w=this.kT()
+this.SB("Reassign these users to ",w)
+U.pI(this.d,null).Z(w)
+this.Bh("<p>Note that when you delete this group, all these users will have all of their permissions changed to the permissions assigned to their new group.</p>","help-note")
 this.sSW(b)},
 static:{Sn:function(a,b){var z=new X.B8(null,null,null,a,null)
 z.Q=H.J([],[W.M])
@@ -719,7 +726,11 @@ z.IS(a,b)
 return z}}},
 DA:{
 "^":"r:6;",
-$1:function(a){return C.xB.g(C.xB.g("<p>If there are any users currently assigned to the \"",a)+"\" group then they need to be assigned to a different group when the \"",a)+"\" group is deleted.</p>"}}}],["","",,U,{
+$1:function(a){return C.xB.g(C.xB.g("<p>If there are any users currently assigned to the \"",a)+"\" group then they need to be assigned to a different group when the \"",a)+"\" group is deleted.</p>"}},
+H6:{
+"^":"r:6;",
+$1:function(a){var z=J.U6(a)
+return J.Mz(z.p(a,0))+z.yn(a,1)}}}],["","",,U,{
 "^":"",
 Qg:{
 "^":"jR;a,b,c,d,e,f,r,Q",
@@ -799,7 +810,40 @@ DF:{
 $1:function(a){return!1}},
 lw:{
 "^":"r:6;Q",
-$1:function(a){return J.mG(a.gk8().gVv(),J.lf(this.Q.gk8()))}}}],["","",,T,{
+$1:function(a){return J.mG(a.gk8().gVv(),J.lf(this.Q.gk8()))}}}],["","",,U,{
+"^":"",
+ik:{
+"^":"jR;a,b,c,d,Q",
+Yk:[function(a){},"$1","gDc",2,0,3],
+EJ:function(a,b){var z,y
+z=this.iX(document.createElement("select",null),null,null,null)
+this.b=z
+J.GH(z).yI(this.gDc())
+z=this.b
+y=new M.Hs(null,!1,null,null,null,null,new U.f2(),null,null)
+y.f=z
+y.l4(z)
+y.zr()
+this.a=y
+z=this.c
+this.c=z
+if(z==null)y.sCI(null)
+else y.sCI(z.b)},
+static:{pI:function(a,b){var z=new U.ik(null,null,a,b,null)
+z.Q=H.J([],[W.M])
+z.EJ(a,b)
+return z}}},
+f2:{
+"^":"r:6;",
+$1:function(a){var z,y,x
+z=new L.Gz(null,null,null)
+z.Q=H.J([],[W.M])
+y=z.aS(["group","codeName"])
+x=H.J(new V.h2(null,null,null,null,null),[P.I])
+x.sFL(y)
+z.a=x
+z.sSW(a)
+return z}}}],["","",,T,{
 "^":"",
 pi:{
 "^":"jR;yH:a@,N0:b@,O8:c@,d,Q",
@@ -928,7 +972,7 @@ z=this.a
 if(a==null)z.sCI(null)
 else z.sCI(a.b)},
 E1:function(a){var z,y
-this.Bh("These are the currently defined groups in this system. Granting a group to a group of users will give them access to functionallity within the system.","help-note")
+this.Bh("These are the currently defined groups in this system. Assigning a group to a user will give that user access to functionallity as defined by the roles associated with that group.","help-note")
 z=this.iX(document.createElement("ul",null),null,null,null)
 y=new K.wR(!1,!1,!1,null,null,null,null,null,null,new O.cu(),new O.Eu(),null)
 y.f=z
@@ -1029,7 +1073,15 @@ z.TY(a)
 return z}}},
 i1:{
 "^":"r:6;",
-$1:function(a){return J.WB(a," ")}}}],["","",,X,{
+$1:function(a){return J.WB(a," ")}}}],["","",,L,{
+"^":"",
+Gz:{
+"^":"jR;a,b,Q",
+sSW:function(a){var z
+this.b=a
+z=this.a
+if(a==null)z.sCI(null)
+else z.sCI(a.gyH())}}}],["","",,X,{
 "^":"",
 Zd:{
 "^":"um;b,c,d,Q,a",
@@ -1274,11 +1326,11 @@ CW:function(a,b,c,d){var z=document.createElement("span",null)
 J.Cd(z,a)
 return this.iX(z,c,b,d)},
 Dl:function(a,b,c){return this.CW(a,b,null,c)},
+SB:function(a,b){return this.CW(a,null,null,b)},
 kB:function(a,b,c,d){var z=document.createElement("div",null)
 J.Cd(z,a)
 return this.iX(z,c,b,d)},
 Bh:function(a,b){return this.kB(a,b,null,null)},
-Va:function(a){return this.kB(a,null,null,null)},
 bF:function(a,b,c,d){var z=document.createElement("div",null)
 if(c!=null)J.Cd(z,c)
 return this.iX(z,b,a,d)},
@@ -1290,6 +1342,7 @@ CN:function(a,b){return this.bF(null,a,null,b)},
 fp:function(a,b,c,d){var z=document.createElement("span",null)
 return this.iX(z,b,a,d)},
 JW:function(a){return this.fp(null,a,null,null)},
+Ww:function(a){return this.fp(null,null,null,a)},
 po:function(a,b,c,d,e,f,g){var z,y
 z=document.createElement("img",null)
 J.As(z,J.JA(a,"{_v_}",$.N))
@@ -1326,6 +1379,9 @@ P3:function(a,b){return this.qT(a,b,null)},
 A0:function(a,b,c,d){var z=document.createElement("li",null)
 return this.iX(z,b,a,d)},
 R5:function(a){return this.A0(a,null,null,null)},
+VK:function(a,b,c,d){var z=W.oK("","",null,!1)
+return this.iX(z,b,a,d)},
+aS:function(a){return this.VK(null,a,null,null)},
 iX:function(a,b,c,d){var z,y,x,w
 if(c!=null&&c.length!==0)J.pP(a).h(0,c)
 if(b!=null)for(z=b.length,y=J.R(a),x=0;x<b.length;b.length===z||(0,H.lk)(b),++x){w=b[x]
@@ -2164,7 +2220,7 @@ $1:function(a){this.Q.sk8(a)
 return a}}}],["","",,F,{
 "^":"",
 iB:{
-"^":"a;",
+"^":"a;i9:Q>",
 gPG:function(){return this.b},
 gBQ:function(){return this.c},
 gxy:function(){return this.d},
@@ -6812,7 +6868,7 @@ a:{
 m:function(a,b){return this===b},
 giO:function(a){return H.eQ(this)},
 X:function(a){return H.H9(this)}},
-Gz:{
+mE:{
 "^":"a;"},
 I:{
 "^":"a;"},
@@ -6853,6 +6909,7 @@ return z.Q},
 dy:function(a){var z,y
 z=document.createElement("input",null)
 if(a!=null)try{J.Lp(z,a)}catch(y){H.Ru(y)}return z},
+oK:function(a,b,c,d){return new Option(a,b,c,d)},
 C0:function(a,b){a=536870911&a+b
 a=536870911&a+((524287&a)<<10>>>0)
 return a^a>>>6},
@@ -6911,6 +6968,7 @@ qs:{
 YN:{
 "^":"KV;",
 goD:function(a){return H.J(new W.RO(a,"blur",!1),[null])},
+gi9:function(a){return H.J(new W.RO(a,"change",!1),[null])},
 gI9:function(a){return H.J(new W.RO(a,"focus",!1),[null])},
 "%":"Document|HTMLDocument|XMLDocument"},
 hs:{
@@ -7029,6 +7087,7 @@ a.appendChild(this.r6(a,b,c,d))},
 YC:function(a,b){return this.WN(a,b,null,null)},
 bI:function(a){return a.focus()},
 goD:function(a){return H.J(new W.Cq(a,"blur",!1),[null])},
+gi9:function(a){return H.J(new W.Cq(a,"change",!1),[null])},
 gVl:function(a){return H.J(new W.Cq(a,"click",!1),[null])},
 gI9:function(a){return H.J(new W.Cq(a,"focus",!1),[null])},
 $isM:1,
@@ -7377,6 +7436,7 @@ w6:{
 K5:{
 "^":"D0;pf:status=",
 goD:function(a){return H.J(new W.RO(a,"blur",!1),[null])},
+gi9:function(a){return H.J(new W.RO(a,"change",!1),[null])},
 gI9:function(a){return H.J(new W.RO(a,"focus",!1),[null])},
 $isGv:1,
 $isD0:1,
@@ -7500,6 +7560,7 @@ X5:function(a,b,c,d){var z=new W.xC(0,this.Q,this.a,W.aF(a),this.b)
 z.$builtinTypeInfo=this.$builtinTypeInfo
 z.DN()
 return z},
+yI:function(a){return this.X5(a,null,null,null)},
 zC:function(a,b,c){return this.X5(a,null,b,c)}},
 Cq:{
 "^":"RO;Q,a,b"},
@@ -7837,6 +7898,7 @@ v=z.gr8(z)
 for(;z=v.firstChild,z!=null;)w.appendChild(z)
 return w},
 goD:function(a){return H.J(new W.Cq(a,"blur",!1),[null])},
+gi9:function(a){return H.J(new W.Cq(a,"change",!1),[null])},
 gVl:function(a){return H.J(new W.Cq(a,"click",!1),[null])},
 gI9:function(a){return H.J(new W.Cq(a,"focus",!1),[null])},
 $isd5:1,
@@ -8203,6 +8265,7 @@ return J.Wx(a).T(a,b)}
 J.EE=function(a,b,c){return J.R(a).AS(a,b,c)}
 J.F8=function(a,b,c,d){return J.R(a).v0(a,b,c,d)}
 J.G0=function(a){return J.R(a).gK(a)}
+J.GH=function(a){return J.R(a).gi9(a)}
 J.He=function(a,b){return J.R(a).siP(a,b)}
 J.In=function(a){return J.R(a).gns(a)}
 J.JA=function(a,b,c){return J.rY(a).h8(a,b,c)}
@@ -8475,7 +8538,7 @@ try{(void 0).$method$($argumentsExpr$)}catch(z){return z.message}}())},"BX","zO"
 I=I.$finishIsolateConstructor(I)
 $=new I()
 init.metadata=[null]
-init.types=[{func:1,void:true,args:[W.Aj]},{func:1,void:true,args:[T.Ws]},{func:1,void:true,args:[P.I]},{func:1,void:true,args:[W.ea]},{func:1,args:[W.Aj]},{func:1,void:true},{func:1,args:[,]},{func:1,args:[W.ea]},{func:1,args:[V.V5]},{func:1,args:[G.Lg]},{func:1,args:[P.Ge]},{func:1,args:[P.w]},{func:1,args:[L.Zn]},{func:1,args:[[P.zM,L.Zn]]},{func:1,args:[S.l0]},{func:1,args:[[P.zM,S.l0]]},{func:1},{func:1,args:[P.I]},{func:1,args:[P.I,A.bT]},{func:1,args:[P.I,P.zM]},{func:1,args:[K.um]},{func:1,args:[A.FC]},{func:1,args:[[P.zM,A.FC]]},{func:1,args:[A.jM]},{func:1,args:[[P.zM,A.jM]]},{func:1,args:[O.NZ]},{func:1,args:[,P.Gz]},{func:1,args:[,P.I]},{func:1,args:[{func:1,void:true}]},{func:1,void:true,args:[P.a],opt:[P.Gz]},{func:1,void:true,args:[,],opt:[P.Gz]},{func:1,args:[,],opt:[,]},{func:1,ret:P.a2},{func:1,void:true,args:[,P.Gz]},{func:1,args:[,,]},{func:1,args:[P.GD,,]},{func:1,ret:P.I,args:[P.KN]},{func:1,args:[W.zU]},{func:1,void:true,args:[W.KV,W.KV]},{func:1,void:true,args:[{func:1,void:true}]},{func:1,void:true,args:[,]},{func:1,ret:P.a2,args:[,,]},{func:1,ret:P.KN,args:[,]},{func:1,ret:P.a,args:[,]},{func:1,ret:P.a2,args:[P.a,P.a]},{func:1,ret:P.KN,args:[P.a]},{func:1,ret:P.a2,args:[W.M,P.I,P.I,W.JQ]}]
+init.types=[{func:1,void:true,args:[W.Aj]},{func:1,void:true,args:[T.Ws]},{func:1,void:true,args:[P.I]},{func:1,void:true,args:[W.ea]},{func:1,args:[W.Aj]},{func:1,void:true},{func:1,args:[,]},{func:1,args:[W.ea]},{func:1,args:[V.V5]},{func:1,args:[G.Lg]},{func:1,args:[P.Ge]},{func:1,args:[P.w]},{func:1,args:[L.Zn]},{func:1,args:[[P.zM,L.Zn]]},{func:1,args:[S.l0]},{func:1,args:[[P.zM,S.l0]]},{func:1},{func:1,args:[P.I]},{func:1,args:[P.I,A.bT]},{func:1,args:[P.I,P.zM]},{func:1,args:[K.um]},{func:1,args:[A.FC]},{func:1,args:[[P.zM,A.FC]]},{func:1,args:[A.jM]},{func:1,args:[[P.zM,A.jM]]},{func:1,args:[O.NZ]},{func:1,args:[,P.mE]},{func:1,args:[,P.I]},{func:1,args:[{func:1,void:true}]},{func:1,void:true,args:[P.a],opt:[P.mE]},{func:1,void:true,args:[,],opt:[P.mE]},{func:1,args:[,],opt:[,]},{func:1,ret:P.a2},{func:1,void:true,args:[,P.mE]},{func:1,args:[,,]},{func:1,args:[P.GD,,]},{func:1,ret:P.I,args:[P.KN]},{func:1,args:[W.zU]},{func:1,void:true,args:[W.KV,W.KV]},{func:1,void:true,args:[{func:1,void:true}]},{func:1,void:true,args:[,]},{func:1,ret:P.a2,args:[,,]},{func:1,ret:P.KN,args:[,]},{func:1,ret:P.a,args:[,]},{func:1,ret:P.a2,args:[P.a,P.a]},{func:1,ret:P.KN,args:[P.a]},{func:1,ret:P.a2,args:[W.M,P.I,P.I,W.JQ]}]
 function convertToFastObject(a){function MyClass(){}MyClass.prototype=a
 new MyClass()
 return a}function convertToSlowObject(a){a.__MAGIC_SLOW_PROPERTY=1

@@ -461,6 +461,33 @@ class HtmlBuilder
 
 	/******************************************************************************/
 
+	SelectElement addDropdownList(
+		{
+			List<String> classNames, 
+			String className, 
+			Element parent
+		})
+	{
+		var list = new SelectElement();
+		return _addElement(list, classNames, className, parent);
+	}
+
+	Element addDropdownListElement(
+		{
+			String html, 
+			Element parent,
+			List<String> classNames, 
+			String className
+		})
+	{
+		var listElement = new OptionElement();
+		if (html != null)
+			listElement.innerHtml = html;
+		return _addElement(listElement, classNames, className, parent);
+	}
+
+	/******************************************************************************/
+
 	Element _addElement(
 		Element element,
 		List<String> classNames, 

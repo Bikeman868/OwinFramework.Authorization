@@ -19,8 +19,9 @@ class GroupListSelectView extends View
 	GroupListSelectView([GroupListViewModel viewModel])
 	{
 		addBlockText(
-			'These are the currently defined groups in this system. Granting a group to ' +
-			'a group of users will give them access to functionallity within the system.', 
+			'These are the currently defined groups in this system. Assigning a group to ' +
+			'a user will give that user access to functionallity as defined by the roles ' +
+			'associated with that group.', 
 			className: 'help-note');
 
 		_groupsBinding = new BoundList<GroupModel, GroupViewModel, GroupNameView>(

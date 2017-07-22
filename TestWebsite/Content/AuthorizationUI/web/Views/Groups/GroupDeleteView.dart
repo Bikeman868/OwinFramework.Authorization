@@ -16,6 +16,7 @@ import '../../ViewModels/GroupListViewModel.dart';
 
 import '../../Views/Base/EditView.dart';
 import '../../Views/Groups/GroupEditFormView.dart';
+import '../../Views/Groups/GroupDropdownSelectView.dart';
 
 class GroupDeleteView extends EditView
 {
@@ -31,13 +32,21 @@ class GroupDeleteView extends EditView
 				'they need to be assigned to a different group when the "' + s + '" group ' + 
 				'is deleted.</p>');
 
-		addBlockText('<p>Note that these users will have all of their permissions changed to ' +
-			'the permissions assigned to their new group.');
+		var descriptionDiv = addDiv();
+		addInlineText('This group is for ', parent: descriptionDiv);
+		_descriptionBinding = new BoundLabel<String>(
+			addSpan(parent: descriptionDiv),
+			formatMethod: (s) => s[0].toLowerCase() + s.substring(1));
 
-		_descriptionBinding = new BoundLabel<String>(addDiv());
+		var selectDiv = addDiv();
+		addInlineText('Reassign these users to ', parent: selectDiv);
+		var groupSelector = new GroupDropdownSelectView(_groupListViewModel) as GroupDropdownSelectView;
+		groupSelector.addTo(selectDiv);
 
-		//var form = addForm();
-		//_displayNameBinding = new BoundField<String>(addLabeledCombo(form, 'New group'));
+		addBlockText(
+			'<p>Note that when you delete this group, all these users will have all of their ' +
+			'permissions changed to the permissions assigned to their new group.</p>',
+			className: 'help-note');
 
 		this.viewModel = viewModel;
 	}

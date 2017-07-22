@@ -28,6 +28,5 @@
     <file src="..\OwinFramework.Authorization.UI\bin\Net45\Release\OwinFramework.Authorization.UI.dll" target="lib\net45"/>
     <file src="..\OwinFramework.Authorization.UI\bin\Net45\Release\OwinFramework.Authorization.Data.dll" target="lib\net45"/>
     <file src="..\*.md" target=""/>
-    <file src="..\TestWebsite\Content\AuthorizationUI\build\web\**" target="lib\AuthorizationUI"/>
   </files>
 </package>
