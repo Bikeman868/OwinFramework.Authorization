@@ -1,7 +1,7 @@
 ﻿import 'dart:html';
 
 import '../../MVVM/View.dart';
-import '../../MVVM/BoundRepeater.dart';
+import '../../MVVM/BoundSelect.dart';
 
 import '../../Events/AppEvents.dart';
 
@@ -10,21 +10,19 @@ import '../../Models/GroupModel.dart';
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/GroupListViewModel.dart';
 
-import 'GroupOptionView.dart';
+import 'GroupNameView.dart';
 
 class GroupDropdownSelectView extends View
 {
-	BoundRepeater<GroupModel, GroupViewModel, GroupOptionView> _groupsBinding;
-
-	SelectElement _dropdownList;
+	BoundSelect<GroupModel, GroupViewModel, GroupNameView> _groupsBinding;
 
 	GroupDropdownSelectView([this._viewModel, this.selectedGroup])
 	{
-		_dropdownList = addDropdownList();
-		_dropdownList.onChange.listen(_selectionChanged);
-
-		_groupsBinding = new BoundRepeater<GroupModel, GroupViewModel, GroupOptionView>(
-			(vm) => new GroupOptionView(vm), _dropdownList);
+		_groupsBinding = new BoundSelect<GroupModel, GroupViewModel, GroupNameView>(
+			(vm) => new GroupNameView(vm), 
+			addDropdownList(),
+			(vm) => selectedGroup = vm,
+			staticListItems: [new View()]);
 
 		this.viewModel = viewModel;
 	}
@@ -33,11 +31,6 @@ class GroupDropdownSelectView extends View
 	GroupListViewModel get viewModel => _viewModel;
 
 	GroupViewModel selectedGroup;
-
-	void _selectionChanged(Event e)
-	{
-
-	}
 
 	void set viewModel(GroupListViewModel value)
 	{

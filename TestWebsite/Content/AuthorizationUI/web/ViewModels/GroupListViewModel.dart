@@ -9,6 +9,7 @@ import '../MVVM/ModelList.dart';
 import '../ViewModels/GroupViewModel.dart';
 
 import '../Models/GroupModel.dart';
+import '../Models/ApiResponseModel.dart';
 
 import '../Server.dart';
 
@@ -57,6 +58,37 @@ class GroupListViewModel extends ViewModel
 		Server.getGroupList()
 			.then((List<GroupModel> m) => models = m)
 			.catchError((Error error) => MvvmEvents.alert.raise(error.toString()));
+	}
+	
+	Future<bool> delete(GroupViewModel groupToDelete, GroupViewModel replacementGroup) async
+	{
+		if (replacementGroup == null)
+		{
+			MvvmEvents.alert.raise('You must select a group to reassign the users to');
+			return false;
+		}
+
+		if (groupToDelete == replacementGroup)
+		{
+			MvvmEvents.alert.raise('You must choose a different group than the one you are deleting');
+			return false;
+		}
+
+		try
+		{
+			ApiResponseModel resp = await Server.deleteGroup(groupToDelete.model.id, replacementGroup.model.id);
+			if (resp.isSuccess)
+			{
+				groups.deleteViewModel(groupToDelete);
+				groups.removeDeleted();
+				return true;
+			}
+		}
+		catch (e)
+		{
+			MvvmEvents.alert.raise(e.toString());
+			return false;
+		}
 	}
 
 	String toString() => 'group list';

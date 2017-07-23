@@ -451,7 +451,61 @@ if(y)for(z=z.f,y=z.length,x=!this.x,w=0;w<z.length;z.length===y||(0,H.lk)(z),++w
 if(!x||v.LA()!==C.BC)u=this.r==null||this.Di(v)===!0
 else u=!1
 if(u)this.Yl(v).Z(this.f)}},
-Di:function(a){return this.r.$1(a)}}}],["","",,E,{
+Di:function(a){return this.r.$1(a)}}}],["","",,O,{
+"^":"",
+wU:{
+"^":"a;Q,a,b,c,d,e,f,r,x,y",
+sCI:function(a){var z,y
+z=this.f
+if(z!=null){z.Gv()
+this.f=null}z=this.r
+if(z!=null){z.Gv()
+this.r=null}z=this.x
+if(z!=null){z.Gv()
+this.x=null}this.y=a
+this.zr()
+if(a!=null){z=a.c
+y=this.gzx()
+z=z.Q
+this.f=H.J(new P.Gm(z),[H.Kp(z,0)]).yI(y)
+y=a.d
+z=this.gzx()
+y=y.Q
+this.r=H.J(new P.Gm(y),[H.Kp(y,0)]).yI(z)
+z=a.e
+y=this.gzx()
+z=z.Q
+this.x=H.J(new P.Gm(z),[H.Kp(z,0)]).yI(y)}},
+oH:[function(a){this.zr()},"$1","gzx",2,0,1],
+zr:function(){var z,y,x,w,v,u,t,s,r,q
+z=this.d
+if(z==null)return
+y=new R.lK(null)
+y.Q=H.J([],[W.M])
+for(x=this.b,w=0;w<1;++w){v=x[w]
+u=W.oK("","",null,!1)
+v.Z(y.iX(u,null,"bound-list-item",null))}x=this.y
+if(x!=null){x.f
+x=!0}else x=!1
+if(x)for(x=!this.Q,t=0;s=this.y.f,t<s.length;++t){r=s[t]
+if(!x||r.LA()!==C.BC)s=!0
+else s=!1
+if(s){u=W.oK("","",null,!1)
+q=y.iX(u,null,"bound-list-item",null)
+J.wH(q,C.jn.X(t))
+s=this.y.f
+if(t>=s.length)return H.e(s,t)
+this.B8(s[t]).Z(q)}}J.U(J.O(z))
+y.Z(z)},
+C1:[function(a){var z,y,x
+z=J.S(this.d)
+if(J.mG(J.wS(z),0))this.HK(null)
+else{y=H.BU(z,null,null)
+x=this.y.f
+if(y>>>0!==y||y>=x.length)return H.e(x,y)
+this.HK(x[y])}},"$1","guo",2,0,0],
+B8:function(a){return this.c.$1(a)},
+HK:function(a){return this.e.$1(a)}}}],["","",,E,{
 "^":"",
 jO:{
 "^":"xt;Q,a,b,c",
@@ -691,19 +745,17 @@ O7:function(){return this.Sz.$0()}}}],["","",,T,{
 Ws:{
 "^":"a;vH:Q>"},
 wD:{
-"^":"a;Q",
-yI:function(a){var z=this.Q
-return H.J(new P.Gm(z),[H.Kp(z,0)]).yI(a)}}}],["","",,X,{
+"^":"a;Q"}}],["","",,X,{
 "^":"",
 B8:{
-"^":"UG;a,b,c,d,Q",
+"^":"UG;a,b,c,d,e,Q",
 sSW:function(a){var z
-this.c=a
+this.d=a
 z=this.a
 if(a==null){z.sCI(null)
 this.b.sCI(null)}else{z.sCI(a.gyH())
 this.b.sCI(a.gN0())}},
-aF:function(a){},
+aF:function(a){this.e.Z8(this.d,this.c.c).ml(new X.Bm(a))},
 IS:function(a,b){var z,y,x,w
 z=this.kT()
 y=H.J(new V.h2(new X.DA(),null,null,null,null),[P.I])
@@ -717,10 +769,12 @@ z.sFL(y)
 this.b=z
 w=this.kT()
 this.SB("Reassign these users to ",w)
-U.pI(this.d,null).Z(w)
+z=U.pI(this.e,null)
+this.c=z
+z.Z(w)
 this.Bh("<p>Note that when you delete this group, all these users will have all of their permissions changed to the permissions assigned to their new group.</p>","help-note")
 this.sSW(b)},
-static:{Sn:function(a,b){var z=new X.B8(null,null,null,a,null)
+static:{Sn:function(a,b){var z=new X.B8(null,null,null,null,a,null)
 z.Q=H.J([],[W.M])
 z.IS(a,b)
 return z}}},
@@ -730,7 +784,10 @@ $1:function(a){return C.xB.g(C.xB.g("<p>If there are any users currently assigne
 H6:{
 "^":"r:6;",
 $1:function(a){var z=J.U6(a)
-return J.Mz(z.p(a,0))+z.yn(a,1)}}}],["","",,U,{
+return J.Mz(z.p(a,0))+z.yn(a,1)}},
+Bm:{
+"^":"r:7;Q",
+$1:function(a){if(a===!0)this.Q.$0()}}}],["","",,U,{
 "^":"",
 Qg:{
 "^":"jR;a,b,c,d,e,f,r,Q",
@@ -813,37 +870,32 @@ lw:{
 $1:function(a){return J.mG(a.gk8().gVv(),J.lf(this.Q.gk8()))}}}],["","",,U,{
 "^":"",
 ik:{
-"^":"jR;a,b,c,d,Q",
-Yk:[function(a){},"$1","gDc",2,0,3],
-EJ:function(a,b){var z,y
+"^":"jR;a,b,c,Q",
+EJ:function(a,b){var z,y,x
 z=this.iX(document.createElement("select",null),null,null,null)
-this.b=z
-J.GH(z).yI(this.gDc())
-z=this.b
-y=new M.Hs(null,!1,null,null,null,null,new U.f2(),null,null)
-y.f=z
-y.l4(z)
-y.zr()
+y=new O.jR(null)
+y.Q=H.J([],[W.M])
+y=new O.wU(!1,null,[y],new U.f2(),z,new U.mW(this),null,null,null,null)
+x=J.R(z)
+x.gDD(z).h(0,"bound-list")
+x.gDD(z).h(0,"selection-list")
+x.gi9(z).yI(y.guo())
 this.a=y
-z=this.c
-this.c=z
+z=this.b
+this.b=z
 if(z==null)y.sCI(null)
 else y.sCI(z.b)},
-static:{pI:function(a,b){var z=new U.ik(null,null,a,b,null)
+static:{pI:function(a,b){var z=new U.ik(null,a,b,null)
 z.Q=H.J([],[W.M])
 z.EJ(a,b)
 return z}}},
 f2:{
 "^":"r:6;",
-$1:function(a){var z,y,x
-z=new L.Gz(null,null,null)
-z.Q=H.J([],[W.M])
-y=z.aS(["group","codeName"])
-x=H.J(new V.h2(null,null,null,null,null),[P.I])
-x.sFL(y)
-z.a=x
-z.sSW(a)
-return z}}}],["","",,T,{
+$1:function(a){return N.iu(a)}},
+mW:{
+"^":"r:6;Q",
+$1:function(a){this.Q.c=a
+return a}}}],["","",,T,{
 "^":"",
 pi:{
 "^":"jR;yH:a@,N0:b@,O8:c@,d,Q",
@@ -872,11 +924,11 @@ z.Q=H.J([],[W.M])
 z.mS()
 return z}}},
 o9:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>The display name is only used by this user interface to allow you to select the group. If you have a large number of groups you should use a naming convention that makes it easier to find groups when they are sorted alphabetically.</p>")
 return"<p>The display name is only used by this user interface to allow you to select the group. If you have a large number of groups you should use a naming convention that makes it easier to find groups when they are sorted alphabetically.</p>"}},
 Ni:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.a)),3)
@@ -884,11 +936,11 @@ x=z.d
 if(y){J.Cd(x,"The display name is too short")
 J.Nn(z.a)}else J.Cd(x,"")}},
 LT:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>Provide a detailed description of the features a user will have access to if they are a member of this group.</p>")
 return"<p>Provide a detailed description of the features a user will have access to if they are a member of this group.</p>"}},
 J7:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.b)),15)
@@ -896,11 +948,11 @@ x=z.d
 if(y){J.Cd(x,"The description is too short")
 J.Nn(z.b)}else J.Cd(x,"")}},
 XR:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>This is a unique name for the group that can be hard-coded into the software. It is strongly advised that you use group code names that are url friendly and contain dot separated namespaces.</p>")
 return"<p>This is a unique name for the group that can be hard-coded into the software. It is strongly advised that you use group code names that are url friendly and contain dot separated namespaces.</p>"}},
 v7:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.c)),3)
@@ -938,7 +990,7 @@ y=J.S(this.a.b)
 J.C7(z.Q,"description",y)
 O.RC(z).ml(new N.cB(this,a,z)).OA(new N.Sd(this))}},
 cB:{
-"^":"r:8;Q,a,b",
+"^":"r:9;Q,a,b",
 $1:function(a){var z,y,x
 z=this.Q
 if(a.gcQ()){y=z.b.b.ny(this.b)
@@ -947,17 +999,17 @@ if(!x.gd9())H.vh(x.Pq())
 x.MW(new F.Ps(y))
 y.vn().ml(new N.FQ(this.a)).OA(new N.AP(z))}else J.Cd(z.a.d,J.Tf(a.Q,"error"))}},
 FQ:{
-"^":"r:9;Q",
+"^":"r:10;Q",
 $1:function(a){return this.Q.$0()}},
 AP:{
-"^":"r:10;Q",
+"^":"r:11;Q",
 $1:function(a){var z,y
 z=this.Q.a.d
 y=J.Lz(a)
 J.Cd(z,y)
 return y}},
 Sd:{
-"^":"r:10;Q",
+"^":"r:11;Q",
 $1:function(a){var z,y
 z=this.Q.a.d
 y=J.Lz(a)
@@ -1000,6 +1052,48 @@ K4:function(){this.b.sIk(null)
 this.RY(0)},
 hK:function(){return[this.b]},
 VD:function(a){O.Rj().ml(new G.Tl(this)).OA(new G.R2())},
+Z8:function(a,b){var z=0,y=new P.Zh(),x,w=2,v,u=[],t=this,s,r,q,p,o,n
+function Z8(c,d){if(c===1){v=d
+z=w}while(true)switch(z){case 0:if(b==null){q=$.SH().Q
+if(!q.gd9())H.vh(q.Pq())
+else ;q.MW("You must select a group to reassign the users to")
+x=!1
+z=1
+break}else ;if(J.mG(a,b)){q=$.SH().Q
+if(!q.gd9())H.vh(q.Pq())
+else ;q.MW("You must choose a different group than the one you are deleting")
+x=!1
+z=1
+break}else ;w=4
+z=7
+return H.AZ(O.Wu(J.lf(a.gk8()),J.lf(b.gk8())),Z8,y)
+case 7:s=d
+if(s.gcQ()){q=t.b
+q.VI(q.wr(a))
+t.b.ub()
+x=!0
+z=1
+break}else ;w=2
+z=6
+break
+case 4:w=3
+n=v
+q=H.Ru(n)
+r=q
+q=$.SH()
+o=J.Lz(r)
+q=q.Q
+if(!q.gd9())H.vh(q.Pq())
+else ;q.MW(o)
+x=!1
+z=1
+break
+z=6
+break
+case 3:z=2
+break
+case 6:case 1:return H.AZ(x,0,y,null)
+case 2:return H.AZ(v,1,y)}}return H.AZ(null,Z8,y,null)},
 X:function(a){return"group list"},
 Fr:function(a){var z,y
 z=B.tT
@@ -1013,7 +1107,7 @@ z.Q=C.Sz
 z.Fr(a)
 return z}}},
 k6:{
-"^":"r:11;",
+"^":"r:12;",
 $1:function(a){var z=new L.Zn(null,null,null)
 z.cD(0,null)
 J.C7(z.Q,"codeName","[unique_code_name]")
@@ -1021,7 +1115,7 @@ J.C7(z.Q,"displayName","[display_name]")
 J.C7(z.Q,"description","[description]")
 return z}},
 GK:{
-"^":"r:12;",
+"^":"r:13;",
 $1:function(a){var z=new B.tT(null,null,null,null,null,null,!0)
 z.Q=C.Sz
 z.b=N.bb()
@@ -1030,13 +1124,13 @@ z.d=N.bb()
 z.sk8(a)
 return z}},
 Tl:{
-"^":"r:13;Q",
+"^":"r:14;Q",
 $1:function(a){var z=this.Q
 z.b.sIk(a)
 z.RY(0)
 return a}},
 R2:{
-"^":"r:10;",
+"^":"r:11;",
 $1:function(a){var z,y
 z=$.SH()
 y=J.Lz(a)
@@ -1073,15 +1167,7 @@ z.TY(a)
 return z}}},
 i1:{
 "^":"r:6;",
-$1:function(a){return J.WB(a," ")}}}],["","",,L,{
-"^":"",
-Gz:{
-"^":"jR;a,b,Q",
-sSW:function(a){var z
-this.b=a
-z=this.a
-if(a==null)z.sCI(null)
-else z.sCI(a.gyH())}}}],["","",,X,{
+$1:function(a){return J.WB(a," ")}}}],["","",,X,{
 "^":"",
 Zd:{
 "^":"um;b,c,d,Q,a",
@@ -1102,21 +1188,21 @@ z.Q=C.Sz
 z.fT(a,b,c)
 return z}}},
 Gp:{
-"^":"r:11;Q",
+"^":"r:12;Q",
 $1:function(a){var z=this.Q
 return R.dX(z.c,z.d,null)}},
 el:{
-"^":"r:14;Q",
+"^":"r:15;Q",
 $1:function(a){var z=this.Q
 return R.dX(z.c,z.d,a)}},
 Of:{
-"^":"r:15;Q",
+"^":"r:16;Q",
 $1:function(a){var z=this.Q
 z.b.sIk(a)
 z.RY(0)
 return a}},
 Cs:{
-"^":"r:10;",
+"^":"r:11;",
 $1:function(a){var z,y
 z=$.SH()
 y=J.Lz(a)
@@ -1190,44 +1276,44 @@ z.Q=C.Sz
 z.hC(a,b,c)
 return z}}},
 Mv:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){return this.Q.x.b.PL(new R.QN(this.a))}},
 QN:{
 "^":"r:6;Q",
 $1:function(a){return J.mG(J.lf(a),this.Q)}},
 Ql:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){return this.Q.y.b.PL(new R.dD(this.a))}},
 dD:{
 "^":"r:6;Q",
 $1:function(a){return J.mG(J.lf(a),this.Q)}},
 Rh:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gO8().Gb()}},
 JB:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gyH().Gb()}},
 Xd:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gN0().Gb()}},
 vj:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gO8().Gb()}},
 MvB:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gyH().Gb()}},
 QuN:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gN0().Gb()}}}],["","",,B,{
@@ -1286,25 +1372,25 @@ case 1:return H.AZ(x,0,y,null)
 case 2:return H.AZ(v,1,y)}}return H.AZ(null,n5,y,null)},
 X:function(a){return J.Lz(this.f)}},
 We:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.sO8(a)
 this.Q.nZ()}},
 oB:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gO8()}},
 yE:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.syH(a)
 this.Q.nZ()}},
 li:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gyH()}},
 jb:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.sN0(a)
 this.Q.nZ()}},
 vl:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gN0()}},
 GP:{
 "^":"r:6;Q",
@@ -1379,9 +1465,6 @@ P3:function(a,b){return this.qT(a,b,null)},
 A0:function(a,b,c,d){var z=document.createElement("li",null)
 return this.iX(z,b,a,d)},
 R5:function(a){return this.A0(a,null,null,null)},
-VK:function(a,b,c,d){var z=W.oK("","",null,!1)
-return this.iX(z,b,a,d)},
-aS:function(a){return this.VK(null,a,null,null)},
 iX:function(a,b,c,d){var z,y,x,w
 if(c!=null&&c.length!==0)J.pP(a).h(0,c)
 if(b!=null)for(z=b.length,y=J.R(a),x=0;x<b.length;b.length===z||(0,H.lk)(b),++x){w=b[x]
@@ -1431,12 +1514,12 @@ return this.Q},
 cD:function(a,b){if(b==null)this.shJ(P.L5(null,null,null,null,null))
 else this.shJ(b)}},
 cW:{
-"^":"r:18;Q",
+"^":"r:19;Q",
 $2:function(a,b){var z=this.Q
 if(b==null)J.V1(z.Q,a)
 else J.C7(z.Q,a,b.ghJ())}},
 Sg:{
-"^":"r:19;Q",
+"^":"r:20;Q",
 $2:function(a,b){var z,y
 z=H.J([],[P.w])
 if(b!=null)for(y=J.Nx(b);y.D();)z.push(y.gk().ghJ())
@@ -1537,13 +1620,13 @@ $1:function(a){var z=this.Q
 return z.f.push(z.QH(a))},
 $signature:function(){return H.IG(function(a,b){return{func:1,args:[a]}},this.Q,"NZ")}},
 V9:{
-"^":"r:20;",
+"^":"r:21;",
 $1:function(a){return a.d0()}},
 Uv:{
-"^":"r:20;",
+"^":"r:21;",
 $1:function(a){return a.CY()}},
 QQ:{
-"^":"r:20;",
+"^":"r:21;",
 $1:function(a){return a.O7()}}}],["","",,R,{
 "^":"",
 BV:{
@@ -1745,7 +1828,7 @@ Q6:{
 "^":"r:6;",
 $1:function(a){return C.xB.g("<p>Are you sure you want to delete the \"",a)+"\" permission.</p><p>Deleting this permission could prevent some users from accessing features of the system that they currently have access to.</p>"}},
 x5:{
-"^":"r:9;Q",
+"^":"r:10;Q",
 $1:function(a){if(J.mG(a,C.Be))this.Q.$0()}}}],["","",,G,{
 "^":"",
 ry:{
@@ -1859,11 +1942,11 @@ z.Q=H.J([],[W.M])
 z.Kt()
 return z}}},
 Jc:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>The display name is only used by this user interface to allow you to select the permission. If you have a large number of permissions you should use a naming convention that makes it easier to find permissions when they are sorted alphabetically.</p>")
 return"<p>The display name is only used by this user interface to allow you to select the permission. If you have a large number of permissions you should use a naming convention that makes it easier to find permissions when they are sorted alphabetically.</p>"}},
 QJ:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.a)),3)
@@ -1871,11 +1954,11 @@ x=z.e
 if(y){J.Cd(x,"The display name is too short")
 J.Nn(z.a)}else J.Cd(x,"")}},
 Ma:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>Provide a detailed description of the features a user will gain access to if this permission is granted to them. When users are assigning permissions to roles it is very important that they understand exactly what they are granting access to.</p>")
 return"<p>Provide a detailed description of the features a user will gain access to if this permission is granted to them. When users are assigning permissions to roles it is very important that they understand exactly what they are granting access to.</p>"}},
 Yi:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.b)),15)
@@ -1883,11 +1966,11 @@ x=z.e
 if(y){J.Cd(x,"The description is too short")
 J.Nn(z.b)}else J.Cd(x,"")}},
 KK:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>This code name must match exactly with the name that is checked by the application code to determine if a user has this permission assigned. The recommended best practice is to format permission code names with the name of the application or sub-system, followed by a colon, followed by a dot separated path to the feature, for example <span class=\"code\">auth:role.assign</span> defines the permission to assign roles within the authentication system.</p>")
 return"<p>This code name must match exactly with the name that is checked by the application code to determine if a user has this permission assigned. The recommended best practice is to format permission code names with the name of the application or sub-system, followed by a colon, followed by a dot separated path to the feature, for example <span class=\"code\">auth:role.assign</span> defines the permission to assign roles within the authentication system.</p>"}},
 Xw:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.c)),3)
@@ -1895,11 +1978,11 @@ x=z.e
 if(y){J.Cd(x,"The code name is too short")
 J.Nn(z.c)}else J.Cd(x,"")}},
 hm:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>Leave the resource expression blank to assign this permission to all resources. By filling in the resource expression here, you are granting this permission but only on the resources that match this expression.</p><p>Resources are defined by a resource type name followed by a colon followed by a resource path. For example <span class=\"code\">user:123/profile/image</span> identifies the profile image for user 123. Resource expressions can match a resource name exactly or they can match multiple resources using partial paths and wildcards.</p><p>For example the resource expression <span class=\"code\">user:123/profile</span> will match the profile of user 123 and all sub-paths like <span class=\"code\">user:123/profile/image</span>, <span class=\"code\">user:123/profile/preferences</span> etc.</p><p>You can also use wildwards in resource expressions in place of a higer up path element, for example <span class=\"code\">user:*/profile/image</span> matches profile images for all users.</p><p>You can also reference dynamic data in resource expressions in place of path elements by enclosing them in <span class=\"code\">{}</span>, for example <span class=\"code\">user:{my.id}/profile</span> matches the profile of the user making the request. See documentation for a full list of supported dynamic data expressions.</p>")
 return"<p>Leave the resource expression blank to assign this permission to all resources. By filling in the resource expression here, you are granting this permission but only on the resources that match this expression.</p><p>Resources are defined by a resource type name followed by a colon followed by a resource path. For example <span class=\"code\">user:123/profile/image</span> identifies the profile image for user 123. Resource expressions can match a resource name exactly or they can match multiple resources using partial paths and wildcards.</p><p>For example the resource expression <span class=\"code\">user:123/profile</span> will match the profile of user 123 and all sub-paths like <span class=\"code\">user:123/profile/image</span>, <span class=\"code\">user:123/profile/preferences</span> etc.</p><p>You can also use wildwards in resource expressions in place of a higer up path element, for example <span class=\"code\">user:*/profile/image</span> matches profile images for all users.</p><p>You can also reference dynamic data in resource expressions in place of path elements by enclosing them in <span class=\"code\">{}</span>, for example <span class=\"code\">user:{my.id}/profile</span> matches the profile of the user making the request. See documentation for a full list of supported dynamic data expressions.</p>"}},
 Mb:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q.e,"")}}}],["","",,E,{
 "^":"",
 NE:{
@@ -1944,7 +2027,7 @@ wl:{
 "^":"r:6;",
 $1:function(a){return O.HE(a)}},
 IV:{
-"^":"r:9;Q",
+"^":"r:10;Q",
 $1:function(a){var z=J.t(a)
 if(z.m(a,C.Be)||z.m(a,C.Ub))this.Q.$0()}}}],["","",,F,{
 "^":"",
@@ -1968,7 +2051,7 @@ y=J.S(this.a.d)
 J.C7(z.Q,"resource",y)
 O.qL(z).ml(new F.hE(this,a,z)).OA(new F.MN(this))}},
 hE:{
-"^":"r:8;Q,a,b",
+"^":"r:9;Q,a,b",
 $1:function(a){var z,y,x
 z=this.Q
 if(a.gcQ()){y=z.b.b.ny(this.b)
@@ -1977,17 +2060,17 @@ if(!x.gd9())H.vh(x.Pq())
 x.MW(new F.kl(y))
 y.vn().ml(new F.Ys(this.a)).OA(new F.wu(z))}else J.Cd(z.a.e,J.Tf(a.Q,"error"))}},
 Ys:{
-"^":"r:9;Q",
+"^":"r:10;Q",
 $1:function(a){return this.Q.$0()}},
 wu:{
-"^":"r:10;Q",
+"^":"r:11;Q",
 $1:function(a){var z,y
 z=this.Q.a.e
 y=J.Lz(a)
 J.Cd(z,y)
 return y}},
 MN:{
-"^":"r:10;Q",
+"^":"r:11;Q",
 $1:function(a){var z,y
 z=this.Q.a.e
 y=J.Lz(a)
@@ -2043,7 +2126,7 @@ z.Q=C.Sz
 z.ph(a)
 return z}}},
 rA:{
-"^":"r:11;",
+"^":"r:12;",
 $1:function(a){var z=new A.FC(null,null,null)
 z.cD(0,null)
 J.C7(z.Q,"codeName","[unique_code_name]")
@@ -2051,7 +2134,7 @@ J.C7(z.Q,"displayName","[display_name]")
 J.C7(z.Q,"description","[description]")
 return z}},
 V4:{
-"^":"r:21;",
+"^":"r:22;",
 $1:function(a){var z=new O.Tz(null,null,null,null,null,null,null,!0)
 z.Q=C.Sz
 z.b=N.bb()
@@ -2061,13 +2144,13 @@ z.e=N.bb()
 z.sk8(a)
 return z}},
 k0:{
-"^":"r:22;Q",
+"^":"r:23;Q",
 $1:function(a){var z=this.Q
 z.b.sIk(a)
 z.RY(0)
 return a}},
 bI:{
-"^":"r:10;",
+"^":"r:11;",
 $1:function(a){var z,y
 z=$.SH()
 y=J.Lz(a)
@@ -2187,32 +2270,32 @@ case 1:return H.AZ(x,0,y,null)
 case 2:return H.AZ(v,1,y)}}return H.AZ(null,n5,y,null)},
 X:function(a){return J.Lz(this.r)}},
 yX:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.sO8(a)
 this.Q.nZ()}},
 M9:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gO8()}},
 Jr:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.syH(a)
 this.Q.nZ()}},
 QU:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gyH()}},
 yw:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.sxI(a)
 this.Q.nZ()}},
 HM:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gxI()}},
 Bf:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.sN0(a)
 this.Q.nZ()}},
 Pa:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gN0()}},
 Ha:{
 "^":"r:6;Q",
@@ -2220,7 +2303,7 @@ $1:function(a){this.Q.sk8(a)
 return a}}}],["","",,F,{
 "^":"",
 iB:{
-"^":"a;i9:Q>",
+"^":"a;",
 gPG:function(){return this.b},
 gBQ:function(){return this.c},
 gxy:function(){return this.d},
@@ -2283,7 +2366,7 @@ H3:{
 "^":"r:6;",
 $1:function(a){return C.xB.g("<p>Are you sure you want to delete the \"",a)+"\" role.</p><p>Deleting this role will remove the permissions granted by this role from any groups that have this role assigned to them.</p>"}},
 FB:{
-"^":"r:9;Q",
+"^":"r:10;Q",
 $1:function(a){if(J.mG(a,C.Be))this.Q.$0()}}}],["","",,G,{
 "^":"",
 yb:{
@@ -2458,11 +2541,11 @@ z.Q=H.J([],[W.M])
 z.Nm()
 return z}}},
 Fz:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>The display name is only used by this user interface to allow you to select the role. If you have a large number of roles you should use a naming convention that makes it easier to find roles when they are sorted alphabetically.</p>")
 return"<p>The display name is only used by this user interface to allow you to select the role. If you have a large number of roles you should use a naming convention that makes it easier to find roles when they are sorted alphabetically.</p>"}},
 XV:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.a)),3)
@@ -2470,11 +2553,11 @@ x=z.d
 if(y){J.Cd(x,"The display name is too short")
 J.Nn(z.a)}else J.Cd(x,"")}},
 Z7:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>Provide a detailed description of the features a group of users will gain access to if this role is assigned to the group. When users are assigning roles to groups it is very important that they understand exactly what they are granting access to, and that id why this description is important.</p>")
 return"<p>Provide a detailed description of the features a group of users will gain access to if this role is assigned to the group. When users are assigning roles to groups it is very important that they understand exactly what they are granting access to, and that id why this description is important.</p>"}},
 Di:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.b)),15)
@@ -2482,11 +2565,11 @@ x=z.d
 if(y){J.Cd(x,"The description is too short")
 J.Nn(z.b)}else J.Cd(x,"")}},
 HK:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){J.Cd(this.Q,"<p>This is a unique name for the role that can be hard-coded into the software. It is strongly advised that you use role code names that are url friendly and contain dot separated namespaces.</p>")
 return"<p>This is a unique name for the role that can be hard-coded into the software. It is strongly advised that you use role code names that are url friendly and contain dot separated namespaces.</p>"}},
 HH:{
-"^":"r:7;Q",
+"^":"r:8;Q",
 $1:function(a){var z,y,x
 z=this.Q
 y=J.UN(J.wS(J.S(z.c)),3)
@@ -2543,7 +2626,7 @@ bc:{
 "^":"r:6;",
 $1:function(a){return F.tb(a)}},
 KE:{
-"^":"r:9;Q",
+"^":"r:10;Q",
 $1:function(a){var z=J.t(a)
 if(z.m(a,C.Be)||z.m(a,C.Ub))this.Q.$0()}}}],["","",,T,{
 "^":"",
@@ -2564,7 +2647,7 @@ y=J.S(this.a.b)
 J.C7(z.Q,"description",y)
 O.GG(z).ml(new T.zC(this,a,z)).OA(new T.l5(this))}},
 zC:{
-"^":"r:8;Q,a,b",
+"^":"r:9;Q,a,b",
 $1:function(a){var z,y,x
 z=this.Q
 if(a.gcQ()){y=z.b.b.ny(this.b)
@@ -2573,17 +2656,17 @@ if(!x.gd9())H.vh(x.Pq())
 x.MW(new F.xO(y))
 y.vn().ml(new T.hz(this.a)).OA(new T.Ed(z))}else J.Cd(z.a.d,J.Tf(a.Q,"error"))}},
 hz:{
-"^":"r:9;Q",
+"^":"r:10;Q",
 $1:function(a){return this.Q.$0()}},
 Ed:{
-"^":"r:10;Q",
+"^":"r:11;Q",
 $1:function(a){var z,y
 z=this.Q.a.d
 y=J.Lz(a)
 J.Cd(z,y)
 return y}},
 l5:{
-"^":"r:10;Q",
+"^":"r:11;Q",
 $1:function(a){var z,y
 z=this.Q.a.d
 y=J.Lz(a)
@@ -2639,7 +2722,7 @@ z.Q=C.Sz
 z.Bo(a)
 return z}}},
 Xy:{
-"^":"r:11;",
+"^":"r:12;",
 $1:function(a){var z=new A.jM(null,null,null)
 z.cD(0,null)
 J.C7(z.Q,"codeName","[unique_code_name]")
@@ -2647,7 +2730,7 @@ J.C7(z.Q,"displayName","[display_name]")
 J.C7(z.Q,"description","[description]")
 return z}},
 vm:{
-"^":"r:23;",
+"^":"r:24;",
 $1:function(a){var z=new T.Z4(null,null,null,null,null,null,!0)
 z.Q=C.Sz
 z.b=N.bb()
@@ -2656,13 +2739,13 @@ z.d=N.bb()
 z.sk8(a)
 return z}},
 UM:{
-"^":"r:24;Q",
+"^":"r:25;Q",
 $1:function(a){var z=this.Q
 z.b.sIk(a)
 z.RY(0)
 return a}},
 vo:{
-"^":"r:10;",
+"^":"r:11;",
 $1:function(a){var z,y
 z=$.SH()
 y=J.Lz(a)
@@ -2720,21 +2803,21 @@ z.Q=C.Sz
 z.fs(a,b,c)
 return z}}},
 Z6:{
-"^":"r:11;Q",
+"^":"r:12;Q",
 $1:function(a){var z=this.Q
 return V.IB(z.c,z.d,null)}},
 wi:{
-"^":"r:14;Q",
+"^":"r:15;Q",
 $1:function(a){var z=this.Q
 return V.IB(z.c,z.d,a)}},
 mn:{
-"^":"r:15;Q",
+"^":"r:16;Q",
 $1:function(a){var z=this.Q
 z.b.sIk(a)
 z.RY(0)
 return a}},
 jU:{
-"^":"r:10;",
+"^":"r:11;",
 $1:function(a){var z,y
 z=$.SH()
 y=J.Lz(a)
@@ -2815,49 +2898,49 @@ z.Q=C.Sz
 z.Lo(a,b,c)
 return z}}},
 pm:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){return this.Q.y.b.PL(new V.lE(this.a))}},
 lE:{
 "^":"r:6;Q",
 $1:function(a){return J.mG(J.lf(a),this.Q)}},
 cU:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){return this.Q.z.b.PL(new V.o3(this.a))}},
 o3:{
 "^":"r:6;Q",
 $1:function(a){return J.mG(J.lf(a),this.Q)}},
 wp:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gO8().Gb()}},
 OC:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gyH().Gb()}},
 fe:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gN0().Gb()}},
 L1:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gO8().Gb()}},
 Ji:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gyH().Gb()}},
 mb:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gN0().Gb()}},
 pmz:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){var z=this.Q.$0()
 if(z==null)return""
 return z.gxI().Gb()}}}],["","",,T,{
@@ -2928,25 +3011,25 @@ case 1:return H.AZ(x,0,y,null)
 case 2:return H.AZ(v,1,y)}}return H.AZ(null,n5,y,null)},
 X:function(a){return J.Lz(this.f)}},
 Gw:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.sO8(a)
 this.Q.nZ()}},
 PD:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gO8()}},
 fn:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.syH(a)
 this.Q.nZ()}},
 a3:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gyH()}},
 Sh:{
-"^":"r:17;Q,a",
+"^":"r:18;Q,a",
 $1:function(a){this.a.sN0(a)
 this.Q.nZ()}},
 Tr:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.gN0()}},
 JL:{
 "^":"r:6;Q",
@@ -3251,6 +3334,20 @@ z=1
 break
 case 1:return H.AZ(x,0,y,null)
 case 2:return H.AZ(v,1,y)}}return H.AZ(null,V7,y,null)},
+Wu:function(a,b){var z=0,y=new P.Zh(),x,w=2,v,u,t,s
+function Wu(c,d){if(c===1){v=d
+z=w}while(true)switch(z){case 0:z=3
+return H.AZ(W.GN(J.WB(J.WB(J.WB(J.WB($.W,"/group/"),J.Lz(a)),"?replacement="),J.Lz(b)),"DELETE","application/json",null,null,null,null,null),Wu,y)
+case 3:u=d
+t=J.R(u)
+if(t.gpf(u)!==200)throw H.b(C.xB.g("Failed to delete group ",t.geM(u)))
+else ;s=new V.V5(null,null,null)
+s.cD(0,C.xr.kV(t.gil(u)))
+x=s
+z=1
+break
+case 1:return H.AZ(x,0,y,null)
+case 2:return H.AZ(v,1,y)}}return H.AZ(null,Wu,y,null)},
 an:function(){var z=0,y=new P.Zh(),x,w=2,v,u,t,s,r,q,p,o,n
 function an(a,b){if(a===1){v=b
 z=w}while(true)switch(z){case 0:n=C.xr
@@ -3317,14 +3414,14 @@ z.Q=new T.wD(P.bK(null,null,!1,null))
 z.H9()
 return z}}},
 I1:{
-"^":"r:17;",
+"^":"r:18;",
 $1:function(a){return a}},
 Q8:{
-"^":"r:17;",
+"^":"r:18;",
 $1:function(a){return a}}}],["","",,O,{
 "^":"",
 jR:{
-"^":"lK;",
+"^":"lK;Q",
 VD:function(a){}}}],["","",,K,{
 "^":"",
 um:{
@@ -3463,37 +3560,37 @@ if(w!=null)if(w.LA()!==C.zg)return C.oQ}v=this.hK()
 if(v!=null&&v.length>0)for(z=v.length,x=0;x<v.length;v.length===z||(0,H.lk)(v),++x){u=v[x]
 if(u!=null)if(u.LA()!==C.zg)return C.oQ}return C.zg}},
 zz:{
-"^":"r:20;",
+"^":"r:21;",
 $1:function(a){return a.O7()}},
 Hk:{
-"^":"r:25;",
+"^":"r:26;",
 $1:function(a){return a.O7()}},
 aO:{
-"^":"r:20;",
+"^":"r:21;",
 $1:function(a){return J.yn(a)}},
 YI:{
-"^":"r:25;",
+"^":"r:26;",
 $1:function(a){return J.yn(a)}},
 at:{
-"^":"r:20;Q",
+"^":"r:21;Q",
 $1:function(a){if(a!=null)this.Q.$1(a)}},
 ie:{
-"^":"r:25;Q",
+"^":"r:26;Q",
 $1:function(a){if(a!=null)this.Q.$1(a)}},
 kb:{
-"^":"r:20;",
+"^":"r:21;",
 $1:function(a){return a.d0()}},
 q1:{
-"^":"r:25;",
+"^":"r:26;",
 $1:function(a){return a.d0()}},
 N3:{
-"^":"r:25;",
+"^":"r:26;",
 $1:function(a){return a.ub()}},
 lQ:{
-"^":"r:20;",
+"^":"r:21;",
 $1:function(a){return a.CY()}},
 FG:{
-"^":"r:25;",
+"^":"r:26;",
 $1:function(a){return a.CY()}}}],["","",,H,{
 "^":"",
 FK:{
@@ -3830,10 +3927,10 @@ if(e===!0){z.v8(w,w)
 init.globalState.e.Q.B7(new H.IY(z,x,"start isolate"))}else x.$0()},
 Gx:function(a){return new H.iY(!0,[]).QS(new H.jP(!1,P.Q9(null,P.KN)).a3(a))},
 PK:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){this.a.$1(this.Q.Q)}},
 JO:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){this.a.$2(this.Q.Q,null)}},
 f0:{
 "^":"a;Q,a,b,c,d,e,f,r,x,y,z,ch,cx",
@@ -3992,7 +4089,7 @@ return}z.vV(this.a)}},
 JH:{
 "^":"a;"},
 bL:{
-"^":"r:16;Q,a,b,c,d,e",
+"^":"r:17;Q,a,b,c,d,e",
 $0:function(){H.Kc(this.Q,this.a,this.b,this.c,this.d,this.e)}},
 vK:{
 "^":"r:5;Q,a,b,c,d",
@@ -4043,7 +4140,7 @@ m:function(a,b){if(b==null)return!1
 return b instanceof H.JM&&J.mG(this.a,b.a)},
 giO:function(a){return this.a.gTU()}},
 Ua:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){var z=this.Q.a
 if(!z.gGl())z.PO(this.a)}},
 ns:{
@@ -4774,19 +4871,19 @@ z=y==null?"":y
 this.a=z
 return z}},
 dr:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){return this.Q.$0()}},
 TL:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){return this.Q.$1(this.a)}},
 KX:{
-"^":"r:16;Q,a,b",
+"^":"r:17;Q,a,b",
 $0:function(){return this.Q.$2(this.a,this.b)}},
 uZ:{
-"^":"r:16;Q,a,b,c",
+"^":"r:17;Q,a,b,c",
 $0:function(){return this.Q.$3(this.a,this.b,this.c)}},
 OQ:{
-"^":"r:16;Q,a,b,c,d",
+"^":"r:17;Q,a,b,c,d",
 $0:function(){return this.Q.$4(this.a,this.b,this.c,this.d)}},
 r:{
 "^":"a;",
@@ -4880,7 +4977,7 @@ za:function(){return}},
 bq:{
 "^":"a;Q,II:a<"},
 TZ:{
-"^":"r:26;Q",
+"^":"r:27;Q",
 $2:function(a,b){H.lz(this.Q,1).$1(new H.bq(a,b))}},
 yS:{
 "^":"r:6;Q,a",
@@ -5034,10 +5131,10 @@ dC:{
 "^":"r:6;Q",
 $1:function(a){return this.Q(a)}},
 wN:{
-"^":"r:27;Q",
+"^":"r:28;Q",
 $2:function(a,b){return this.Q(a,b)}},
 VX:{
-"^":"r:17;Q",
+"^":"r:18;Q",
 $1:function(a){return this.Q(a)}},
 VR:{
 "^":"a;Q,a,b,c",
@@ -5144,10 +5241,10 @@ new self.MutationObserver(H.tR(new P.th(z),1)).observe(y,{childList:true})
 return new P.ha(z,y,x)}else if(self.setImmediate!=null)return P.q9()
 return P.K7()},
 ZV:[function(a){++init.globalState.e.a
-self.scheduleImmediate(H.tR(new P.C6(a),0))},"$1","vd",2,0,39],
+self.scheduleImmediate(H.tR(new P.C6(a),0))},"$1","vd",2,0,40],
 oA:[function(a){++init.globalState.e.a
-self.setImmediate(H.tR(new P.Ft(a),0))},"$1","q9",2,0,39],
-Bz:[function(a){P.YF(C.RT,a)},"$1","K7",2,0,39],
+self.setImmediate(H.tR(new P.Ft(a),0))},"$1","q9",2,0,40],
+Bz:[function(a){P.YF(C.RT,a)},"$1","K7",2,0,40],
 VH:function(a,b){var z=H.N7()
 z=H.KT(z,[z,z]).Zg(a)
 if(z){b.toString
@@ -5199,10 +5296,10 @@ x=H.ts(w)
 v=$.X3
 v.toString
 P.L2(null,null,v,y,x)}},
-QE:[function(a){},"$1","ux",2,0,40],
+QE:[function(a){},"$1","ux",2,0,41],
 Z0:[function(a,b){var z=$.X3
 z.toString
-P.L2(null,null,z,a,b)},function(a){return P.Z0(a,null)},"$2","$1","bx",2,2,30,0],
+P.L2(null,null,z,a,b)},function(a){return P.Z0(a,null)},"$2","$1","bx",2,2,31,0],
 dL:[function(){},"$0","v3",0,0,5],
 FE:function(a,b,c){var z,y,x,w,v,u,t
 try{b.$1(a.$0())}catch(u){t=H.Ru(u)
@@ -5267,18 +5364,18 @@ y=z.Q
 z.Q=null
 y.$0()}},
 ha:{
-"^":"r:28;Q,a,b",
+"^":"r:29;Q,a,b",
 $1:function(a){var z,y;++init.globalState.e.a
 this.Q.Q=a
 z=this.a
 y=this.b
 z.firstChild?z.removeChild(y):z.appendChild(y)}},
 C6:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){H.ox()
 this.Q.$0()}},
 Ft:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){H.ox()
 this.Q.$0()}},
 fA:{
@@ -5394,7 +5491,7 @@ Pf:{
 w0:[function(a,b){a=a!=null?a:new P.LK()
 if(this.Q.Q!==0)throw H.b(new P.lj("Future already completed"))
 $.X3.toString
-this.ZL(a,b)},function(a){return this.w0(a,null)},"pm","$2","$1","gYJ",2,2,29,0]},
+this.ZL(a,b)},function(a){return this.w0(a,null)},"pm","$2","$1","gYJ",2,2,30,0]},
 Zf:{
 "^":"Pf;Q",
 aM:function(a,b){var z=this.Q
@@ -5466,7 +5563,7 @@ this.vd(a)
 P.HZ(this,z)},
 ZL:[function(a,b){var z=this.ah()
 this.P9(new P.OH(a,b))
-P.HZ(this,z)},function(a){return this.ZL(a,null)},"yk","$2","$1","gFa",2,2,30,0],
+P.HZ(this,z)},function(a){return this.ZL(a,null)},"yk","$2","$1","gFa",2,2,31,0],
 Xf:function(a){var z
 if(a==null);else{z=J.t(a)
 if(!!z.$isb8){if(!!z.$isvs){z=a.Q
@@ -5549,29 +5646,29 @@ o.b=x}else{o.Q=8
 o.b=x}z.Q=o
 y=o}}}},
 pS:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){P.HZ(this.Q,this.a)}},
 pV:{
 "^":"r:6;Q",
 $1:function(a){this.Q.X2(a)}},
 U7:{
-"^":"r:31;Q",
+"^":"r:32;Q",
 $2:function(a,b){this.Q.ZL(a,b)},
 $1:function(a){return this.$2(a,null)}},
 vr:{
-"^":"r:16;Q,a,b",
+"^":"r:17;Q,a,b",
 $0:function(){this.Q.ZL(this.a,this.b)}},
 rH:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){P.A9(this.a,this.Q)}},
 cX:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){this.Q.X2(this.a)}},
 ZL:{
-"^":"r:16;Q,a,b",
+"^":"r:17;Q,a,b",
 $0:function(){this.Q.ZL(this.a,this.b)}},
 rq:{
-"^":"r:32;Q,a,b,c",
+"^":"r:33;Q,a,b,c",
 $0:function(){var z,y,x,w
 try{this.Q.a=this.c.FI(this.a.gdU(),this.b)
 return!0}catch(x){w=H.Ru(x)
@@ -5641,7 +5738,7 @@ jZ:{
 "^":"r:6;Q,a",
 $1:function(a){P.HZ(this.Q.Q,new P.Fe(null,this.a,0,null,null))}},
 FZ:{
-"^":"r:31;Q,a",
+"^":"r:32;Q,a",
 $2:function(a,b){var z,y
 z=this.Q
 if(!(z.Q instanceof P.vs)){y=H.J(new P.vs(0,$.X3,null),[null])
@@ -5676,26 +5773,26 @@ M4:{
 $1:function(a){P.FE(new P.Rl(this.b,a),new P.Jb(),P.TB(this.Q.Q,this.c))},
 $signature:function(){return H.IG(function(a){return{func:1,args:[a]}},this.a,"qh")}},
 Rl:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){return this.Q.$1(this.a)}},
 Jb:{
 "^":"r:6;",
 $1:function(a){}},
 fi:{
-"^":"r:16;Q",
+"^":"r:17;Q",
 $0:function(){this.Q.HH(null)}},
 B5:{
 "^":"r:6;Q",
 $1:function(a){++this.Q.Q}},
 PI:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){this.a.HH(this.Q.Q)}},
 VV:{
 "^":"r;Q,a",
 $1:function(a){this.a.push(a)},
 $signature:function(){return H.IG(function(a){return{func:1,args:[a]}},this.Q,"qh")}},
 Dy:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){this.a.HH(this.Q)}},
 MO:{
 "^":"a;"},
@@ -5874,7 +5971,7 @@ return}P.rb(new P.CR(this,a))
 this.Q=1},
 FK:function(){if(this.Q===1)this.Q=3}},
 CR:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){var z,y
 z=this.Q
 y=z.Q
@@ -5936,7 +6033,7 @@ this.I8()
 z.ZL(a,b)
 return}this.Q.zd(0)
 this.b=new P.OH(a,b)
-this.c=4},function(a){return this.d8(a,null)},"oG","$2","$1","gTv",2,2,29,0],
+this.c=4},function(a){return this.d8(a,null)},"oG","$2","$1","gTv",2,2,30,0],
 mX:[function(){if(this.c===2){var z=this.b
 this.I8()
 z.HH(!1)
@@ -5944,10 +6041,10 @@ return}this.Q.zd(0)
 this.b=null
 this.c=5},"$0","gEU",0,0,5]},
 dR:{
-"^":"r:16;Q,a,b",
+"^":"r:17;Q,a,b",
 $0:function(){return this.Q.ZL(this.a,this.b)}},
 uR:{
-"^":"r:26;Q,a",
+"^":"r:27;Q,a",
 $2:function(a,b){return P.NX(this.Q,this.a,a,b)}},
 YR:{
 "^":"qh;",
@@ -5972,7 +6069,7 @@ cZ:function(){var z=this.x
 if(z!=null){this.x=null
 z.Gv()}return},
 yi:[function(a){this.r.FC(a,this)},"$1","gwU",2,0,function(){return H.IG(function(a,b){return{func:1,void:true,args:[a]}},this.$receiver,"fB")}],
-Yg:[function(a,b){this.UI(a,b)},"$2","gPr",4,0,33],
+Yg:[function(a,b){this.UI(a,b)},"$2","gPr",4,0,34],
 oZ:[function(){this.Ig()},"$0","gos",0,0,5],
 JC:function(a,b,c,d,e,f,g){var z,y
 z=this.gwU()
@@ -6000,7 +6097,7 @@ $isGe:1},
 m0:{
 "^":"a;"},
 pK:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){var z=this.Q
 throw H.b(new P.fA(z,P.HR(z,this.a)))}},
 R8:{
@@ -6039,10 +6136,10 @@ return P.yv(null,null,this,a,b)},
 mg:function(a,b,c){if($.X3===C.NU)return a.$2(b,c)
 return P.Mu(null,null,this,a,b,c)}},
 hj:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){return this.Q.bH(this.a)}},
 MK:{
-"^":"r:16;Q,a",
+"^":"r:17;Q,a",
 $0:function(){return this.Q.Gr(this.a)}},
 pQ:{
 "^":"r:6;Q,a",
@@ -6053,8 +6150,8 @@ $1:function(a){return this.Q.FI(this.a,a)}}}],["","",,P,{
 "^":"",
 u5:function(){return H.J(new H.N5(0,null,null,null,null,null,0),[null,null])},
 Td:function(a){return H.B7(a,H.J(new H.N5(0,null,null,null,null,null,0),[null,null]))},
-Ou:[function(a,b){return J.mG(a,b)},"$2","iv",4,0,41],
-T9:[function(a){return J.v1(a)},"$1","rm",2,0,42],
+Ou:[function(a,b){return J.mG(a,b)},"$2","iv",4,0,42],
+T9:[function(a){return J.v1(a)},"$1","rm",2,0,43],
 EP:function(a,b,c){var z,y
 if(P.hB(a)){if(b==="("&&c===")")return"(...)"
 return b+"..."+c}z=[]
@@ -6314,7 +6411,7 @@ $iszM:1,
 $aszM:null,
 $isqC:1},
 W0:{
-"^":"r:34;Q,a",
+"^":"r:35;Q,a",
 $2:function(a,b){var z,y
 z=this.Q
 if(!z.Q)this.a.Q+=", "
@@ -6453,7 +6550,7 @@ z=null
 try{z=JSON.parse(a)}catch(w){x=H.Ru(w)
 y=x
 throw H.b(new P.oe(String(y),null,null))}return P.KH(z)},
-tp:[function(a){return a.Lt()},"$1","DY",2,0,43],
+tp:[function(a){return a.Lt()},"$1","DY",2,0,44],
 uw:{
 "^":"a;Q,a,b",
 p:function(a,b){var z,y
@@ -6628,7 +6725,7 @@ this.QD(x[y])}this.K6("}")
 return!0},
 zj:function(a){return this.a.$1(a)}},
 ti:{
-"^":"r:34;Q,a",
+"^":"r:35;Q,a",
 $2:function(a,b){var z,y,x,w,v
 if(typeof a!=="string")this.Q.a=!1
 z=this.a
@@ -6664,8 +6761,8 @@ os:function(a){var z=J.t(a)
 if(!!z.$isr)return z.X(a)
 return H.H9(a)},
 FM:function(a){return new P.HG(a)},
-ad:[function(a,b){return a==null?b==null:a===b},"$2","n0",4,0,44],
-xv:[function(a){return H.CU(a)},"$1","J2",2,0,45],
+ad:[function(a,b){return a==null?b==null:a===b},"$2","n0",4,0,45],
+xv:[function(a){return H.CU(a)},"$1","J2",2,0,46],
 z:function(a,b,c){var z,y
 z=H.J([],[c])
 for(y=J.Nx(a);y.D();)z.push(y.gk())
@@ -6675,7 +6772,7 @@ return z},
 JS:function(a){var z=H.d(a)
 H.qw(z)},
 CL:{
-"^":"r:35;Q,a",
+"^":"r:36;Q,a",
 $2:function(a,b){this.a.Q+=this.Q.Q
 P.Hp(a)}},
 a2:{
@@ -6707,7 +6804,7 @@ w=z.$1(C.jn.JV(C.jn.BU(y,1e6),60))
 v=new P.P7().$1(C.jn.JV(y,1e6))
 return""+C.jn.BU(y,36e8)+":"+H.d(x)+":"+H.d(w)+"."+H.d(v)}},
 P7:{
-"^":"r:36;",
+"^":"r:37;",
 $1:function(a){if(a>=1e5)return""+a
 if(a>=1e4)return"0"+a
 if(a>=1000)return"00"+a
@@ -6715,7 +6812,7 @@ if(a>=100)return"000"+a
 if(a>=10)return"0000"+a
 return"00000"+a}},
 DW:{
-"^":"r:36;",
+"^":"r:37;",
 $1:function(a){if(a>=10)return""+a
 return"0"+a}},
 Ge:{
@@ -6868,7 +6965,7 @@ a:{
 m:function(a,b){return this===b},
 giO:function(a){return H.eQ(this)},
 X:function(a){return H.H9(this)}},
-mE:{
+Gz:{
 "^":"a;"},
 I:{
 "^":"a;"},
@@ -6968,7 +7065,6 @@ qs:{
 YN:{
 "^":"KV;",
 goD:function(a){return H.J(new W.RO(a,"blur",!1),[null])},
-gi9:function(a){return H.J(new W.RO(a,"change",!1),[null])},
 gI9:function(a){return H.J(new W.RO(a,"focus",!1),[null])},
 "%":"Document|HTMLDocument|XMLDocument"},
 hs:{
@@ -7124,7 +7220,7 @@ as:{
 Yu:{
 "^":"qE;v:length=,oc:name=,K:target=",
 "%":"HTMLFormElement"},
-Wu:{
+Zc:{
 "^":"ec;",
 gv:function(a){return a.length},
 p:function(a,b){if(b>>>0!==b||b>=a.length)throw H.b(P.Cf(b,a,null,null,null))
@@ -7158,7 +7254,7 @@ $iszU:1,
 $isa:1,
 "%":"XMLHttpRequest"},
 Kx:{
-"^":"r:37;",
+"^":"r:38;",
 $1:function(a){return J.CA(a)}},
 bU:{
 "^":"r:6;Q,a",
@@ -7436,7 +7532,6 @@ w6:{
 K5:{
 "^":"D0;pf:status=",
 goD:function(a){return H.J(new W.RO(a,"blur",!1),[null])},
-gi9:function(a){return H.J(new W.RO(a,"change",!1),[null])},
 gI9:function(a){return H.J(new W.RO(a,"focus",!1),[null])},
 $isGv:1,
 $isD0:1,
@@ -7608,7 +7703,7 @@ z=document.createElement("a",null)
 y=new W.mk(z,window.location)
 y=new W.JQ(y)
 y.qR(a)
-return y},qD:[function(a,b,c,d){return!0},"$4","y3",8,0,46],QW:[function(a,b,c,d){var z,y,x,w,v
+return y},qD:[function(a,b,c,d){return!0},"$4","y3",8,0,47],QW:[function(a,b,c,d){var z,y,x,w,v
 z=d.gKs()
 y=z.Q
 x=J.R(y)
@@ -7625,7 +7720,7 @@ if(!z)if(x.gy0(y)==="")if(x.gtp(y)==="")z=x.gA8(y)===":"||x.gA8(y)===""
 else z=!1
 else z=!1
 else z=!0
-return z},"$4","tc",8,0,46]}},
+return z},"$4","tc",8,0,47]}},
 Pb:{
 "^":"a;",
 gu:function(a){return new W.W9(a,this.gv(a),-1,null)},
@@ -7747,7 +7842,7 @@ if(typeof console!="undefined")console.warn(v)
 z.getAttribute(w)
 z.removeAttribute(w)}}if(!!J.t(a).$isyY)this.Pn(a.content)}},
 fm:{
-"^":"r:38;Q",
+"^":"r:39;Q",
 $2:function(a,b){var z,y,x
 z=this.Q
 switch(a.nodeType){case 1:z.I4(a,b)
@@ -8217,7 +8312,7 @@ w.WI()
 J.U(J.O(w.x))
 $.Pv=w}v=$.L
 J.O(v).V1(0)
-w.Z(v)},"$0","lS",0,0,16]},1]]
+w.Z(v)},"$0","lS",0,0,17]},1]]
 setupProgram(dart,0)
 J.P=function(a){if(a==null)return a
 if(a.constructor==Array)return J.G.prototype
@@ -8265,7 +8360,6 @@ return J.Wx(a).T(a,b)}
 J.EE=function(a,b,c){return J.R(a).AS(a,b,c)}
 J.F8=function(a,b,c,d){return J.R(a).v0(a,b,c,d)}
 J.G0=function(a){return J.R(a).gK(a)}
-J.GH=function(a){return J.R(a).gi9(a)}
 J.He=function(a,b){return J.R(a).siP(a,b)}
 J.In=function(a){return J.R(a).gns(a)}
 J.JA=function(a,b,c){return J.rY(a).h8(a,b,c)}
@@ -8538,7 +8632,7 @@ try{(void 0).$method$($argumentsExpr$)}catch(z){return z.message}}())},"BX","zO"
 I=I.$finishIsolateConstructor(I)
 $=new I()
 init.metadata=[null]
-init.types=[{func:1,void:true,args:[W.Aj]},{func:1,void:true,args:[T.Ws]},{func:1,void:true,args:[P.I]},{func:1,void:true,args:[W.ea]},{func:1,args:[W.Aj]},{func:1,void:true},{func:1,args:[,]},{func:1,args:[W.ea]},{func:1,args:[V.V5]},{func:1,args:[G.Lg]},{func:1,args:[P.Ge]},{func:1,args:[P.w]},{func:1,args:[L.Zn]},{func:1,args:[[P.zM,L.Zn]]},{func:1,args:[S.l0]},{func:1,args:[[P.zM,S.l0]]},{func:1},{func:1,args:[P.I]},{func:1,args:[P.I,A.bT]},{func:1,args:[P.I,P.zM]},{func:1,args:[K.um]},{func:1,args:[A.FC]},{func:1,args:[[P.zM,A.FC]]},{func:1,args:[A.jM]},{func:1,args:[[P.zM,A.jM]]},{func:1,args:[O.NZ]},{func:1,args:[,P.mE]},{func:1,args:[,P.I]},{func:1,args:[{func:1,void:true}]},{func:1,void:true,args:[P.a],opt:[P.mE]},{func:1,void:true,args:[,],opt:[P.mE]},{func:1,args:[,],opt:[,]},{func:1,ret:P.a2},{func:1,void:true,args:[,P.mE]},{func:1,args:[,,]},{func:1,args:[P.GD,,]},{func:1,ret:P.I,args:[P.KN]},{func:1,args:[W.zU]},{func:1,void:true,args:[W.KV,W.KV]},{func:1,void:true,args:[{func:1,void:true}]},{func:1,void:true,args:[,]},{func:1,ret:P.a2,args:[,,]},{func:1,ret:P.KN,args:[,]},{func:1,ret:P.a,args:[,]},{func:1,ret:P.a2,args:[P.a,P.a]},{func:1,ret:P.KN,args:[P.a]},{func:1,ret:P.a2,args:[W.M,P.I,P.I,W.JQ]}]
+init.types=[{func:1,void:true,args:[W.Aj]},{func:1,void:true,args:[T.Ws]},{func:1,void:true,args:[P.I]},{func:1,void:true,args:[W.ea]},{func:1,args:[W.Aj]},{func:1,void:true},{func:1,args:[,]},{func:1,args:[P.a2]},{func:1,args:[W.ea]},{func:1,args:[V.V5]},{func:1,args:[G.Lg]},{func:1,args:[P.Ge]},{func:1,args:[P.w]},{func:1,args:[L.Zn]},{func:1,args:[[P.zM,L.Zn]]},{func:1,args:[S.l0]},{func:1,args:[[P.zM,S.l0]]},{func:1},{func:1,args:[P.I]},{func:1,args:[P.I,A.bT]},{func:1,args:[P.I,P.zM]},{func:1,args:[K.um]},{func:1,args:[A.FC]},{func:1,args:[[P.zM,A.FC]]},{func:1,args:[A.jM]},{func:1,args:[[P.zM,A.jM]]},{func:1,args:[O.NZ]},{func:1,args:[,P.Gz]},{func:1,args:[,P.I]},{func:1,args:[{func:1,void:true}]},{func:1,void:true,args:[P.a],opt:[P.Gz]},{func:1,void:true,args:[,],opt:[P.Gz]},{func:1,args:[,],opt:[,]},{func:1,ret:P.a2},{func:1,void:true,args:[,P.Gz]},{func:1,args:[,,]},{func:1,args:[P.GD,,]},{func:1,ret:P.I,args:[P.KN]},{func:1,args:[W.zU]},{func:1,void:true,args:[W.KV,W.KV]},{func:1,void:true,args:[{func:1,void:true}]},{func:1,void:true,args:[,]},{func:1,ret:P.a2,args:[,,]},{func:1,ret:P.KN,args:[,]},{func:1,ret:P.a,args:[,]},{func:1,ret:P.a2,args:[P.a,P.a]},{func:1,ret:P.KN,args:[P.a]},{func:1,ret:P.a2,args:[W.M,P.I,P.I,W.JQ]}]
 function convertToFastObject(a){function MyClass(){}MyClass.prototype=a
 new MyClass()
 return a}function convertToSlowObject(a){a.__MAGIC_SLOW_PROPERTY=1

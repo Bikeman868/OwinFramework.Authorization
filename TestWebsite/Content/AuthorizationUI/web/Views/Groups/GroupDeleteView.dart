@@ -3,6 +3,7 @@
 import '../../MVVM/View.dart';
 import '../../MVVM/Enums.dart';
 import '../../MVVM/BoundLabel.dart';
+import '../../MVVM/Events.dart';
 
 import '../../Server.dart';
 
@@ -22,6 +23,7 @@ class GroupDeleteView extends EditView
 {
 	BoundLabel<String> _displayNameBinding;
 	BoundLabel<String> _descriptionBinding;
+	GroupDropdownSelectView _groupSelector;
 
 	GroupDeleteView(this._groupListViewModel, [GroupViewModel viewModel])
 	{
@@ -40,8 +42,8 @@ class GroupDeleteView extends EditView
 
 		var selectDiv = addDiv();
 		addInlineText('Reassign these users to ', parent: selectDiv);
-		var groupSelector = new GroupDropdownSelectView(_groupListViewModel) as GroupDropdownSelectView;
-		groupSelector.addTo(selectDiv);
+		_groupSelector = new GroupDropdownSelectView(_groupListViewModel) as GroupDropdownSelectView;
+		_groupSelector.addTo(selectDiv);
 
 		addBlockText(
 			'<p>Note that when you delete this group, all these users will have all of their ' +
@@ -73,5 +75,10 @@ class GroupDeleteView extends EditView
 
 	void deleteRecord(void onSuccess())
 	{
+		_groupListViewModel.delete(_viewModel, _groupSelector.selectedGroup)
+			.then((bool success)
+			{
+				if (success) onSuccess();
+			});
 	}
 }
