@@ -15,6 +15,7 @@ using OwinFramework.Interfaces.Utility;
 using OwinFramework.InterfacesV1.Capability;
 using OwinFramework.InterfacesV1.Middleware;
 using OwinFramework.InterfacesV1.Upstream;
+using OwinFramework.MiddlewareHelpers.EmbeddedResources;
 
 namespace OwinFramework.Authorization.UI
 {
@@ -29,14 +30,13 @@ namespace OwinFramework.Authorization.UI
         string IMiddleware.Name { get; set; }
         public Action<IOwinContext, Func<string>> Trace { get; set; }
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly ResourceManager _resourceManager;
 
-        private PathString _apiRootPath;
         private PathString _uiRootPath;
 
         public AuthorizationUiMiddleware(IHostingEnvironment hostingEnvironment)
         {
-            _hostingEnvironment = hostingEnvironment;
+            _resourceManager = new ResourceManager(hostingEnvironment, new MimeTypeEvaluator());
 
             this.RunAfter<IAuthorization>(null, false);
             this.RunAfter<IIdentification>(null, false);
@@ -87,8 +87,6 @@ namespace OwinFramework.Authorization.UI
             return context.Response.WriteAsync(resource.Content);
         }
 
-        #region IConfigurable
-
         private IDisposable _configurationRegistration;
         private AuthorizationUiConfiguration _configuration = new AuthorizationUiConfiguration();
 
@@ -103,6 +101,7 @@ namespace OwinFramework.Authorization.UI
         private void ConfigurationChanged(AuthorizationUiConfiguration configuration)
         {
             _configuration = configuration;
+            _resourceManager.ConfigurationChanged(configuration);
 
             Func<string, PathString> normalizePath = p =>
             {
@@ -116,170 +115,17 @@ namespace OwinFramework.Authorization.UI
                 return new PathString(p);
             };
 
-            Func<PathString, string, PathString> filePath = (p, f) =>
-            {
-                if (!p.HasValue || string.IsNullOrEmpty(f))
-                    return new PathString();
-
-                if (f.StartsWith("/")) f = f.Substring(1);
-
-                return p.Value == "/"
-                    ? new PathString("/" + f)
-                    : new PathString(p.Value + "/" + f);
-            };
-
-            _apiRootPath = normalizePath(configuration.ApiRootUrl);
             _uiRootPath = normalizePath(configuration.UiRootUrl);
-
-            lock (_resources) _resources.Clear();
         }
-
-        #endregion
-
-        #region Embedded resources
 
         private EmbeddedResource GetResource(string filename)
         {
             filename = filename.ToLower();
 
-            EmbeddedResource resource;
-            lock(_resources)
-                if (_resources.TryGetValue(filename, out resource))
-                    return resource;
-
-            resource = new EmbeddedResource
-            {
-                FileName = filename
-            };
-
-            if (filename.EndsWith(".gif"))
-                resource.MimeType = "image/gif";
-            else if (filename.EndsWith(".ico"))
-                resource.MimeType = "image/ico";
-            else if (filename.EndsWith(".js"))
-                resource.MimeType = "application/javascript";
-            else if (filename.EndsWith(".html"))
-                resource.MimeType = "text/html";
-            else if (filename.EndsWith(".css"))
-            {
-                resource.MimeType = "text/css";
+            if (filename.EndsWith(".css"))
                 filename = Path.ChangeExtension(filename, ".less");
-            }
 
-            var physicalFile = new FileInfo(_hostingEnvironment.MapPath(_configuration.AssetsPath + filename));
-            if (physicalFile.Exists)
-            {
-                if (resource.MimeType.StartsWith("image/"))
-                {
-                    resource.Content = new byte[physicalFile.Length];
-                    using (var stream = physicalFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        ReadBinaryResource((int)physicalFile.Length, stream, resource);
-                    }
-                }
-                else
-                {
-                    using (var streamReader = physicalFile.OpenText())
-                    {
-                        ReadTextResource(filename, streamReader, resource);
-                    }
-                }
-            }
-            else
-            {
-                var resourceStream = FindEmbeddedResource(filename);
-                if (resourceStream != null)
-                {
-                    using (resourceStream)
-                    {
-                        if (resource.MimeType.StartsWith("image/"))
-                        {
-                            ReadBinaryResource((int)resourceStream.Length, resourceStream, resource);
-                        }
-                        else
-                        {
-                            using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
-                            {
-                                ReadTextResource(filename, reader, resource);
-                            }
-                        }
-                    }
-                }
-            }
-
-            lock (_resources)
-                _resources[filename] = resource;
-
-            return resource;
+            return _resourceManager.GetResource(Assembly.GetExecutingAssembly(), filename);
         }
-
-        private void ReadTextResource(string filename, StreamReader reader, EmbeddedResource resource)
-        {
-            var text = reader.ReadToEnd();
-            text = TransformTextResource(filename, text);
-            resource.Content = Encoding.UTF8.GetBytes(text);
-        }
-
-        private void ReadBinaryResource(int length, Stream stream, EmbeddedResource resource)
-        {
-            resource.Content = new byte[length];
-            var offset = 0;
-            while (true)
-            {
-                var bytesRead = stream.Read(resource.Content, offset, length - offset);
-                if (bytesRead == 0) return;
-                offset += bytesRead;
-            }
-        }
-
-        private string TransformTextResource(string filename, string content)
-        {
-            if (filename.EndsWith(".less"))
-            {
-                return dotless.Core.Less.Parse(
-                    content,
-                    new dotless.Core.configuration.DotlessConfiguration
-                    {
-                        MinifyOutput = true
-                    });
-            }
-
-            if (filename.EndsWith(".dart.js") || filename.EndsWith(".html"))
-            {
-                return content
-                    .Replace("{_api-url_}", _apiRootPath.Value)
-                    .Replace("{_ui-url_}", _uiRootPath.Value)
-                    .Replace("{_images-url_}", _uiRootPath.Value)
-                    .Replace("{_v_}", "");
-            }
-
-            return content;
-        }
-
-        private Stream FindEmbeddedResource(string filename)
-        {
-            var resources = Assembly.GetExecutingAssembly()
-                .GetManifestResourceNames();
-
-            filename = filename.Replace("/", ".");
-
-            var scriptResourceName = resources.FirstOrDefault(n => n.ToLower().Contains(filename));
-
-            if (scriptResourceName == null)
-                return null;
-
-            return Assembly.GetExecutingAssembly().GetManifestResourceStream(scriptResourceName);
-        }
-
-        private class EmbeddedResource
-        {
-            public string FileName;
-            public byte[] Content;
-            public string MimeType;
-        }
-
-        private readonly IDictionary<string, EmbeddedResource> _resources = new Dictionary<string, EmbeddedResource>(StringComparer.InvariantCultureIgnoreCase);
-
-        #endregion
     }
 }
