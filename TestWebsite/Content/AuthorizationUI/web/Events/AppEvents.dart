@@ -31,12 +31,8 @@ class ConfirmationMessageEvent
 	String confirmButton;
 	String cancelButton;
 
-	ConfirmationMessageEvent(String messsage, void() action, [String confirmButton = 'OK', String cancelButton = 'Cancel'])
+	ConfirmationMessageEvent(this.messsage, this.confirmAction, [this.confirmButton = 'OK', this.cancelButton = 'Cancel'])
 	{
-		this.message = message;
-		this.confirmAction = action;
-		this.confirmButton = confirmButton;
-		this.cancelButton = cancelButton;
 	}
 }
 

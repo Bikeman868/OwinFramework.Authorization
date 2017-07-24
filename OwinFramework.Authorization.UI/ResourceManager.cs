@@ -69,6 +69,8 @@ namespace OwinFramework.Authorization.UI
 
             _apiRootPath = normalizePath(configuration.ApiRootUrl);
             _uiRootPath = normalizePath(configuration.UiRootUrl);
+
+            LocalResourcePath = configuration.AssetsPath;
         }
     }
 }
