@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../MVVM/Events.dart';
+import '../MVVM/Mvvm.dart';
 
 import '../ViewModels/GroupViewModel.dart';
 import '../ViewModels/RoleViewModel.dart';

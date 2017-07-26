@@ -1,6 +1,7 @@
 ﻿import 'dart:html';
 
 import '../../MVVM/Mvvm.dart';
+import '../../Views/Base/EditView.dart';
 
 class EditableView extends View
 {

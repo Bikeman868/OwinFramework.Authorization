@@ -1,7 +1,6 @@
 import 'dart:html';
 
-import 'MVVM/HtmlBuilder.dart';
-import 'MVVM/View.dart';
+import 'MVVM/Mvvm.dart';
 import 'Server.dart';
 
 import 'ViewModels/AuthorizationViewModel.dart';
