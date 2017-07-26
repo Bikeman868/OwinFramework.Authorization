@@ -27,7 +27,7 @@ class GroupSelectedEvent
 class ConfirmationMessageEvent
 {
 	String messsage;
-	void() confirmAction;
+	Function confirmAction;
 	String confirmButton;
 	String cancelButton;
 

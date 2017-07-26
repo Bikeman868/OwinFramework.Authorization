@@ -1,9 +1,4 @@
-﻿import 'dart:html';
-import 'dart:async';
-
-import 'Enums.dart';
-import 'Events.dart';
-import 'ModelList.dart';
+﻿part of mvvm;
 
 abstract class ViewModel
 {

@@ -1,15 +1,4 @@
-import 'dart:html';
-import 'dart:async';
-
-import 'HtmlBuilder.dart';
-import 'View.dart';
-import 'Model.dart';
-import 'ViewModel.dart';
-import 'Types.dart';
-import 'BoundContainer.dart';
-import 'Enums.dart';
-import 'ModelList.dart';
-import 'Events.dart';
+part of mvvm;
 
 // Provides two-way binding of a list of view models to a drop-down list of views
 // * Generates <option> elements and adds them to a <select> container

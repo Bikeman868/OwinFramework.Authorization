@@ -1,10 +1,7 @@
 ﻿import 'dart:async';
 import 'dart:html';
 
-import '../MVVM/ViewModel.dart';
-import '../MVVM/Enums.dart';
-import '../MVVM/Events.dart';
-import '../MVVM/ModelList.dart';
+import '../MVVM/Mvvm.dart';
 
 import '../ViewModels/PermissionViewModel.dart';
 

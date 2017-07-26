@@ -1,4 +1,4 @@
-﻿import '../../MVVM/View.dart';
+﻿import '../../MVVM/Mvvm.dart';
 
 class EditView extends View
 {

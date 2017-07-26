@@ -1,9 +1,6 @@
 ﻿import 'dart:html';
 
-import '../../MVVM/View.dart';
-import '../../MVVM/Enums.dart';
-import '../../MVVM/BoundTextInput.dart';
-import '../../MVVM/BoundTextArea.dart';
+import '../../MVVM/Mvvm.dart';
 
 import '../../Server.dart';
 

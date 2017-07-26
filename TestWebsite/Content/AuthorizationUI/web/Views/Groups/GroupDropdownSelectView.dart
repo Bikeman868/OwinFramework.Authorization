@@ -1,7 +1,6 @@
 ﻿import 'dart:html';
 
-import '../../MVVM/View.dart';
-import '../../MVVM/BoundSelect.dart';
+import '../../MVVM/Mvvm.dart';
 
 import '../../Events/AppEvents.dart';
 

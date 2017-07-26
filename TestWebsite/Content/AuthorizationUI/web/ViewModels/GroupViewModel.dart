@@ -1,11 +1,7 @@
 ﻿import 'dart:html';
 import 'dart:async';
 
-import '../MVVM/ViewModel.dart';
-import '../MVVM/Enums.dart';
-import '../MVVM/ModelList.dart';
-import '../MVVM/StringBinding.dart';
-import '../MVVM/Events.dart';
+import '../MVVM/Mvvm.dart';
 
 import '../Server.dart';
 import '../Events/AppEvents.dart';

@@ -1,8 +1,4 @@
-﻿import 'dart:html';
-
-import 'Model.dart';
-import 'View.dart';
-import 'ViewModel.dart';
+﻿part of mvvm;
 
 typedef String FormatFunction<T>(T value);
 typedef T ParseFunction<T>(String value);

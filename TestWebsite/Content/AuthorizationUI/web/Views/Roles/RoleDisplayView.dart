@@ -1,8 +1,6 @@
 ﻿import 'dart:html';
 
-import '../../MVVM/View.dart';
-import '../../MVVM/BoundLabel.dart';
-import '../../MVVM/BoundRepeater.dart';
+import '../../MVVM/Mvvm.dart';
 
 import '../../Models/ParentChildModel.dart';
 

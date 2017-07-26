@@ -1,11 +1,4 @@
-﻿import 'dart:async';
-
-import 'Events.dart';
-import 'Types.dart';
-import 'ViewModel.dart';
-import 'Model.dart';
-import 'Enums.dart';
-import 'Events.dart';
+﻿part of mvvm;
 
 // Use this in your view models to maintain a list of models and the corresponding view models
 // Many UI list elements can be bound to the list. They can add and remove models from the list

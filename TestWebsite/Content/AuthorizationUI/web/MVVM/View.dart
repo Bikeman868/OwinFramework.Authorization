@@ -1,5 +1,4 @@
-﻿import 'dart:html';
-import 'HtmlBuilder.dart';
+﻿part of mvvm;
 
 class View extends HtmlBuilder
 {

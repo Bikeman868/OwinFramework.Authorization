@@ -1,12 +1,4 @@
-﻿import 'dart:html';
-
-import 'HtmlBuilder.dart';
-import 'View.dart';
-import 'Model.dart';
-import 'ViewModel.dart';
-import 'Types.dart';
-import 'BoundContainer.dart';
-import 'Enums.dart';
+﻿part of mvvm;
 
 // Provides two-way binding of a list of view models to a list of views
 // * Generates <li> elements and adds them to the list container

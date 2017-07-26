@@ -1,7 +1,6 @@
 ﻿import 'dart:html';
 
-import '../../MVVM/View.dart';
-import '../../MVVM/BoundLabel.dart';
+import '../../MVVM/Mvvm.dart';
 
 import '../../ViewModels/GroupRoleViewModel.dart';
 

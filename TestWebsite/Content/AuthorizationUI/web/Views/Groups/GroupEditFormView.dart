@@ -1,6 +1,6 @@
 ﻿import 'dart:html';
 
-import '../../MVVM/View.dart';
+import '../../MVVM/Mvvm.dart';
 
 class GroupEditFormView extends View
 {
