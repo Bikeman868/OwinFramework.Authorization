@@ -33,7 +33,7 @@ class Binding<T> {
 
   SubscriptionEvent<T> onChange;
 
-  Binding({this.value = null, this.getValue = null, this.setValue = null}) {
+  Binding({this.value: null, this.getValue: null, this.setValue: null}) {
     onChange = new SubscriptionEvent<T>();
     if (getValue == null) getValue = () => value;
     if (setValue == null)
@@ -59,11 +59,11 @@ class ListBinding<T> {
   SubscriptionEvent<List<T>> onChange;
 
   ListBinding(
-      {this.list = null,
-      this.getList = null,
-      this.setList = null,
-      this.add = null,
-      this.remove = null}) {
+      {this.list: null,
+      this.getList: null,
+      this.setList: null,
+      this.add: null,
+      this.remove: null}) {
     onChange = new SubscriptionEvent<List<T>>();
     
     if (getList == null) getList = () => list;
@@ -112,7 +112,7 @@ class View {
   final String template;
   final String templateUrl;
 
-  const View(this.name, {this.template = null, this.templateUrl = null});
+  const View(this.name, {this.template: null, this.templateUrl: null});
 }
 
 /*==============  Application code  ==============*/
