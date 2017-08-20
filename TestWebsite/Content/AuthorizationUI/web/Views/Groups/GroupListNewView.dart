@@ -1,19 +1,10 @@
-﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
+﻿import '../../MVVM/Mvvm.dart';
 import '../../Server.dart';
-
 import '../../Events/AppEvents.dart';
-
 import '../../Models/GroupModel.dart';
 import '../../Models/ApiResponseModel.dart';
-
-import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/GroupListViewModel.dart';
-
 import '../../Views/Base/EditView.dart';
-import '../../Views/Groups/GroupNameView.dart';
 import '../../Views/Groups/GroupEditFormView.dart';
 
 class GroupListNewView extends EditView

@@ -1,13 +1,8 @@
 ﻿import 'dart:async';
-import 'dart:html';
-
 import '../MVVM/Mvvm.dart';
-
 import '../ViewModels/GroupViewModel.dart';
-
 import '../Models/GroupModel.dart';
 import '../Models/ApiResponseModel.dart';
-
 import '../Server.dart';
 
 class GroupListViewModel extends ViewModel
@@ -78,7 +73,6 @@ class GroupListViewModel extends ViewModel
 			{
 				groups.deleteViewModel(groupToDelete);
 				groups.removeDeleted();
-				return true;
 			}
 		}
 		catch (e)
@@ -86,6 +80,7 @@ class GroupListViewModel extends ViewModel
 			MvvmEvents.alert.raise(e.toString());
 			return false;
 		}
+		return true;
 	}
 
 	String toString() => 'group list';

@@ -1,19 +1,7 @@
-﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
-import '../../Server.dart';
-
-import '../../Events/AppEvents.dart';
-
-import '../../Models/GroupModel.dart';
-import '../../Models/ApiResponseModel.dart';
-
+﻿import '../../MVVM/Mvvm.dart';
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/GroupListViewModel.dart';
-
 import '../../Views/Base/EditView.dart';
-import '../../Views/Groups/GroupEditFormView.dart';
 import '../../Views/Groups/GroupDropdownSelectView.dart';
 
 class GroupDeleteView extends EditView
@@ -39,7 +27,7 @@ class GroupDeleteView extends EditView
 
 		var selectDiv = addDiv();
 		addInlineText('Reassign these users to ', parent: selectDiv);
-		_groupSelector = new GroupDropdownSelectView(_groupListViewModel) as GroupDropdownSelectView;
+		_groupSelector = new GroupDropdownSelectView(_groupListViewModel);
 		_groupSelector.addTo(selectDiv);
 
 		addBlockText(

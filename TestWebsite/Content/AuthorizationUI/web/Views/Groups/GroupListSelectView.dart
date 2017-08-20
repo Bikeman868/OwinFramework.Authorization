@@ -1,11 +1,6 @@
-﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
+﻿import '../../MVVM/Mvvm.dart';
 import '../../Events/AppEvents.dart';
-
 import '../../Models/GroupModel.dart';
-
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/GroupListViewModel.dart';
 

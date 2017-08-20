@@ -18,4 +18,3 @@ class ApiResponseModel extends Model
 		return result + ': ' + error;
 	}
 }
-

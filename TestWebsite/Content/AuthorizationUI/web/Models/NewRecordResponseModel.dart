@@ -1,6 +1,4 @@
-﻿import '../MVVM/Mvvm.dart';
-
-import '../Models/ApiResponseModel.dart';
+﻿import '../Models/ApiResponseModel.dart';
 
 class NewRecordResponseModel extends ApiResponseModel
 {

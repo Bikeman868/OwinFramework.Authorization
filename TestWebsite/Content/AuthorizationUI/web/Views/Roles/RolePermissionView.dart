@@ -1,7 +1,4 @@
-﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
+﻿import '../../MVVM/Mvvm.dart';
 import '../../ViewModels/RolePermissionViewModel.dart';
 
 class RolePermissionView extends View

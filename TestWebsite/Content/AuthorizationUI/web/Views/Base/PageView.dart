@@ -23,7 +23,6 @@ import '../Permissions/PermissionEditView.dart';
 import '../Permissions/PermissionDeleteView.dart';
 
 import '../Groups/GroupListSelectView.dart';
-import '../Groups/GroupListEditView.dart';
 import '../Groups/GroupListNewView.dart';
 import '../Groups/GroupDisplayView.dart';
 import '../Groups/GroupEditView.dart';

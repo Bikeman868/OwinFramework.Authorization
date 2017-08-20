@@ -1,12 +1,7 @@
-﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
+﻿import '../../MVVM/Mvvm.dart';
 import '../../Models/PermissionModel.dart';
-
 import '../../ViewModels/PermissionViewModel.dart';
 import '../../ViewModels/PermissionListViewModel.dart';
-
 import '../../Views/Base/EditView.dart';
 import '../../Views/Permissions/PermissionNameView.dart';
 

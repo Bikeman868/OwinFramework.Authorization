@@ -1,13 +1,8 @@
-﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
+﻿import '../../MVVM/Mvvm.dart';
 import '../../Models/ParentChildModel.dart';
-
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/GroupRoleViewModel.dart';
 import '../../ViewModels/GroupRoleListViewModel.dart';
-
 import '../../Views/Groups/GroupRoleView.dart';
 
 class GroupDisplayView extends View

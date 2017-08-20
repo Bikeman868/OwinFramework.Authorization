@@ -1,7 +1,4 @@
 ﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
 import '../../ViewModels/AuthorizationViewModel.dart';
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/RoleViewModel.dart';
@@ -14,7 +11,6 @@ class DesktopView extends PageView
 	Element _headerRegion;
 	Element _menuRegion;
 	Element _mainRegion;
-	Element _footerRegion;
 
 	Element _navRegion;
 	Element _bodyRegion;
@@ -53,7 +49,6 @@ class DesktopView extends PageView
 		_headerRegion = addContainer(classNames:['page-region', 'header-region']);
 		_menuRegion = addContainer(classNames:['page-region', 'menu-region']);
 		_mainRegion = addContainer(classNames:['page-region', 'main-region']);
-		_footerRegion = addContainer(classNames:['page-region', 'footer-region']);
 
 		_navRegion = addContainer(classNames:['page-region', 'nav-region'], parent: _mainRegion);
 		_bodyRegion = addContainer(classNames:['page-region', 'body-region'], parent: _mainRegion);

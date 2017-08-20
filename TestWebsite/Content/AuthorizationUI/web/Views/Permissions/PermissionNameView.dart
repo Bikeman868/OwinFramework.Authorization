@@ -1,7 +1,4 @@
-﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
+﻿import '../../MVVM/Mvvm.dart';
 import '../../ViewModels/PermissionViewModel.dart';
 
 class PermissionNameView extends View

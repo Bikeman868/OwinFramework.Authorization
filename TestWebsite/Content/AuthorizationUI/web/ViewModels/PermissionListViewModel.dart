@@ -1,12 +1,6 @@
-﻿import 'dart:async';
-import 'dart:html';
-
-import '../MVVM/Mvvm.dart';
-
+﻿import '../MVVM/Mvvm.dart';
 import '../ViewModels/PermissionViewModel.dart';
-
 import '../Models/PermissionModel.dart';
-
 import '../Server.dart';
 
 class PermissionListViewModel extends ViewModel

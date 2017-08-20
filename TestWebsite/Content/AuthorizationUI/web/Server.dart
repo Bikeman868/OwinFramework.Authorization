@@ -84,7 +84,7 @@ class Server
 		return new ApiResponseModel(json);
 	}
   
-	static Future<ApiResponseModel> createPermission(PermissionModel permission) async
+	static Future<NewRecordResponseModel> createPermission(PermissionModel permission) async
 	{
 		var request = await HttpRequest.request(
 			_apiUrl + '/permissions', 
@@ -188,7 +188,7 @@ class Server
 		return new ApiResponseModel(json);
 	}
   
-	static Future<ApiResponseModel> createRole(RoleModel role) async
+	static Future<NewRecordResponseModel> createRole(RoleModel role) async
 	{
 		var request = await HttpRequest.request(
 			_apiUrl + '/roles', 
@@ -292,7 +292,7 @@ class Server
 		return new ApiResponseModel(json);
 	}
   
-	static Future<ApiResponseModel> createGroup(GroupModel group) async
+	static Future<NewRecordResponseModel> createGroup(GroupModel group) async
 	{
 		var request = await HttpRequest.request(
 			_apiUrl + '/groups', 

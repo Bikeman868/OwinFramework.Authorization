@@ -1,14 +1,8 @@
-﻿import 'dart:async';
-import 'dart:html';
-
-import '../MVVM/Mvvm.dart';
-
+﻿import '../MVVM/Mvvm.dart';
 import '../ViewModels/GroupRoleViewModel.dart';
 import '../ViewModels/GroupListViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
-
 import '../Models/ParentChildModel.dart';
-
 import '../Server.dart';
 
 class GroupRoleListViewModel extends ViewModel
@@ -26,7 +20,7 @@ class GroupRoleListViewModel extends ViewModel
 		]): super(false)
 	{
 		groupRoles = new ModelList<ParentChildModel, GroupRoleViewModel>(
-			(Map json) => new GroupRoleViewModel(_groupListViewModel, _roleListViewModel),
+			(Map json) => new ParentChildModel(json),
 			(ParentChildModel m) => new GroupRoleViewModel(_groupListViewModel, _roleListViewModel, m));
 
 		if (groupRoleModels == null)

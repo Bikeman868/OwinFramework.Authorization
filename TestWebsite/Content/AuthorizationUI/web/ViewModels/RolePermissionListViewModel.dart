@@ -1,14 +1,8 @@
-﻿import 'dart:async';
-import 'dart:html';
-
-import '../MVVM/Mvvm.dart';
-
+﻿import '../MVVM/Mvvm.dart';
 import '../ViewModels/RolePermissionViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
 import '../ViewModels/PermissionListViewModel.dart';
-
 import '../Models/ParentChildModel.dart';
-
 import '../Server.dart';
 
 class RolePermissionListViewModel extends ViewModel
@@ -26,7 +20,7 @@ class RolePermissionListViewModel extends ViewModel
 		]): super(false)
 	{
 		rolePermissions = new ModelList<ParentChildModel, RolePermissionViewModel>(
-			(Map json) => new RolePermissionViewModel(_roleListViewModel, _permissionListViewModel),
+			(Map json) => new ParentChildModel(json),
 			(ParentChildModel m) => new RolePermissionViewModel(_roleListViewModel, _permissionListViewModel, m));
 
 		if (rolePermissionModels == null)

@@ -1,7 +1,4 @@
 ﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
-
 import '../../ViewModels/AuthorizationViewModel.dart';
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/RoleViewModel.dart';

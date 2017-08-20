@@ -2,7 +2,7 @@ import 'dart:html';
 import 'dart:async';
 
 void main() {
-  var element = querySelector('#dart');
+  querySelector('#dart');
 }
 
 /*==============  Framework code  ==============*/

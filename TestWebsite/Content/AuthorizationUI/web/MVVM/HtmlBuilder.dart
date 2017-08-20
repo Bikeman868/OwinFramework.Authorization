@@ -387,7 +387,7 @@ class HtmlBuilder
 	{
 		var row = addContainer(parent: form, classNames: ['data-row', className]);
 
-		var labelField = addInlineText(label, parent: row, className: 'data-label');
+		addInlineText(label, parent: row, className: 'data-label');
 		var dataField = addInlineText('', parent: row, className: 'data-field');
 
 		return dataField;
@@ -400,7 +400,7 @@ class HtmlBuilder
 	{
 		var row = addContainer(parent: form, classNames: ['data-row', className]);
 
-		var labelField = addInlineText(label, parent: row, className: 'data-label');
+		addInlineText(label, parent: row, className: 'data-label');
 		var dataField = addInput(parent: row, className: 'input-field');
 
 		return dataField;
@@ -413,7 +413,7 @@ class HtmlBuilder
 	{
 		var row = addContainer(parent: form, classNames: ['data-row', className]);
 
-		var labelField = addInlineText(label, parent: row, className: 'data-label');
+		addInlineText(label, parent: row, className: 'data-label');
 		var dataField = addTextArea(parent: row, className: 'input-field');
 
 		return dataField;
@@ -426,7 +426,7 @@ class HtmlBuilder
 	{
 		var row = addContainer(parent: form, classNames: ['data-row', className]);
 
-		var labelField = addInlineText(label, parent: row, className: 'data-label');
+		addInlineText(label, parent: row, className: 'data-label');
 		var checkbox = addCheckbox(parent: row, className: 'input-field');
 
 		return checkbox;
