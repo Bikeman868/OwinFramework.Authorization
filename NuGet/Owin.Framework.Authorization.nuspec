@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization</id>
-    <version>1.0.3-alpha</version>
+    <version>1.0.4-alpha</version>
     <title>Owin.Framework.Authorization</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Owin Framework authorization middleware allows users, groups, roles and permissions to be managed, and checks that the user making the request is authorized to do so</description>
     <copyright>Copyright Martin Halliday 2017</copyright>
-    <releaseNotes>First version</releaseNotes>
+    <releaseNotes>Split database reads and writes to support replication</releaseNotes>
     <summary>Adding this package to your project will allow you to manage user access to protected resources</summary>
     <projectUrl>https://github.com/Bikeman868/OwinFramework.Authorization</projectUrl>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>

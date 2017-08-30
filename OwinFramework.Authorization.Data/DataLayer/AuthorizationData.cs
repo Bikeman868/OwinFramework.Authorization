@@ -20,7 +20,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
         private readonly ICommandFactory _commandFactory;
         private readonly IDisposable _configurationChangeRegistration;
 
-        private string _repositoryName;
+        private string _repositoryWriterName;
+        private string _repositoryReadonlyName;
 
         private string _defaultGroupName;
         private string _administratorsGroupName;
@@ -48,10 +49,12 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 ("/OwinFramework/Authorization/Data",
                     c =>
                     {
-                        var oldName = _repositoryName;
+                        var oldWriterName = _repositoryWriterName;
+                        var oldReadonlyName = _repositoryReadonlyName;
                         try
                         {
-                            _repositoryName = c.PriusRepositoryName;
+                            _repositoryWriterName = c.PriusMasterRepository;
+                            _repositoryReadonlyName = c.PriusReadonlyReplicaRepository;
                             _defaultGroupName = string.Intern(c.DefaultGroup.ToLower());
                             _administratorsGroupName = string.Intern(c.AdministratorGroup.ToLower());
                             _anonymousGroupName = string.Intern(c.AnonymousGroup.ToLower());
@@ -59,7 +62,8 @@ namespace OwinFramework.Authorization.Data.DataLayer
                         }
                         catch
                         {
-                            _repositoryName = oldName;
+                            _repositoryWriterName = oldWriterName;
+                            _repositoryReadonlyName = oldReadonlyName;
                         }
                     },
                 new DataLayerConfiguration());
@@ -332,7 +336,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Group GetGroup(long groupId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroup"))
                 {
@@ -347,7 +351,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Group GetGroup(string codeName)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroupByCodeName"))
                 {
@@ -362,7 +366,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Group> GetGroups(Func<Group, bool> filterFunction = null)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroups"))
                 {
@@ -378,7 +382,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Role GetRole(long roleId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetRole"))
                 {
@@ -393,7 +397,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Role GetRole(string codeName)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetRoleByCodeName"))
                 {
@@ -408,7 +412,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Role> GetRoles(Func<Role, bool> filterFunction = null)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetRoles"))
                 {
@@ -424,7 +428,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Permission GetPermission(long permissionId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetPermission"))
                 {
@@ -439,7 +443,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Permission GetPermission(string codeName)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetPermissionByCodeName"))
                 {
@@ -454,7 +458,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Permission> GetPermissions(Func<Permission, bool> filterFunction = null)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetPermissions"))
                 {
@@ -472,7 +476,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             Validate(group);
 
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddGroup"))
                 {
@@ -491,7 +495,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             Validate(role);
 
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddRole"))
                 {
@@ -510,7 +514,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             Validate(permission);
 
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddPermission"))
                 {
@@ -530,7 +534,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             Validate(group);
 
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_UpdateGroup"))
                 {
@@ -550,7 +554,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             Validate(role);
 
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_UpdateRole"))
                 {
@@ -570,7 +574,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             Validate(permission);
 
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_UpdatePermission"))
                 {
@@ -589,7 +593,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public void DeleteGroup(long groupToDelete, long reassignIdentitiesTo)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_DeleteGroup"))
                 {
@@ -602,7 +606,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public void DeleteRole(long roleToDelete)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_DeleteRole"))
                 {
@@ -614,7 +618,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public void DeletePermission(long permissionToDelete)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_DeletePermission"))
                 {
@@ -626,7 +630,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Role> GetGroupRoles(long groupId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroupRoles"))
                 {
@@ -641,7 +645,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Permission> GetRolePermissions(long roleId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetRolePermissions"))
                 {
@@ -656,7 +660,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Permission> GetGroupPermissions(long groupId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroupPermissions"))
                 {
@@ -671,7 +675,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public long? GetGroupId(IIdentification identification)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityGroupId"))
                 {
@@ -686,7 +690,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             var groupId = GetGroupId(identification);
             if (!groupId.HasValue) return null;
 
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroup"))
                 {
@@ -701,7 +705,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Role> GetRoles(IIdentification identification)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityRoles"))
                 {
@@ -716,7 +720,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Permission> GetPermissions(IIdentification identification)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityPermissions"))
                 {
@@ -733,7 +737,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             try
             {
-                using (var context = _contextFactory.Create(_repositoryName))
+                using (var context = _contextFactory.Create(_repositoryWriterName))
                 {
                     using (var command = _commandFactory.CreateStoredProcedure("sp_ChangeIdentityGroup"))
                     {
@@ -755,7 +759,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public void AddRoleToGroup(long roleId, long groupId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddGroupRole"))
                 {
@@ -768,7 +772,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public void AddPermissionToRole(long permissionId, long roleId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_AddRolePermission"))
                 {
@@ -781,7 +785,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public void RemoveRoleFromGroup(long roleId, long groupId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_DeleteGroupRole"))
                 {
@@ -794,7 +798,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public void RemovePermissionFromRole(long permissionId, long roleId)
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryWriterName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_DeleteRolePermission"))
                 {
@@ -807,7 +811,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Tuple<long, long>> GetAllGroupRoles()
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetAllGroupRoles"))
                 {
@@ -826,7 +830,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public IEnumerable<Tuple<long, long>> GetAllRolePermissions()
         {
-            using (var context = _contextFactory.Create(_repositoryName))
+            using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetAllRolePermissions"))
                 {
