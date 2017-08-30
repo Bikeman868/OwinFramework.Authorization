@@ -7,7 +7,7 @@ import '../Server.dart';
 
 class RolePermissionListViewModel extends ViewModel
 {
-    ModelList<ParentChildModel, RolePermissionViewModel> rolePermissions;
+  ModelList<ParentChildModel, RolePermissionViewModel> rolePermissions;
 
 	RoleListViewModel _roleListViewModel;
 	PermissionListViewModel _permissionListViewModel;

@@ -432,6 +432,19 @@ class HtmlBuilder
 		return checkbox;
 	}
 
+	SelectElement addLabeledDropdownList(Element form, String label,
+		{
+			String className
+		})
+	{
+		var row = addContainer(parent: form, classNames: ['data-row', className]);
+
+		addInlineText(label, parent: row, className: 'data-label');
+		var dataField = addDropdownList(parent: row, className: 'input-field');
+
+		return dataField;
+	}
+
 	/******************************************************************************/
 
 	Element addList(
