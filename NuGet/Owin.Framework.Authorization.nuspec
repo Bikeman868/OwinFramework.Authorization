@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization</id>
-    <version>1.0.2-alpha</version>
+    <version>1.0.3-alpha</version>
     <title>Owin.Framework.Authorization</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>

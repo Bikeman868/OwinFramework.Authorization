@@ -218,7 +218,6 @@
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundRepeater.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundTextArea.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundTextInput.dart" />
-    <Content Include="Content\AuthorizationUI\web\MVVM\Enums.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\Events.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\HtmlBuilder.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\IntBinding.dart" />

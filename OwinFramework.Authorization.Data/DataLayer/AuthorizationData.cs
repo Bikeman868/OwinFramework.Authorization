@@ -41,6 +41,9 @@ namespace OwinFramework.Authorization.Data.DataLayer
         {
             _contextFactory = contextFactory;
             _commandFactory = commandFactory;
+
+            _identityGroupIds = new Dictionary<string, long>();
+
             _configurationChangeRegistration = configurationStore.Register
                 ("/OwinFramework/Authorization/Data",
                     c =>
@@ -160,6 +163,14 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
                 if (!groupId.HasValue)
                     groupId = _defaultGroupId;
+
+                if (groupId.HasValue)
+                {
+                    lock (_identityGroupIds)
+                    {
+                        _identityGroupIds[identification.Identity] = groupId.Value;
+                    }
+                }
             }
 
             if (!groupId.HasValue)
