@@ -9,9 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		LICENSE = LICENSE
 		NuGet\Owin.Framework.Authorization.nuspec = NuGet\Owin.Framework.Authorization.nuspec
 		NuGet\Owin.Framework.Authorization.UI.nuspec = NuGet\Owin.Framework.Authorization.UI.nuspec
 		NuGet\Package.cmd = NuGet\Package.cmd
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OwinFramework.Authorization.UI.Net40", "OwinFramework.Authorization.UI\OwinFramework.Authorization.UI.Net40.csproj", "{3ACA57E9-A406-41BC-B37E-641FE6342094}"

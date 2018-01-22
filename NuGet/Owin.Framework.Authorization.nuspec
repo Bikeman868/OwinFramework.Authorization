@@ -24,7 +24,9 @@
   </metadata>
   <files>
     <file src="..\OwinFramework.Authorization\bin\Net40\Release\OwinFramework.Authorization.dll" target="lib\net40"/>
+    <file src="..\OwinFramework.Authorization\bin\Net40\Release\OwinFramework.Authorization.Data.dll" target="lib\net40"/>
     <file src="..\OwinFramework.Authorization\bin\Net45\Release\OwinFramework.Authorization.dll" target="lib\net45"/>
+    <file src="..\OwinFramework.Authorization\bin\Net45\Release\OwinFramework.Authorization.Data.dll" target="lib\net45"/>
     <file src="..\*.md" target=""/>
   </files>
 </package>
