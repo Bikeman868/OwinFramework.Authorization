@@ -8,8 +8,8 @@ namespace OwinFramework.Authorization.Data.Interfaces
     public interface IAuthorizationData
     {
         void GetIdentity(
-            IIdentification identification, 
-            out string group, 
+            IIdentification identification,
+            out Group group, 
             out List<string> roles,
             out List<string> permissions);
 

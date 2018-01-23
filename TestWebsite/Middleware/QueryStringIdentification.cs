@@ -13,7 +13,7 @@ using OwinFramework.MiddlewareHelpers.Identification;
 namespace TestWebsite.Middleware
 {
     /// <summary>
-    /// For testing only. Identify by adding &identity=... to the query string
+    /// For testing only. Identify by adding &authId=... to the query string
     /// </summary>
     internal class QueryStringIdentification: 
         IMiddleware<IIdentification>,
@@ -26,21 +26,21 @@ namespace TestWebsite.Middleware
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            var identity = context.Request.Query["identity"];
+            var identity = context.Request.Query["authId"];
             var claims = new List<IIdentityClaim>();
             var purposes = new List<string>();
 
             if (identity == null)
             {
-                identity = context.Request.Cookies["identity"];
+                identity = context.Request.Cookies["authId"];
             }
             else if (identity.Length == 0)
             {
-                context.Response.Cookies.Delete("identity");
+                context.Response.Cookies.Delete("authId");
             }
             else
             {
-                context.Response.Cookies.Append("identity", identity);
+                context.Response.Cookies.Append("authId", identity);
             }
 
             var anonymous = string.IsNullOrEmpty(identity);

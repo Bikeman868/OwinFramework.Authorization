@@ -357,6 +357,24 @@ class Server
 		return identities;
 	}
 
+	static Future<IdentityModel> getIdentity(String identity) async
+	{
+		String responseString = await HttpRequest.getString(_apiUrl + '/identity?identity=' + identity);
+		Map responseJson = JSON.decode(responseString);
+
+		var response = new ApiResponseModel(responseJson);
+		if (!response.isSuccess) return null;
+
+		List<Map> identitiesJson = responseJson['identities'];
+
+		var identities = new List<IdentityModel>();
+		for (Map identityJson in identitiesJson)
+		{
+			identities.add(new IdentityModel(identityJson));
+		}
+		return identities;
+	}
+
 //
 //-- Many-to-many relationships -----------------------------------------------------------------
 //

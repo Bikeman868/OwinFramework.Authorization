@@ -108,7 +108,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OwinFramework.Facilities.IdentityStore.Prius, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.Facilities.IdentityStore.Prius.2.5.2\lib\net40\OwinFramework.Facilities.IdentityStore.Prius.dll</HintPath>
+      <HintPath>..\packages\Owin.Framework.Facilities.IdentityStore.Prius.2.6.0\lib\net40\OwinFramework.Facilities.IdentityStore.Prius.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OwinFramework.Facilities.TokenStore.Prius, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">

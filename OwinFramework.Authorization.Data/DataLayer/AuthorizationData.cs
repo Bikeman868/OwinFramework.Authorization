@@ -186,11 +186,11 @@ namespace OwinFramework.Authorization.Data.DataLayer
             return identityGroup;
         }
 
-        public void GetIdentity(IIdentification identification, out string group, out List<string> roles, out List<string> permissions)
+        public void GetIdentity(IIdentification identification, out Group group, out List<string> roles, out List<string> permissions)
         {
             var identityGroup = FindGroup(identification);
 
-            group = identityGroup.CodeName;
+            group = GetGroup(identityGroup.GroupId);
 
             roles = identityGroup.IdentityRoles
                 .Select(r => r.CodeName)

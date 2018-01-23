@@ -24,28 +24,28 @@
         To set the user you want to impersonate navigate to a url like this one.
     </p>
     <div>
-        <a href="/index.html?identity=administrator@mycompany.com">/index.html?identity=administrator@mycompany.com</a>
+        <a href="/index.html?authId=administrator@mycompany.com">/index.html?authId=administrator@mycompany.com</a>
     </div>
     <div>
-        <a href="/index.html?identity=cs2@domain">/index.html?identity=cs2@domain</a>
+        <a href="/index.html?authId=cs2@domain">/index.html?authId=cs2@domain</a>
     </div>
     <div>
-        <a href="/index.html?identity=manager@domain">/index.html?identity=manager@domain</a>
+        <a href="/index.html?authId=manager@domain">/index.html?authId=manager@domain</a>
     </div>
     <p>
         To test what happens for an anonymous user, visit this page to clear the cookie
     </p>
     <div>
-        <a href="/index.html?identity=">/index.html?identity=</a>
+        <a href="/index.html?authId=">/index.html?authId=</a>
     </div>
     <p>
         To set the user you want to impersonate with specified purposes (mapped to roles)
     </p>
     <div>
-        <a href="/index.html?identity=cs2@domain:sys.user">/index.html?identity=cs2@domain:sys.user</a>
+        <a href="/index.html?authId=cs2@domain:sys.user">/index.html?authId=cs2@domain:sys.user</a>
     </div>
     <div>
-        <a href="/index.html?identity=manager@domain:sys.user">/index.html?identity=manager@domain:sys.user</a>
+        <a href="/index.html?authId=manager@domain:sys.user">/index.html?authId=manager@domain:sys.user</a>
     </div>
     <p>
         Note that this user identification mechanism is helpful for testing but is totally
@@ -91,6 +91,9 @@
     <div>
         <a href="/api/authorization/permissions">/api/authorization/permissions</a>
     </div>
+    <div>
+        <a href="/api/authorization/identity/_search?q=martin">/api/authorization/identity/_search?q=martin</a>
+    </div>
     <h2>Authorization Middleware</h2>
     <p>
         You can test the authorization middleware using urls like these:
@@ -129,10 +132,10 @@
         You can also combine the user identification and the permission checks into one URL like this:
     </p>
     <div>
-        <a href="/check?identity=administrator@mycompany.com&permission=auth:group.assign&resource=group:sys.admins">/check?identity=administrator@mycompany.com&permission=auth:group.assign&resource=group:sys.admins</a>
+        <a href="/check?authId=administrator@mycompany.com&permission=auth:group.assign&resource=group:sys.admins">/check?authId=administrator@mycompany.com&permission=auth:group.assign&resource=group:sys.admins</a>
     </div>
     <div>
-        <a href="/check?identity=cs1@domain.com&role=user">/check?identity=cs1@domain.com&role=sys.user</a>
+        <a href="/check?authId=cs1@domain.com&role=user">/check?authId=cs1@domain.com&role=sys.user</a>
     </div>
 </body>
 </html>

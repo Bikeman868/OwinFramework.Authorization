@@ -16,8 +16,10 @@ using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
 using OwinFramework.InterfacesV1.Capability;
+using OwinFramework.InterfacesV1.Facilities;
 using OwinFramework.InterfacesV1.Middleware;
 using OwinFramework.InterfacesV1.Upstream;
+using OwinFramework.MiddlewareHelpers.Identification;
 using OwinFramework.MiddlewareHelpers.SelfDocumenting;
 
 namespace OwinFramework.Authorization.UI
@@ -34,6 +36,7 @@ namespace OwinFramework.Authorization.UI
         string IMiddleware.Name { get; set; }
         public Action<IOwinContext, Func<string>> Trace { get; set; }
 
+        private readonly IIdentityDirectory _identityDirectory;
         private readonly IAuthorizationData _authorizationData;
 
         private PathString _rootPath;
@@ -55,10 +58,15 @@ namespace OwinFramework.Authorization.UI
         private PathString _permissionPath;
 
         private PathString _searchIdentityListPath;
+        private PathString _identityListPath;
         private PathString _identityGroupPath;
+        private PathString _identityPath;
 
-        public AuthorizationApiMiddleware(IAuthorizationData authorizationData)
+        public AuthorizationApiMiddleware(
+            IIdentityDirectory identityDirectory,
+            IAuthorizationData authorizationData)
         {
+            _identityDirectory = identityDirectory;
             _authorizationData = authorizationData;
 
             this.RunAfter<IAuthorization>(null, false);
@@ -101,6 +109,20 @@ namespace OwinFramework.Authorization.UI
                 {
                     apiContext.Handler = DocumentConfiguration;
                     Trace(context, () => GetType().Name + " routing request to document configuration handler");
+                }
+                else if (path.StartsWithSegments(_searchIdentityListPath))
+                {
+                    apiContext.Handler = SearchIdentitiesHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToViewIdentities);
+                    Trace(context, () => GetType().Name + " routing request to GET identity search handler");
+                }
+                else if (path.StartsWithSegments(_identityPath))
+                {
+                    apiContext.Handler = GetIdentityHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToViewIdentities);
+                    Trace(context, () => GetType().Name + " routing request to GET identity handler");
                 }
                 else if (path.StartsWithSegments(_groupRoleListPath))
                 {
@@ -145,7 +167,14 @@ namespace OwinFramework.Authorization.UI
             }
             else if (context.Request.Method == "POST")
             {
-                if (path.StartsWithSegments(_groupListPath))
+                if (path.StartsWithSegments(_identityListPath))
+                {
+                    apiContext.Handler = NewIdentityHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditIdentity);
+                    Trace(context, () => GetType().Name + " routing request to POST new identity handler");
+                }
+                else if (path.StartsWithSegments(_groupListPath))
                 {
                     apiContext.Handler = NewGroupHandler;
                     if (upstreamAuthorization != null)
@@ -268,6 +297,118 @@ namespace OwinFramework.Authorization.UI
         {
             context.Response.ContentType = "application/json";
             return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+        }
+
+        #endregion
+
+        #region Identity related handlers
+
+        private Task SearchIdentitiesHandler(IOwinContext context)
+        {
+            var response = new SearchIdentitiesResponse();
+
+            var query = context.Request.Query;
+            var searchText = query["q"] ?? string.Empty;
+            var pagerToken = query["pager"];
+
+            var searchResult = _identityDirectory.Search(searchText, pagerToken);
+
+            response.Identities = searchResult.Identities.Select(i => new IdentityDto
+            {
+                Identity = i.Identity,
+                GroupId = null,
+                Claims = i.Claims.Select(c => new ClaimDto
+                {
+                    Name = c.Name,
+                    Value = c.Value,
+                    Status = c.Status
+                }).ToList()
+            }).ToList();
+
+            response.PagerToken = searchResult.PagerToken;
+
+            return Json(context, response);
+        }
+
+        private Task GetIdentityHandler(IOwinContext context)
+        {
+            var response = new GetIdentityResponse();
+
+            var identity = context.Request.Query["identity"];
+
+            if (string.IsNullOrEmpty(identity))
+            {
+                response.Result = ApiResult.BadRequest;
+                response.ErrorMessage = "Ni identity was specified in the query string";
+                return Json(context, response);
+            }
+
+            var claims = _identityDirectory.GetClaims(identity);
+            if (claims == null)
+            {
+                response.Result = ApiResult.NotFound;
+                response.ErrorMessage = "There is no identity " + identity;
+            }
+            else
+            {
+                var identification = new Identification 
+                {
+                    Identity = identity
+                };
+
+                Group group;
+                List<string> roles;
+                List<string> permissions;
+                _authorizationData.GetIdentity(identification, out group, out roles, out permissions);
+
+                response.Identity = new IdentityDto
+                {
+                    Identity = identity,
+                    GroupId = group.Id,
+                    Claims = claims.Select(c => new ClaimDto
+                    {
+                        Name = c.Name,
+                        Value = c.Value,
+                        Status = c.Status
+                    }).ToList()
+                };
+            }
+
+            return Json(context, response);
+        }
+        
+        private Task NewIdentityHandler(IOwinContext context)
+        {
+            var response = new NewIdentityResponse
+            {
+                Identity = GetBody<IdentityDto>(context)
+            };
+
+            try
+            {
+                response.Identity.Identity = _identityDirectory.CreateIdentity();
+
+                if (response.Identity.Claims != null)
+                {
+                    foreach (var claimDto in response.Identity.Claims)
+                    {
+                        _identityDirectory.UpdateClaim(response.Identity.Identity, claimDto);
+                    }
+                }
+
+                if (response.Identity.GroupId.HasValue)
+                {
+                    var identification = new Identification { Identity = response.Identity.Identity };
+                    _authorizationData.ChangeGroup(identification, response.Identity.GroupId.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Result = ApiResult.FatalError;
+                response.ErrorMessage = "Failed to add identity: " + ex.Message;
+            }
+
+            return Json(context, response);
         }
 
         #endregion
@@ -946,8 +1087,10 @@ namespace OwinFramework.Authorization.UI
             _permissionListPath = filePath(_rootPath, "permissions");
             _permissionPath = filePath(_rootPath, "permission");
 
+            _identityListPath = filePath(_rootPath, "identities");
             _searchIdentityListPath = filePath(_rootPath, "identity/_search");
             _identityGroupPath = filePath(_rootPath, "identity/group");
+            _identityPath = filePath(_rootPath, "identity");
 
             _validateGroupPath = filePath(_rootPath, "validate/group");
             _validateRolePath = filePath(_rootPath, "validate/role");
@@ -1270,6 +1413,34 @@ namespace OwinFramework.Authorization.UI
                 documentation.Add(
                     new EndpointDocumentation
                     {
+                        RelativePath = _identityListPath.Value,
+                        Description = "The list of identities. Identities can be users, machines, services etc",
+                        Attributes = new List<IEndpointAttributeDocumentation>
+                                {
+                                    new EndpointAttributeDocumentation
+                                    {
+                                        Type = "Method",
+                                        Name = "POST",
+                                        Description = "Creates a new identity and returns it in the response"
+                                    },
+                                    new EndpointAttributeDocumentation
+                                    {
+                                        Type = "Body",
+                                        Name = "Request",
+                                        Description = "When creating a new identity the body of the request must contain a JSON serialization of a <span class='code'>Identity<</span> data contract"
+                                    },
+                                    new EndpointAttributeDocumentation
+                                    {
+                                        Type = "Body",
+                                        Name = "Response",
+                                        Description = "When creating a new identity the body of the response will contain a JSON serialization of the new <span class='code'>Identity<</span> data contract."
+                                    }
+                                }
+                    });
+                
+                documentation.Add(
+                    new EndpointDocumentation
+                    {
                         RelativePath = _searchIdentityListPath.Value,
                         Description = "Search for an identity based on a search phrase",
                         Attributes = new List<IEndpointAttributeDocumentation>
@@ -1283,8 +1454,36 @@ namespace OwinFramework.Authorization.UI
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Parameter",
-                                        Name = "query",
+                                        Name = "q",
                                         Description = "The text that was entered to find matching identities"
+                                    }
+                                }
+                    });
+
+                documentation.Add(
+                    new EndpointDocumentation
+                    {
+                        RelativePath = _identityPath.Value,
+                        Description = "Get and updates the claims made by this identity",
+                        Attributes = new List<IEndpointAttributeDocumentation>
+                                {
+                                    new EndpointAttributeDocumentation
+                                    {
+                                        Type = "Method",
+                                        Name = "GET",
+                                        Description = "Returns the claims made by this identoty"
+                                    },
+                                    new EndpointAttributeDocumentation
+                                    {
+                                        Type = "Method",
+                                        Name = "POST",
+                                        Description = "Replaces the claims made by this identity"
+                                    },
+                                    new EndpointAttributeDocumentation
+                                    {
+                                        Type = "Parameter",
+                                        Name = "identity",
+                                        Description = "The identity to get/modify"
                                     }
                                 }
                     });
@@ -1446,11 +1645,14 @@ namespace OwinFramework.Authorization.UI
             [JsonProperty("identity")]
             public string Identity { get; set; }
 
+            [JsonProperty("groupId")]
+            public long? GroupId { get; set; }
+
             [JsonProperty("claims")]
             public List<ClaimDto> Claims { get; set; }
         }
 
-        private class ClaimDto
+        private class ClaimDto: IIdentityClaim
         {
             [JsonProperty("name")]
             public string Name { get; set; }
@@ -1492,6 +1694,18 @@ namespace OwinFramework.Authorization.UI
             public long Id { get; set; }
         }
 
+        private class NewIdentityResponse : ApiResponse
+        {
+            [JsonProperty("identity")]
+            public IdentityDto Identity { get; set; }
+        }
+
+        private class GetIdentityResponse : ApiResponse
+        {
+            [JsonProperty("identity")]
+            public IdentityDto Identity { get; set; }
+        }
+        
         private class GetGroupResponse : ApiResponse
         {
             [JsonProperty("group")]
@@ -1530,8 +1744,11 @@ namespace OwinFramework.Authorization.UI
 
         private class SearchIdentitiesResponse : ApiResponse
         {
+            [JsonProperty("pagerToken")]
+            public string PagerToken { get; set; }
+
             [JsonProperty("identities")]
-            public List<IdentityDto> Permissions { get; set; }
+            public List<IdentityDto> Identities { get; set; }
         }
 
         private class ValidationResponse : ApiResponse

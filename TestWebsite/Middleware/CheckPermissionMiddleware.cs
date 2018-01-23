@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
+using OwinFramework.Authorization.Data.DataContracts;
 using OwinFramework.Authorization.Data.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
@@ -68,12 +69,12 @@ namespace TestWebsite.Middleware
                 {
                     response.AppendLine("User identified as " + identification.Identity);
 
-                    string group;
+                    Group group;
                     List<string> roles;
                     List<string> permissions;
                     _authorizationData.GetIdentity(identification, out group, out roles, out permissions);
 
-                    response.AppendLine("   User is in the " + group + " group");
+                    response.AppendLine("   User is in the " + group.DisplayName + " group");
                     response.AppendLine("   User has the role of " + string.Join(" and ", roles));
                     response.AppendLine("   User has permissions to " + string.Join(" and ", permissions));
                 }
