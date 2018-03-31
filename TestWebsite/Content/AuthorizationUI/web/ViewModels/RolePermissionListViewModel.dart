@@ -52,7 +52,8 @@ class RolePermissionListViewModel extends ViewModel
 
 	void reload()
 	{
-		Server.getRolePermissions()
+		Server
+			.getRolePermissions()
 			.then((List<ParentChildModel> m) => models = m)
 			.catchError((Error error) => MvvmEvents.alert.raise(error.toString()));
 	}

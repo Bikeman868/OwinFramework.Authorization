@@ -37,8 +37,6 @@ namespace TestWebsite
 
             // By explicitly adding this assembly to the package locator, any IoC mappings
             // in this assembly will take priority over assemblies found through probing.
-            // Also when the package locator probes for assemblies it only looks for DLLs
-            // and not executables.
             var packageLocator = new PackageLocator()
                 .ProbeBinFolderAssemblies()
                 .Add(Assembly.GetExecutingAssembly());

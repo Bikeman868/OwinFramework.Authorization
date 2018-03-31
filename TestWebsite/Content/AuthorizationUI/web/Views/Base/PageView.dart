@@ -11,6 +11,8 @@ import '../../ViewModels/RoleListViewModel.dart';
 import '../../ViewModels/RoleViewModel.dart';
 import '../../ViewModels/PermissionListViewModel.dart';
 import '../../ViewModels/PermissionViewModel.dart';
+import '../../ViewModels/IdentityListViewModel.dart';
+import '../../ViewModels/IdentityViewModel.dart';
 
 import '../Panels/EditableListView.dart';
 import '../Panels/EditableView.dart';
@@ -35,6 +37,8 @@ import '../Roles/RoleDisplayView.dart';
 import '../Roles/RoleEditView.dart';
 import '../Roles/RoleDeleteView.dart';
 
+import '../Identities/IdentityListSelectView.dart';
+
 class PageView extends View
 {
 	PageView()
@@ -44,6 +48,7 @@ class PageView extends View
 		AppEvents.groupSelected.listen((e) => groupSelected(e.group));
 		AppEvents.roleSelected.listen((e) => roleSelected(e.role));
 		AppEvents.permissionSelected.listen((e) => permissionSelected(e.permission));
+		AppEvents.identitySelected.listen((e) => identitySelected(e.identity));
 	}
 
 	alert(String message){}
@@ -51,6 +56,7 @@ class PageView extends View
 	permissionSelected(PermissionViewModel permissionViewModel){}
 	roleSelected(RoleViewModel roleViewModel){}
 	groupSelected(GroupViewModel groupViewModel){}
+	identitySelected(IdentityViewModel identityViewModel){}
 
 	EditableListView _permissionListView;
 
@@ -129,6 +135,24 @@ class PageView extends View
 		_roleListView.displayIn(container);
 	}
 
+	IdentityListSelectView _identityListView;
+
+	displayIdentityList(
+		IdentityListViewModel identityListViewModel, 
+		Element container)
+	{
+		if (_identityListView == null)
+		{
+			_identityListView = new IdentityListSelectView(identityListViewModel);
+		}
+		else
+		{
+			_identityListView.viewModel = identityListViewModel;
+		}
+
+		_identityListView.displayIn(container);
+	}
+
 	EditableView _groupView;
 
 	displayGroup(
@@ -202,6 +226,31 @@ class PageView extends View
 		}
 
 		_permissionView.displayIn(container);
+	}
+
+
+	EditableView _identityView;
+
+	displayIdentity(
+		IdentityViewModel identityViewModel, 
+		Element container)
+	{
+		if (_identityView == null)
+		{
+			_identityView = new EditableView(
+				'Identity',
+				new IdentityDisplayView(identityViewModel),
+				new IdentityEditView(identityViewModel),
+				new IdentityDeleteView(identityViewModel));
+		}
+		else
+		{
+			(_identityView.displayView as IdentityDisplayView).viewModel = identityViewModel;
+			(_identityView.editView as IdentityEditView).viewModel = identityViewModel;
+			(_identityView.deleteView as IdentityDeleteView).viewModel = identityViewModel;
+		}
+
+		_identityView.displayIn(container);
 	}
 }
 

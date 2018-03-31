@@ -3,6 +3,7 @@ import '../../ViewModels/AuthorizationViewModel.dart';
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/RoleViewModel.dart';
 import '../../ViewModels/PermissionViewModel.dart';
+import '../../ViewModels/IdentityViewModel.dart';
 
 import '../Base/PageView.dart';
 
@@ -20,7 +21,7 @@ class DesktopView extends PageView
 	DesktopView(this._viewModel)
 	{
 		_createLayout();
-		_displayUsers();
+		_displayIdentities();
 	}
 
 	alert(String message)
@@ -44,6 +45,11 @@ class DesktopView extends PageView
 		displayPermission(_viewModel, permissionViewModel, _bodyRegion);
 	}
 
+	identitySelected(IdentityViewModel identityViewModel)
+	{
+		displayIdentity(identityViewModel, _bodyRegion);
+	}
+
 	_createLayout()
 	{
 		_headerRegion = addContainer(classNames:['page-region', 'header-region']);
@@ -55,15 +61,15 @@ class DesktopView extends PageView
 
 		addHeading(2, 'Authorization', parent: _headerRegion);
 
-		addButton('Users', (MouseEvent e) => _displayUsers(), parent: _menuRegion);
+		addButton('Users', (MouseEvent e) => _displayIdentities(), parent: _menuRegion);
 		addButton('Groups', (MouseEvent e) => _displayGroups(), parent: _menuRegion);
 		addButton('Roles', (MouseEvent e) => _displayRoles(), parent: _menuRegion);
 		addButton('Permissions', (MouseEvent e) => _displayPermissions(), parent: _menuRegion);
 	}
 
-	_displayUsers()
+	_displayIdentities()
 	{
-		_navRegion.children.clear();
+		displayIdentityList(null, _navRegion);
 	}
 
 	_displayGroups()

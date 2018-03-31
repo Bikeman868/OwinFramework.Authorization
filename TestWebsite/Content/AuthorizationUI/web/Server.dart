@@ -6,6 +6,7 @@ import 'MVVM/Mvvm.dart';
 
 import 'Models/ApiResponseModel.dart';
 import 'Models/NewRecordResponseModel.dart';
+import 'Models/NewIdentityResponseModel.dart';
 import 'Models/GroupModel.dart';
 import 'Models/PermissionModel.dart';
 import 'Models/RoleModel.dart';
@@ -24,49 +25,91 @@ class Server
 			_apiUrl = apiUrl.value;
 	}
 
+	static void reportForbidden(String action)
+	{
+		MvvmEvents.alert.raise(
+			'You do not have permission to ' + action + 
+			'.\nCheck that you logged into the correct account.');
+	}
+
+	static void reportServerError(String action)
+	{
+		MvvmEvents.alert.raise(
+			'The back-end service encountered a critical error whilst trying to ' + action + '.' +
+			'.\nPlease inform the system administrator about this issue.');
+	}
+
+	static void reportFailedResponse(String action, ApiResponseModel response)
+	{
+			MvvmEvents.alert.raise(
+				'Failed to ' + action + '.\n' + 
+				response.result + ' - ' + response.error);
+	}
+
+	static void handleError(HttpRequest request, String action)
+	{
+		print(request.responseUrl + ' => ' + request.statusText);
+
+		if (request.status == 403) reportForbidden(action);
+		else if (request.status == 500) reportServerError(action);
+	}
+
 //
 //-- Permission related server methods -----------------------------------------------------------------
 //
 	static Future<List<PermissionModel>> getPermissionList() async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/permissions');
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve a list of permissions';
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) 
-		{
-			MvvmEvents.alert.raise(
-				'Failed to retrieve a list of permissions. ' + 
-				response.result + ' - ' + response.error);
-			return null;
-		}
+		return HttpRequest
+			.getString(_apiUrl + '/permissions')
 
-		List<Map> permissionsJson = responseJson['permissions'];
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
 
-		var permissions = new List<PermissionModel>();
-		for (Map permissionJson in permissionsJson)
-		{
-			permissions.add(new PermissionModel(permissionJson));
-		}
-		return permissions;
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					reportFailedResponse(action, response);
+					return null;
+				}
+
+				List<Map> permissionsJson = responseJson['permissions'];
+
+				var permissions = new List<PermissionModel>();
+				for (Map permissionJson in permissionsJson)
+				{
+					permissions.add(new PermissionModel(permissionJson));
+				}
+				return permissions;
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 
 	static Future<PermissionModel> getPermission(int permissionId) async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/permission/' + permissionId.toString());
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve permission ' + permissionId.toString();
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) 
-		{
-			MvvmEvents.alert.raise(
-				'Failed to retrieve permission. ' + 
-				response.result + ' - ' + response.error);
-			return null;
-		}
+		return HttpRequest.getString(_apiUrl + '/permission/' + permissionId.toString())
 
-		Map permissionJson = responseJson['permission'];
-		return new PermissionModel(permissionJson);
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
+
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					reportFailedResponse(action, response);
+					return null;
+				}
+
+				Map permissionJson = responseJson['permission'];
+				return new PermissionModel(permissionJson);
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 
 	static Future<ApiResponseModel> validatePermission(PermissionModel permission) async
@@ -133,44 +176,58 @@ class Server
 //
 	static Future<List<RoleModel>> getRoleList() async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/roles');
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve a list of roles ';
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) 
-		{
-			MvvmEvents.alert.raise(
-				'Failed to retrieve the list of roles. ' + 
-				response.result + ' - ' + response.error);
-			return null;
-		}
+		return HttpRequest.getString(_apiUrl + '/roles')
 
-		List<Map> rolesJson = responseJson['roles'];
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
 
-		var roles = new List<RoleModel>();
-		for (Map roleJson in rolesJson)
-		{
-			roles.add(new RoleModel(roleJson));
-		}
-		return roles;
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					reportFailedResponse(action, response);
+					return null;
+				}
+
+				List<Map> rolesJson = responseJson['roles'];
+
+				var roles = new List<RoleModel>();
+				for (Map roleJson in rolesJson)
+				{
+					roles.add(new RoleModel(roleJson));
+				}
+				return roles;
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 
 	static Future<RoleModel> getRole(int roleId) async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/role/' + roleId.toString());
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve role ' + roleId.toString();
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) 
-		{
-			MvvmEvents.alert.raise(
-				'Failed to retrieve the role. ' + 
-				response.result + ' - ' + response.error);
-			return null;
-		}
+		return HttpRequest.getString(_apiUrl + '/role/' + roleId.toString())
 
-		Map roleJson = responseJson['role'];
-		return new RoleModel(roleJson);
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
+
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					MvvmEvents.alert.raise(
+						'Failed to retrieve the role. ' + 
+						response.result + ' - ' + response.error);
+					return null;
+				}
+
+				Map roleJson = responseJson['role'];
+				return new RoleModel(roleJson);
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 
 	static Future<ApiResponseModel> validateRole(RoleModel role) async
@@ -237,44 +294,56 @@ class Server
 //
 	static Future<List<GroupModel>> getGroupList() async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/groups');
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve a list of groups';
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) 
-		{
-			MvvmEvents.alert.raise(
-				'Failed to retrieve the list of groups. ' + 
-				response.result + ' - ' + response.error);
-			return null;
-		}
+		return HttpRequest.getString(_apiUrl + '/groups')
 
-		List<Map> groupsJson = responseJson['groups'];
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
 
-		var groups = new List<GroupModel>();
-		for (Map groupJson in groupsJson)
-		{
-			groups.add(new GroupModel(groupJson));
-		}
-		return groups;
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					reportFailedResponse(action, response);
+					return null;
+				}
+
+				List<Map> groupsJson = responseJson['groups'];
+
+				var groups = new List<GroupModel>();
+				for (Map groupJson in groupsJson)
+				{
+					groups.add(new GroupModel(groupJson));
+				}
+				return groups;
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 
 	static Future<GroupModel> getGroup(int groupId) async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/group/' + groupId.toString());
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve group ' + groupId.toString();
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) 
-		{
-			MvvmEvents.alert.raise(
-				'Failed to retrieve the group. ' + 
-				response.result + ' - ' + response.error);
-			return null;
-		}
+		return HttpRequest.getString(_apiUrl + '/group/' + groupId.toString())
 
-		Map groupJson = responseJson['group'];
-		return new GroupModel(groupJson);
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
+
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					reportFailedResponse(action, response);
+					return null;
+				}
+
+				Map groupJson = responseJson['group'];
+				return new GroupModel(groupJson);
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 
 	static Future<ApiResponseModel> validateGroup(GroupModel group) async
@@ -341,38 +410,95 @@ class Server
 //
 	static Future<List<IdentityModel>> findIdentities(String searchText) async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/identity/_search?q=' + searchText);
-		Map responseJson = JSON.decode(responseString);
+		String action = 'search for identities matching "' + searchText + '"';
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) return null;
+		return HttpRequest.getString(_apiUrl + '/identity/_search?q=' + searchText)
 
-		List<Map> identitiesJson = responseJson['identities'];
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
 
-		var identities = new List<IdentityModel>();
-		for (Map identityJson in identitiesJson)
-		{
-			identities.add(new IdentityModel(identityJson));
-		}
-		return identities;
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) return null;
+
+				List<Map> identitiesJson = responseJson['identities'];
+
+				var identities = new List<IdentityModel>();
+				for (Map identityJson in identitiesJson)
+				{
+					identities.add(new IdentityModel(identityJson));
+				}
+				return identities;
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 
 	static Future<IdentityModel> getIdentity(String identity) async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/identity?identity=' + identity);
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve identity ' + identity;
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) return null;
+		return HttpRequest.getString(_apiUrl + '/identity?identity=' + identity)
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
 
-		List<Map> identitiesJson = responseJson['identities'];
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					reportFailedResponse(action, response);
+					return null;
+				}
 
-		var identities = new List<IdentityModel>();
-		for (Map identityJson in identitiesJson)
-		{
-			identities.add(new IdentityModel(identityJson));
-		}
-		return identities;
+				Map identityJson = responseJson['identity'];
+				return new IdentityModel(identityJson);
+			})
+
+			.catchError((e) => handleError(e.target, action));
+	}
+
+	static Future<NewIdentityResponseModel> createIdentity(IdentityModel identity) async
+	{
+		var request = await HttpRequest.request(
+			_apiUrl + '/identities', 
+			method: 'POST',
+			sendData: JSON.encode(identity.json),
+			mimeType: 'application/json');
+
+		if (request.status != 200)
+			throw 'Failed to create identity ' + request.statusText;
+
+		Map json = JSON.decode(request.responseText);
+		return new NewIdentityResponseModel(json);
+	}
+  
+	static Future<ApiResponseModel> updateIdentity(IdentityModel identity) async
+	{
+		var request = await HttpRequest.request(
+			_apiUrl + '/identity/' + identity.identity.toString(), 
+			method: 'PUT',
+			sendData: JSON.encode(identity.json),
+			mimeType: 'application/json');
+
+		if (request.status != 200)
+			throw 'Failed to update identity ' + request.statusText;
+
+		Map json = JSON.decode(request.responseText);
+		return new ApiResponseModel(json);
+	}
+
+	static Future<ApiResponseModel> deleteIdentity(String identity) async
+	{
+		var request = await HttpRequest.request(
+			_apiUrl + '/identity/' + identity, 
+			method: 'DELETE',
+			mimeType: 'application/json');
+
+		if (request.status != 200)
+			throw 'Failed to delete identity ' + request.statusText;
+
+		Map json = JSON.decode(request.responseText);
+		return new ApiResponseModel(json);
 	}
 
 //
@@ -381,49 +507,63 @@ class Server
 
 	static Future<List<ParentChildModel>> getGroupRoles() async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/group/roles');
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve group/roles';
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) 
-		{
-			MvvmEvents.alert.raise(
-				'Failed to retrieve the list of group-role assignments. ' + 
-				response.result + ' - ' + response.error);
-			return null;
-		}
+		return HttpRequest.getString(_apiUrl + '/group/roles')
 
-		List<Map> relationsJson = responseJson['relations'];
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
 
-		var relations = new List<ParentChildModel>();
-		for (Map relationJson in relationsJson)
-		{
-			relations.add(new ParentChildModel(relationJson));
-		}
-		return relations;
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					reportFailedResponse(action, response);
+					return null;
+				}
+
+				List<Map> relationsJson = responseJson['relations'];
+
+				var relations = new List<ParentChildModel>();
+				for (Map relationJson in relationsJson)
+				{
+					relations.add(new ParentChildModel(relationJson));
+				}
+				return relations;
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 
 	static Future<List<ParentChildModel>> getRolePermissions() async
 	{
-		String responseString = await HttpRequest.getString(_apiUrl + '/role/permissions');
-		Map responseJson = JSON.decode(responseString);
+		String action = 'retrieve role/permissions';
 
-		var response = new ApiResponseModel(responseJson);
-		if (!response.isSuccess) 
-		{
-			MvvmEvents.alert.raise(
-				'Failed to retrieve the list of role-permission assignments. ' + 
-				response.result + ' - ' + response.error);
-			return null;
-		}
+		return HttpRequest.getString(_apiUrl + '/role/permissions')
 
-		List<Map> relationsJson = responseJson['relations'];
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
 
-		var relations = new List<ParentChildModel>();
-		for (Map relationJson in relationsJson)
-		{
-			relations.add(new ParentChildModel(relationJson));
-		}
-		return relations;
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					MvvmEvents.alert.raise(
+						'Failed to retrieve the list of role-permission assignments. ' + 
+						response.result + ' - ' + response.error);
+					return null;
+				}
+
+				List<Map> relationsJson = responseJson['relations'];
+
+				var relations = new List<ParentChildModel>();
+				for (Map relationJson in relationsJson)
+				{
+					relations.add(new ParentChildModel(relationJson));
+				}
+				return relations;
+			})
+
+			.catchError((e) => handleError(e.target, action));
 	}
 }

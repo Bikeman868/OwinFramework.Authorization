@@ -339,7 +339,7 @@ namespace OwinFramework.Authorization.UI
             if (string.IsNullOrEmpty(identity))
             {
                 response.Result = ApiResult.BadRequest;
-                response.ErrorMessage = "Ni identity was specified in the query string";
+                response.ErrorMessage = "No identity was specified in the query string";
                 return Json(context, response);
             }
 

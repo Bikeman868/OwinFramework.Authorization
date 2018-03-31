@@ -3,6 +3,7 @@ import '../../ViewModels/AuthorizationViewModel.dart';
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/RoleViewModel.dart';
 import '../../ViewModels/PermissionViewModel.dart';
+import '../../ViewModels/IdentityViewModel.dart';
 
 import '../Base/PageView.dart';
 
@@ -16,7 +17,7 @@ class MobileView extends PageView
 	MobileView(this._viewModel)
 	{
 		_createLayout();
-		_displayUsers();
+		_displayIdentities();
 	}
 
 	groupSelected(GroupViewModel groupViewModel)
@@ -34,20 +35,25 @@ class MobileView extends PageView
 		displayPermission(_viewModel, permissionViewModel, _navRegion);
 	}
 
+	identitySelected(IdentityViewModel identityViewModel)
+	{
+		displayIdentity(identityViewModel, _navRegion);
+	}
+
 	_createLayout()
 	{
 		_menuRegion = addContainer(classNames:['page-region', 'menu-region']);
 		_navRegion = addContainer(classNames:['page-region', 'nav-region']);
 
-		addButton('Users', (MouseEvent e) => _displayUsers(), parent: _menuRegion);
+		addButton('Users', (MouseEvent e) => _displayIdentities(), parent: _menuRegion);
 		addButton('Groups', (MouseEvent e) => _displayGroups(), parent: _menuRegion);
 		addButton('Roles', (MouseEvent e) => _displayRoles(), parent: _menuRegion);
 		addButton('Permissions', (MouseEvent e) => _displayPermissions(), parent: _menuRegion);
 	}
 
-	_displayUsers()
+	_displayIdentities()
 	{
-		_navRegion.children.clear();
+		displayIdentityList(null, _navRegion);
 	}
 
 	_displayGroups()

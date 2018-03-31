@@ -2,6 +2,7 @@ import '../MVVM/Mvvm.dart';
 import '../ViewModels/GroupViewModel.dart';
 import '../ViewModels/RoleViewModel.dart';
 import '../ViewModels/PermissionViewModel.dart';
+import '../ViewModels/IdentityViewModel.dart';
 
 class PermissionSelectedEvent
 {
@@ -21,6 +22,12 @@ class GroupSelectedEvent
 	GroupSelectedEvent(this.group);
 }
 
+class IdentitySelectedEvent
+{
+	IdentityViewModel identity;
+	IdentitySelectedEvent(this.identity);
+}
+
 class ConfirmationMessageEvent
 {
 	String messsage;
@@ -37,6 +44,7 @@ class AppEvents
 {
 	static SubscriptionEvent<GroupSelectedEvent>groupSelected = new SubscriptionEvent<GroupSelectedEvent>();
 	static SubscriptionEvent<RoleSelectedEvent>roleSelected = new SubscriptionEvent<RoleSelectedEvent>();
+	static SubscriptionEvent<IdentitySelectedEvent>identitySelected = new SubscriptionEvent<IdentitySelectedEvent>();
 	static SubscriptionEvent<PermissionSelectedEvent>permissionSelected = new SubscriptionEvent<PermissionSelectedEvent>();
 	static SubscriptionEvent<ConfirmationMessageEvent>confirm = new SubscriptionEvent<ConfirmationMessageEvent>();
 }

@@ -9,6 +9,9 @@ class IdentityModel extends Model
 	String get identity => getProperty('identity');
 	set identity(String value) { setProperty('identity', value); }
   
+	int get groupId => getProperty('groupId');
+	set groupId(int value) { setProperty('groupId', value); }
+  
 	List<ClaimModel> get claims => getList('claims', (json) => new ClaimModel(json));
 	set claims(List<ClaimModel> value) { setList('claims', value); }
 
