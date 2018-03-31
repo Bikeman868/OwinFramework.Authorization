@@ -26,9 +26,7 @@ class IdentityNameView extends View
 		}
 		else
 		{
-			// TODO: Configure the claim that is used as display name
-			// Fall back to Identity URN only when that claim is not made by the identity
-			_displayNameBinding.binding = viewModel.identity;
+			_displayNameBinding.binding = viewModel.displayName;
 		}
 	}
 }

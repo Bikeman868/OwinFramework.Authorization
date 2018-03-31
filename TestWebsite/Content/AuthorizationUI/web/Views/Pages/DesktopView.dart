@@ -47,7 +47,7 @@ class DesktopView extends PageView
 
 	identitySelected(IdentityViewModel identityViewModel)
 	{
-		displayIdentity(identityViewModel, _bodyRegion);
+		displayIdentity(_viewModel, identityViewModel, _bodyRegion);
 	}
 
 	_createLayout()

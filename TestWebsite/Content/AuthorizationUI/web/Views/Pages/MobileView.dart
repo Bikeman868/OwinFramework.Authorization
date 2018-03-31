@@ -37,7 +37,7 @@ class MobileView extends PageView
 
 	identitySelected(IdentityViewModel identityViewModel)
 	{
-		displayIdentity(identityViewModel, _navRegion);
+		displayIdentity(_viewModel, identityViewModel, _navRegion);
 	}
 
 	_createLayout()

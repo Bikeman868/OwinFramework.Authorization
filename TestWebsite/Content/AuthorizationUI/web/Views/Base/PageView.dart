@@ -38,6 +38,9 @@ import '../Roles/RoleEditView.dart';
 import '../Roles/RoleDeleteView.dart';
 
 import '../Identities/IdentityListSelectView.dart';
+import '../Identities/IdentityDisplayView.dart';
+import '../Identities/IdentityEditView.dart';
+import '../Identities/IdentityDeleteView.dart';
 
 class PageView extends View
 {
@@ -232,6 +235,7 @@ class PageView extends View
 	EditableView _identityView;
 
 	displayIdentity(
+		AuthorizationViewModel authorizationViewModel, 
 		IdentityViewModel identityViewModel, 
 		Element container)
 	{
@@ -239,7 +243,7 @@ class PageView extends View
 		{
 			_identityView = new EditableView(
 				'Identity',
-				new IdentityDisplayView(identityViewModel),
+				new IdentityDisplayView(authorizationViewModel, identityViewModel),
 				new IdentityEditView(identityViewModel),
 				new IdentityDeleteView(identityViewModel));
 		}

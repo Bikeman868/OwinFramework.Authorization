@@ -9,12 +9,15 @@ class IdentityViewModel extends ViewModel
 {
     StringBinding identity;
 		IntBinding groupId;
+    StringBinding displayName;
 	  ModelList<ClaimModel, ClaimViewModel> claims;
 
 	IdentityViewModel([IdentityModel identityModel])
 	{
 		identity = new StringBinding();
 		groupId = new IntBinding();
+		displayName = new StringBinding();
+
 		claims = new ModelList<ClaimModel, ClaimViewModel>(
 			(Map json) => new ClaimModel(json),
 			(ClaimModel m) => new ClaimViewModel(m));
@@ -45,15 +48,14 @@ class IdentityViewModel extends ViewModel
 			groupId.setter = null;
 			groupId.getter = null;
 
+			displayName.setter = null;
+			displayName.getter = null;
+
 			claims.models = null;
 		}
 		else
 		{
-			identity.setter = (String text) 
-			{ 
-				identityModel.identity = text;
-				modified();
-			};
+			identity.setter = null;
 			identity.getter = () => identityModel.identity;
         
 			groupId.setter = (int id) 
@@ -62,6 +64,12 @@ class IdentityViewModel extends ViewModel
 				modified();
 			};
 			groupId.getter = () => identityModel.groupId;
+
+			displayName.setter = null;
+			// TODO: configure a claim to use as the display name
+			// and default to the identity only when that claim is
+			// not made by the identity
+			displayName.getter = () => identityModel.identity;
 
 			claims.models = identityModel.claims;
 		}
@@ -120,7 +128,7 @@ class IdentityViewModel extends ViewModel
 		}
 		else if (state == ChangeState.deleted)
 		{
-			var response = await Server.deleteIdentity(model);
+			var response = await Server.deleteIdentity(model.identity);
 			if (response.isSuccess)
 			{
 				model = null;
