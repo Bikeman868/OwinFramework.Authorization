@@ -41,6 +41,7 @@ namespace OwinFramework.Authorization.UI
 
         private PathString _rootPath;
         private PathString _documentationPath;
+        private PathString _configurationPath;
 
         private PathString _validateGroupPath;
         private PathString _validateRolePath;
@@ -163,6 +164,11 @@ namespace OwinFramework.Authorization.UI
                 {
                     apiContext.Handler = GetPermissionListHandler;
                     Trace(context, () => GetType().Name + " routing request to GET permission list handler");
+                }
+                else if (path.Equals(_configurationPath))
+                {
+                    apiContext.Handler = GetConfigurationHandler;
+                    Trace(context, () => GetType().Name + " routing request to GET configuration handler");
                 }
             }
             else if (context.Request.Method == "POST")
@@ -301,6 +307,27 @@ namespace OwinFramework.Authorization.UI
 
         #endregion
 
+        #region Configuration related handlers
+
+        private Task GetConfigurationHandler(IOwinContext context)
+        {
+            var response = new ConfigurationResponse
+                {
+                    Configuration = new ConfigurationDto
+                    {
+                        DisplayNameClaims = _configuration
+                            .IdentityDisplayNameClaims
+                            .Split(',')
+                            .Select(s => s.Trim())
+                            .Where(s => s.Length > 0)
+                            .ToList()
+                    }
+                };
+            return Json(context, response);
+        }
+
+        #endregion
+
         #region Identity related handlers
 
         private Task SearchIdentitiesHandler(IOwinContext context)
@@ -316,7 +343,7 @@ namespace OwinFramework.Authorization.UI
             response.Identities = searchResult.Identities.Select(i => new IdentityDto
             {
                 Identity = i.Identity,
-                GroupId = null,
+                GroupId = _authorizationData.GetIdentityGroupId(i.Identity),
                 Claims = i.Claims.Select(c => new ClaimDto
                 {
                     Name = c.Name,
@@ -1095,6 +1122,8 @@ namespace OwinFramework.Authorization.UI
             _validateGroupPath = filePath(_rootPath, "validate/group");
             _validateRolePath = filePath(_rootPath, "validate/role");
             _validatePermissionPath = filePath(_rootPath, "validate/permission");
+
+            _configurationPath = filePath(_rootPath, "configuration");
         }
 
 
@@ -1700,6 +1729,18 @@ namespace OwinFramework.Authorization.UI
             public IdentityDto Identity { get; set; }
         }
 
+        private class ConfigurationDto
+        {
+            [JsonProperty("displayNameClaims")]
+            public List<string> DisplayNameClaims { get; set; }
+        }
+
+        private class ConfigurationResponse : ApiResponse
+        {
+            [JsonProperty("configuration")]
+            public ConfigurationDto Configuration { get; set; }
+        }
+        
         private class GetIdentityResponse : ApiResponse
         {
             [JsonProperty("identity")]

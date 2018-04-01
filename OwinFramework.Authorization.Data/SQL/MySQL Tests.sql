@@ -74,10 +74,10 @@ CALL sp_AddGroupRole(@group_cs_manager, @role_cs); -- CS manager has the 'cs' ro
 CALL sp_AddGroupRole(@group_cs, @role_user); -- CS has the 'user' role
 CALL sp_AddGroupRole(@group_cs, @role_cs); -- CS manager has the 'cs' role
 
-CALL sp_ChangeIdentityGroup('manager@domain', @group_cs_manager);
-CALL sp_ChangeIdentityGroup('cs1@domain', @group_cs);
-CALL sp_ChangeIdentityGroup('cs2@domain', @group_cs);
-CALL sp_ChangeIdentityGroup('cs3@domain', @group_cs);
+CALL sp_ChangeIdentityGroup('urn:identity:baltmzbu1uypqajj1n9dv87m6v', @group_cs_manager);
+CALL sp_ChangeIdentityGroup('urn:identity:bb7m2ss1hi858bwgc111h3zk1o', @group_cs);
+CALL sp_ChangeIdentityGroup('urn:identity:bcw1qpn09prjmdnvnwdht1hcge', @group_cs);
+CALL sp_ChangeIdentityGroup('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh', @group_cs);
 
 /************************************************************/
 
@@ -104,22 +104,22 @@ CALL sp_GetRolesWithPermission(@permission_assign_role_cs);
 CALL sp_GetRolesWithPermission(@permission_assign_group_cs);
 CALL sp_GetRolesWithPermission(@permission_cart_myorder_cancel);
 
-CALL sp_GetIdentityPermissions('manager@domain');
-CALL sp_GetIdentityPermissions('cs1@domain');
-CALL sp_GetIdentityPermissions('cs2@domain');
-CALL sp_GetIdentityPermissions('cs3@domain');
+CALL sp_GetIdentityPermissions('urn:identity:baltmzbu1uypqajj1n9dv87m6v');
+CALL sp_GetIdentityPermissions('urn:identity:bb7m2ss1hi858bwgc111h3zk1o');
+CALL sp_GetIdentityPermissions('urn:identity:bcw1qpn09prjmdnvnwdht1hcge');
+CALL sp_GetIdentityPermissions('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh');
 
-CALL sp_GetIdentityRoles('manager@domain');
-CALL sp_GetIdentityRoles('cs1@domain');
-CALL sp_GetIdentityRoles('cs2@domain');
-CALL sp_GetIdentityRoles('cs3@domain');
+CALL sp_GetIdentityRoles('urn:identity:baltmzbu1uypqajj1n9dv87m6v');
+CALL sp_GetIdentityRoles('urn:identity:bb7m2ss1hi858bwgc111h3zk1o');
+CALL sp_GetIdentityRoles('urn:identity:bcw1qpn09prjmdnvnwdht1hcge');
+CALL sp_GetIdentityRoles('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh');
 
-CALL sp_GetIdentity('manager@domain');
-CALL sp_GetIdentity('cs1@domain');
-CALL sp_GetIdentity('cs2@domain');
-CALL sp_GetIdentity('cs3@domain');
+CALL sp_GetIdentity('urn:identity:baltmzbu1uypqajj1n9dv87m6v');
+CALL sp_GetIdentity('urn:identity:bb7m2ss1hi858bwgc111h3zk1o');
+CALL sp_GetIdentity('urn:identity:bcw1qpn09prjmdnvnwdht1hcge');
+CALL sp_GetIdentity('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh');
 CALL sp_GetIdentity('annonymous@domain');
-CALL sp_GetIdentity('administrator@mycompany.com');
+CALL sp_GetIdentity('urn:identity:bhsmp4h51ha8bcywxqhba1rvn6');
 
 /************************************************************/
 

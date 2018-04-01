@@ -1,18 +1,24 @@
 ﻿import '../../MVVM/Mvvm.dart';
 import '../../ViewModels/ClaimViewModel.dart';
 
-class ClaimDisplayView extends View
+class ClaimTableRowView extends View
 {
 	BoundLabel<String> _nameBinding;
 	BoundLabel<String> _valueBinding;
 	BoundLabel<String> _statusBinding;
 
-	ClaimDisplayView([ClaimViewModel viewModel])
+	ClaimTableRowView([ClaimViewModel viewModel])
 	{
-		var form = addForm();
-		_nameBinding = new BoundLabel<String>(addLabeledField(form, 'Claim'));
-		_valueBinding = new BoundLabel<String>(addLabeledField(form, 'Value'));
-		_statusBinding = new BoundLabel<String>(addLabeledField(form, 'Status'));
+		var tableRow = addDiv(className: 'tr');
+
+		_nameBinding = new BoundLabel<String>(
+			addDiv(classNames: ['td', 'display-name', 'claim'], parent: tableRow));
+
+		_valueBinding = new BoundLabel<String>(
+			addDiv(classNames: ['td', 'claim-value', 'claim'], parent: tableRow));
+
+		_statusBinding = new BoundLabel<String>(
+			addDiv(classNames: ['td', 'claim-status', 'claim'], parent: tableRow));
 
 		this.viewModel = viewModel;
 	}
@@ -37,3 +43,4 @@ class ClaimDisplayView extends View
 		}
 	}
 }
+

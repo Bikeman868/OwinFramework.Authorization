@@ -2,26 +2,25 @@
 import '../ViewModels/GroupRoleViewModel.dart';
 import '../ViewModels/GroupListViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../Models/ParentChildModel.dart';
 import '../Server.dart';
 
 class GroupRoleListViewModel extends ViewModel
 {
-    ModelList<ParentChildModel, GroupRoleViewModel> groupRoles;
+	ModelList<ParentChildModel, GroupRoleViewModel> groupRoles;
 
-	GroupListViewModel _groupListViewModel;
-	RoleListViewModel _roleListViewModel;
+	AuthorizationViewModel _authorizationViewModel;
 
 	GroupRoleListViewModel(
-		this._groupListViewModel,
-		this._roleListViewModel,
+		this._authorizationViewModel,
 		[
 			List<ParentChildModel> groupRoleModels
 		]): super(false)
 	{
 		groupRoles = new ModelList<ParentChildModel, GroupRoleViewModel>(
 			(Map json) => new ParentChildModel(json),
-			(ParentChildModel m) => new GroupRoleViewModel(_groupListViewModel, _roleListViewModel, m));
+			(ParentChildModel m) => new GroupRoleViewModel(_authorizationViewModel, m));
 
 		if (groupRoleModels == null)
 			reload();

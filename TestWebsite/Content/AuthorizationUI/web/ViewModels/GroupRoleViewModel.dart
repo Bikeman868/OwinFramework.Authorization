@@ -1,4 +1,5 @@
 ﻿import '../MVVM/Mvvm.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../ViewModels/GroupListViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
 import '../ViewModels/GroupViewModel.dart';
@@ -7,24 +8,27 @@ import '../Models/ParentChildModel.dart';
 
 class GroupRoleViewModel extends ViewModel
 {
-    StringBinding groupCodeName;
-    StringBinding groupDisplayName;
-    StringBinding groupDescription;
+	StringBinding groupCodeName;
+	StringBinding groupDisplayName;
+	StringBinding groupDescription;
 
-    StringBinding roleCodeName;
-    StringBinding roleDisplayName;
-    StringBinding roleDescription;
+	StringBinding roleCodeName;
+	StringBinding roleDisplayName;
+	StringBinding roleDescription;
 
+	AuthorizationViewModel _authorizationViewModel;
 	GroupListViewModel _groupListViewModel;
 	RoleListViewModel _roleListViewModel;
 
 	GroupRoleViewModel(
-		this._groupListViewModel,
-		this._roleListViewModel,
+		this._authorizationViewModel,
 		[
 			ParentChildModel model
 		])
 	{
+		_groupListViewModel = _authorizationViewModel.groupList;
+		_roleListViewModel = _authorizationViewModel.roleList;
+
 		groupCodeName = new StringBinding();
 		groupDisplayName = new StringBinding();
 		groupDescription = new StringBinding();

@@ -1,4 +1,7 @@
-﻿import '../MVVM/Mvvm.dart';
+﻿import 'dart:async';
+import '../MVVM/Mvvm.dart';
+import '../Server.dart';
+import '../Models/ConfigurationModel.dart';
 import '../ViewModels/GroupListViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
 import '../ViewModels/PermissionListViewModel.dart';
@@ -7,11 +10,20 @@ import '../ViewModels/RolePermissionListViewModel.dart';
 
 class AuthorizationViewModel extends ViewModel
 {
+	ConfigurationModel _configuration;
+	Future<ConfigurationModel> get configuration async
+	{
+		if (_configuration == null)
+			_configuration = await Server.getConfiguration();
+
+		return _configuration;
+	}
+
 	PermissionListViewModel _permissionList;
 	PermissionListViewModel get permissionList
 	{
 		if (_permissionList == null)
-			_permissionList = new PermissionListViewModel();
+			_permissionList = new PermissionListViewModel(this);
 
 		return _permissionList;
 	}
@@ -20,7 +32,7 @@ class AuthorizationViewModel extends ViewModel
 	RoleListViewModel get roleList
 	{
 		if (_roleList == null)
-			_roleList = new RoleListViewModel();
+			_roleList = new RoleListViewModel(this);
 	
 		return _roleList;
 	}
@@ -29,7 +41,7 @@ class AuthorizationViewModel extends ViewModel
 	GroupListViewModel get groupList
 	{
 		if (_groupList == null)
-			_groupList = new GroupListViewModel();
+			_groupList = new GroupListViewModel(this);
 	
 		return _groupList;
 	}
@@ -38,7 +50,7 @@ class AuthorizationViewModel extends ViewModel
 	GroupRoleListViewModel get groupRoleList
 	{
 		if (_groupRoleList == null)
-			_groupRoleList = new GroupRoleListViewModel(groupList, roleList);
+			_groupRoleList = new GroupRoleListViewModel(this);
 
 		return _groupRoleList;
 	}
@@ -47,7 +59,7 @@ class AuthorizationViewModel extends ViewModel
 	RolePermissionListViewModel get rolePermissionList
 	{
 		if (_rolePermissionList == null)
-			_rolePermissionList = new RolePermissionListViewModel(roleList, permissionList);
+			_rolePermissionList = new RolePermissionListViewModel(this);
 
 		return _rolePermissionList;
 	}

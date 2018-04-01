@@ -1,18 +1,21 @@
 ﻿import 'dart:async';
 import '../MVVM/Mvvm.dart';
 import '../Server.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../Models/PermissionModel.dart';
 
 class PermissionViewModel extends ViewModel
 {
-    StringBinding codeName;
-    StringBinding displayName;
-    StringBinding resource;
-    StringBinding description;
+	StringBinding codeName;
+	StringBinding displayName;
+	StringBinding resource;
+	StringBinding description;
 
 	int id;
 
-	PermissionViewModel([PermissionModel model])
+	AuthorizationViewModel _authorizationViewModel;
+
+	PermissionViewModel(this._authorizationViewModel,[PermissionModel model])
 	{
 		codeName = new StringBinding();
 		displayName = new StringBinding();

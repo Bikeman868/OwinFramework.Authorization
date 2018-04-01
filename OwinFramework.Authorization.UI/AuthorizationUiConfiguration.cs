@@ -20,6 +20,8 @@ namespace OwinFramework.Authorization.UI
         public string PermissionToAssignRoleToGroup { get; set; }
         public string PermissionToAssignUserToGroup { get; set; }
 
+        public string IdentityDisplayNameClaims { get; set; }
+
         public AuthorizationUiConfiguration()
         {
             DocumentationRootUrl = "owin/authorizationApi/config";
@@ -38,6 +40,8 @@ namespace OwinFramework.Authorization.UI
             PermissionToAssignPermissionToRole = "auth:permission.assign";
             PermissionToAssignRoleToGroup = "auth:role.assign";
             PermissionToAssignUserToGroup = "auth:group.assign";
+
+            IdentityDisplayNameClaims = "username,email";
         }
     }
 }

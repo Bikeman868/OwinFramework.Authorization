@@ -12,6 +12,7 @@ import 'Models/PermissionModel.dart';
 import 'Models/RoleModel.dart';
 import 'Models/IdentityModel.dart';
 import 'Models/ParentChildModel.dart';
+import 'Models/ConfigurationModel.dart';
 
 class Server
 {
@@ -53,6 +54,35 @@ class Server
 		if (request.status == 403) reportForbidden(action);
 		else if (request.status == 500) reportServerError(action);
 	}
+
+//
+//-- Configuration related server methods -----------------------------------------------------------------
+//
+
+static Future<ConfigurationModel> getConfiguration() async
+{
+		String action = 'retrieve configuration data';
+
+		return HttpRequest
+			.getString(_apiUrl + '/configuration')
+
+			.then((responseString)
+			{
+				Map responseJson = JSON.decode(responseString);
+
+				var response = new ApiResponseModel(responseJson);
+				if (!response.isSuccess) 
+				{
+					reportFailedResponse(action, response);
+					return null;
+				}
+
+				Map configurationJson = responseJson['configuration'];
+				return new ConfigurationModel(configurationJson);
+			})
+
+			.catchError((e) => handleError(e.target, action));
+}
 
 //
 //-- Permission related server methods -----------------------------------------------------------------

@@ -4,6 +4,7 @@ import '../Server.dart';
 import '../Models/IdentityModel.dart';
 import '../Models/ClaimModel.dart';
 import '../ViewModels/ClaimViewModel.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 
 class IdentityViewModel extends ViewModel
 {
@@ -12,7 +13,13 @@ class IdentityViewModel extends ViewModel
     StringBinding displayName;
 	  ModelList<ClaimModel, ClaimViewModel> claims;
 
-	IdentityViewModel([IdentityModel identityModel])
+		AuthorizationViewModel _authorizationViewModel;
+
+	IdentityViewModel(
+		this._authorizationViewModel,
+		[
+			IdentityModel identityModel
+		])
 	{
 		identity = new StringBinding();
 		groupId = new IntBinding();
@@ -20,7 +27,7 @@ class IdentityViewModel extends ViewModel
 
 		claims = new ModelList<ClaimModel, ClaimViewModel>(
 			(Map json) => new ClaimModel(json),
-			(ClaimModel m) => new ClaimViewModel(m));
+			(ClaimModel m) => new ClaimViewModel(_authorizationViewModel, m));
 
 		if (identityModel == null)
 			reload();
@@ -66,10 +73,23 @@ class IdentityViewModel extends ViewModel
 			groupId.getter = () => identityModel.groupId;
 
 			displayName.setter = null;
-			// TODO: configure a claim to use as the display name
-			// and default to the identity only when that claim is
-			// not made by the identity
-			displayName.getter = () => identityModel.identity;
+
+			_authorizationViewModel.configuration.then((configuration)
+			{
+				displayName.getter = () 
+				{ 
+					var claims = identityModel.claims;
+					if (claims != null)
+					{
+						for (var claimName in configuration.displayNameClaims)
+						{
+							var claim = claims.firstWhere((c) => c.name == claimName, orElse: () => null);
+							if (claim != null) return claim.value;
+						}
+					}
+					return identityModel.identity;
+				};
+			});
 
 			claims.models = identityModel.claims;
 		}

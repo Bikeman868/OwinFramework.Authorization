@@ -1,14 +1,17 @@
 ﻿import '../MVVM/Mvvm.dart';
 import '../Models/ClaimModel.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 
 class ClaimViewModel extends ViewModel
 {
-    StringBinding name;
-    StringBinding value;
-    IntBinding status;
-    StringBinding statusText;
+	StringBinding name;
+	StringBinding value;
+	IntBinding status;
+	StringBinding statusText;
 
-	ClaimViewModel([ClaimModel model])
+	AuthorizationViewModel _authorizationViewModel;
+
+	ClaimViewModel(this._authorizationViewModel, [ClaimModel model])
 	{
 		name = new StringBinding();
 		value = new StringBinding();

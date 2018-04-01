@@ -24,13 +24,13 @@
         To set the user you want to impersonate navigate to a url like this one.
     </p>
     <div>
-        <a href="/index.html?authId=administrator@mycompany.com">/index.html?authId=administrator@mycompany.com</a>
+        <a href="/index.html?authId=urn:identity:bcxc0ermlshfxa3tmstwyyzvbh">/index.html?authId=urn:identity:bcxc0ermlshfxa3tmstwyyzvbh</a>
     </div>
     <div>
-        <a href="/index.html?authId=cs2@domain">/index.html?authId=cs2@domain</a>
+        <a href="/index.html?authId=urn:identity:baltmzbu1uypqajj1n9dv87m6v">/index.html?authId=urn:identity:baltmzbu1uypqajj1n9dv87m6v</a>
     </div>
     <div>
-        <a href="/index.html?authId=manager@domain">/index.html?authId=manager@domain</a>
+        <a href="/index.html?authId=urn:identity:bcw1qpn09prjmdnvnwdht1hcge">/index.html?authId=urn:identity:bcw1qpn09prjmdnvnwdht1hcge</a>
     </div>
     <p>
         To test what happens for an anonymous user, visit this page to clear the cookie
@@ -42,10 +42,10 @@
         To set the user you want to impersonate with specified purposes (mapped to roles)
     </p>
     <div>
-        <a href="/index.html?authId=cs2@domain:sys.user">/index.html?authId=cs2@domain:sys.user</a>
+        <a href="/index.html?authId=urn:identity:bcw1qpn09prjmdnvnwdht1hcge&purposes=sys.user">/index.html?authId=urn:identity:bcw1qpn09prjmdnvnwdht1hcge&purposes=sys.user</a>
     </div>
     <div>
-        <a href="/index.html?authId=manager@domain:sys.user">/index.html?authId=manager@domain:sys.user</a>
+        <a href="/index.html?authId=urn:identity:bhsmp4h51ha8bcywxqhba1rvn6&purposes=sys.user">/index.html?authId=urn:identity:bhsmp4h51ha8bcywxqhba1rvn6&purposes=sys.user</a>
     </div>
     <p>
         Note that this user identification mechanism is helpful for testing but is totally
@@ -132,10 +132,10 @@
         You can also combine the user identification and the permission checks into one URL like this:
     </p>
     <div>
-        <a href="/check?authId=administrator@mycompany.com&permission=auth:group.assign&resource=group:sys.admins">/check?authId=administrator@mycompany.com&permission=auth:group.assign&resource=group:sys.admins</a>
+        <a href="/check?authId=urn:identity:bcw1qpn09prjmdnvnwdht1hcge&permission=auth:group.assign&resource=group:sys.admins">/check?authId=urn:identity:bcw1qpn09prjmdnvnwdht1hcge&permission=auth:group.assign&resource=group:sys.admins</a>
     </div>
     <div>
-        <a href="/check?authId=cs1@domain.com&role=user">/check?authId=cs1@domain.com&role=sys.user</a>
+        <a href="/check?authId=urn:identity:bhsmp4h51ha8bcywxqhba1rvn6&purposes=user">/check?authId=cs1@domain.com&purposes=sys.user</a>
     </div>
 </body>
 </html>

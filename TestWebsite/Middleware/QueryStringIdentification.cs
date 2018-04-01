@@ -27,6 +27,7 @@ namespace TestWebsite.Middleware
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
             var identity = context.Request.Query["authId"];
+            var purposesParam = context.Request.Query["purposes"];
             var claims = new List<IIdentityClaim>();
             var purposes = new List<string>();
 
@@ -43,14 +44,25 @@ namespace TestWebsite.Middleware
                 context.Response.Cookies.Append("authId", identity);
             }
 
+            if (purposesParam == null)
+            {
+                purposesParam = context.Request.Cookies["purposes"];
+            }
+            else if (purposesParam.Length == 0)
+            {
+                context.Response.Cookies.Delete("purposes");
+            }
+            else
+            {
+                context.Response.Cookies.Append("purposes", purposesParam);
+            }
+
             var anonymous = string.IsNullOrEmpty(identity);
             if (!anonymous)
             {
-                var colonPos = identity.IndexOf(':');
-                if (colonPos > 0)
+                if (!string.IsNullOrEmpty(purposesParam))
                 {
-                    purposes = identity.Substring(colonPos + 1).Split(',').ToList();
-                    identity = identity.Substring(0, colonPos);
+                    purposes = purposesParam.Split(',').ToList();
                 }
                 claims.Add(new IdentityClaim(ClaimNames.Email, "someone@mailinator.com", ClaimStatus.Verified));
                 claims.Add(new IdentityClaim(ClaimNames.IpV4, context.Request.RemoteIpAddress, ClaimStatus.Verified));

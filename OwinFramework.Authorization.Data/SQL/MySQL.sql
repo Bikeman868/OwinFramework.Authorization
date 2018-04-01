@@ -918,4 +918,4 @@ CALL sp_AddGroupRole(3, 2);
 CALL sp_AddGroupRole(4, 3);
 
 -- Note that you need to assign at least one sys admin to be able to configure permissions for other users
-CALL sp_ChangeIdentityGroup('administrator@mycompany.com', 1);
+CALL sp_ChangeIdentityGroup('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh', 1);

@@ -1,20 +1,23 @@
 ﻿import '../MVVM/Mvvm.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../ViewModels/RoleViewModel.dart';
 import '../Models/RoleModel.dart';
 import '../Server.dart';
 
 class RoleListViewModel extends ViewModel
 {
-    ModelList<RoleModel, RoleViewModel> roles;
+	ModelList<RoleModel, RoleViewModel> roles;
 
-	RoleListViewModel([List<RoleModel> roleModels]): super(false)
+	AuthorizationViewModel _authorizationViewModel;
+
+	RoleListViewModel(this._authorizationViewModel,[List<RoleModel> roleModels]): super(false)
 	{
 		roles = new ModelList<RoleModel, RoleViewModel>(
 			(Map json) => new RoleModel(null)
 				..codeName = '[unique_code_name]'
 				..displayName = '[display_name]'
 				..description = '[description]',
-			(RoleModel m) => new RoleViewModel(m));
+			(RoleModel m) => new RoleViewModel(_authorizationViewModel, m));
 
 		if (roleModels == null)
 			reload();

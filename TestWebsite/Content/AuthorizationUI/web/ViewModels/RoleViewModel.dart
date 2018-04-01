@@ -1,6 +1,7 @@
 ﻿import 'dart:async';
 import '../MVVM/Mvvm.dart';
 import '../Server.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../Models/RoleModel.dart';
 
 class RoleViewModel extends ViewModel
@@ -11,7 +12,9 @@ class RoleViewModel extends ViewModel
 
 	int id;
 
-	RoleViewModel([RoleModel model])
+	AuthorizationViewModel _authorizationViewModel;
+
+	RoleViewModel(this._authorizationViewModel, [RoleModel model])
 	{
 		codeName = new StringBinding();
 		displayName = new StringBinding();

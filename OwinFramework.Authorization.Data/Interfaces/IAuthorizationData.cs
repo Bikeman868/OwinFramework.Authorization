@@ -47,6 +47,7 @@ namespace OwinFramework.Authorization.Data.Interfaces
         IEnumerable<Tuple<long, long>> GetAllGroupRoles();
         IEnumerable<Tuple<long, long>> GetAllRolePermissions();
 
+        long? GetIdentityGroupId(string identity);
         long? GetGroupId(IIdentification identification);
         Group GetGroup(IIdentification identification);
         IEnumerable<Role> GetRoles(IIdentification identification);

@@ -1,20 +1,23 @@
 ﻿import '../MVVM/Mvvm.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../ViewModels/PermissionViewModel.dart';
 import '../Models/PermissionModel.dart';
 import '../Server.dart';
 
 class PermissionListViewModel extends ViewModel
 {
-    ModelList<PermissionModel, PermissionViewModel> permissions;
+	ModelList<PermissionModel, PermissionViewModel> permissions;
 
-	PermissionListViewModel([List<PermissionModel> permissionModels]): super(false)
+	AuthorizationViewModel _authorizationViewModel;
+
+	PermissionListViewModel(this._authorizationViewModel,[List<PermissionModel> permissionModels]): super(false)
 	{
 		permissions = new ModelList<PermissionModel, PermissionViewModel>(
 			(Map json) => new PermissionModel(null)
 				..codeName = '[unique_code_name]'
 				..displayName = '[display_name]'
 				..description = '[description]',
-			(PermissionModel m) => new PermissionViewModel(m));
+			(PermissionModel m) => new PermissionViewModel(_authorizationViewModel, m));
 
 		if (permissionModels == null)
 			reload();

@@ -673,16 +673,21 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public long? GetGroupId(IIdentification identification)
+        public long? GetIdentityGroupId(string identity)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityGroupId"))
                 {
-                    command.AddParameter("identity", identification.Identity);
+                    command.AddParameter("identity", identity);
                     return context.ExecuteScalar<long?>(command);
                 }
             }
+        }
+
+        public long? GetGroupId(IIdentification identification)
+        {
+            return GetIdentityGroupId(identification.Identity);
         }
 
         public Group GetGroup(IIdentification identification)

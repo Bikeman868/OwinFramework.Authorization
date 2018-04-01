@@ -1,6 +1,7 @@
 ﻿import 'dart:async';
 import '../MVVM/Mvvm.dart';
 import '../Server.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../Models/GroupModel.dart';
 
 class GroupViewModel extends ViewModel
@@ -11,7 +12,9 @@ class GroupViewModel extends ViewModel
 
 	int id;
 
-	GroupViewModel([GroupModel model])
+	AuthorizationViewModel _authorizationViewModel;
+
+	GroupViewModel(this._authorizationViewModel,[GroupModel model])
 	{
 		codeName = new StringBinding();
 		displayName = new StringBinding();

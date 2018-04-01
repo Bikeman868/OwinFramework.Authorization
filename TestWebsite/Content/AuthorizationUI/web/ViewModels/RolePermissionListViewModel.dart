@@ -1,4 +1,5 @@
 ﻿import '../MVVM/Mvvm.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../ViewModels/RolePermissionViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
 import '../ViewModels/PermissionListViewModel.dart';
@@ -9,19 +10,17 @@ class RolePermissionListViewModel extends ViewModel
 {
   ModelList<ParentChildModel, RolePermissionViewModel> rolePermissions;
 
-	RoleListViewModel _roleListViewModel;
-	PermissionListViewModel _permissionListViewModel;
+	AuthorizationViewModel _authorizationViewModel;
 
 	RolePermissionListViewModel(
-		this._roleListViewModel,
-		this._permissionListViewModel,
+		this._authorizationViewModel,
 		[
 			List<ParentChildModel> rolePermissionModels
 		]): super(false)
 	{
 		rolePermissions = new ModelList<ParentChildModel, RolePermissionViewModel>(
 			(Map json) => new ParentChildModel(json),
-			(ParentChildModel m) => new RolePermissionViewModel(_roleListViewModel, _permissionListViewModel, m));
+			(ParentChildModel m) => new RolePermissionViewModel(_authorizationViewModel, m));
 
 		if (rolePermissionModels == null)
 			reload();

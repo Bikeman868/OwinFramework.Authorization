@@ -1,16 +1,23 @@
 ﻿import '../MVVM/Mvvm.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../ViewModels/IdentityViewModel.dart';
 import '../Models/IdentityModel.dart';
 
 class IdentityListViewModel extends ViewModel
 {
-    ModelList<IdentityModel, IdentityViewModel> identities;
+  ModelList<IdentityModel, IdentityViewModel> identities;
 
-	IdentityListViewModel([List<IdentityModel> identityModels]): super(false)
+	AuthorizationViewModel _authorizationViewModel;
+
+	IdentityListViewModel(
+		this._authorizationViewModel,
+		[
+			List<IdentityModel> identityModels
+		]): super(false)
 	{
 		identities = new ModelList<IdentityModel, IdentityViewModel>(
 			(Map json) => new IdentityModel(null),
-			(IdentityModel m) => new IdentityViewModel(m));
+			(IdentityModel m) => new IdentityViewModel(_authorizationViewModel, m));
 
 			models = identityModels;
 	}

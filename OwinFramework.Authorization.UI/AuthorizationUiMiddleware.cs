@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Owin;
@@ -19,7 +17,11 @@ using OwinFramework.MiddlewareHelpers.EmbeddedResources;
 
 namespace OwinFramework.Authorization.UI
 {
-    public class AuthorizationUiMiddleware:
+    /// <summary>
+    /// This middleware handles requests for static files that comprise the authorization UI.
+    /// These static files are embedded into the assembly to simplify installation and deployment.
+    /// </summary>
+    public class AuthorizationUiMiddleware :
         IMiddleware<object>,
         IRoutingProcessor,
         ITraceable,

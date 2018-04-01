@@ -1,4 +1,5 @@
 ﻿import '../MVVM/Mvvm.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../ViewModels/PermissionListViewModel.dart';
 import '../ViewModels/RoleListViewModel.dart';
 import '../ViewModels/PermissionViewModel.dart';
@@ -7,25 +8,28 @@ import '../Models/ParentChildModel.dart';
 
 class RolePermissionViewModel extends ViewModel
 {
-    StringBinding roleCodeName;
-    StringBinding roleDisplayName;
-    StringBinding roleDescription;
+	StringBinding roleCodeName;
+	StringBinding roleDisplayName;
+	StringBinding roleDescription;
 
-    StringBinding permissionCodeName;
-    StringBinding permissionDisplayName;
-    StringBinding permissionDescription;
-    StringBinding permissionResource;
+	StringBinding permissionCodeName;
+	StringBinding permissionDisplayName;
+	StringBinding permissionDescription;
+	StringBinding permissionResource;
 
+	AuthorizationViewModel _authorizationViewModel;
 	RoleListViewModel _roleListViewModel;
 	PermissionListViewModel _permissionListViewModel;
 
 	RolePermissionViewModel(
-		this._roleListViewModel,
-		this._permissionListViewModel,
+		this._authorizationViewModel,
 		[
 			ParentChildModel model
 		])
 	{
+		_roleListViewModel = _authorizationViewModel.roleList;
+		_permissionListViewModel = _authorizationViewModel.permissionList;
+
 		roleCodeName = new StringBinding();
 		roleDisplayName = new StringBinding();
 		roleDescription = new StringBinding();

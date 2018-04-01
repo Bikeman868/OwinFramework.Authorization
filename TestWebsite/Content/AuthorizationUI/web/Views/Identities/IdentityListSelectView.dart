@@ -5,6 +5,7 @@ import '../../Events/AppEvents.dart';
 import '../../Models/IdentityModel.dart';
 import '../../ViewModels/IdentityViewModel.dart';
 import '../../ViewModels/IdentityListViewModel.dart';
+import '../../ViewModels/AuthorizationViewModel.dart';
 
 import 'IdentityNameView.dart';
 
@@ -14,7 +15,9 @@ class IdentityListSelectView extends View
 	InputElement searchText;
 	Element _resultContainer;
 
-	IdentityListSelectView([IdentityListViewModel viewModel])
+	AuthorizationViewModel _authorizationViewModel;
+
+	IdentityListSelectView(this._authorizationViewModel, [IdentityListViewModel viewModel])
 	{
 		addBlockText(
 			'Search for users by entering some search text below.', 
@@ -49,7 +52,7 @@ class IdentityListSelectView extends View
 			.then((identityModels)
 			{
 				_resultContainer.hidden = false;
-				this.viewModel = new IdentityListViewModel(identityModels);
+				this.viewModel = new IdentityListViewModel(_authorizationViewModel, identityModels);
 			});
 		}
 	}

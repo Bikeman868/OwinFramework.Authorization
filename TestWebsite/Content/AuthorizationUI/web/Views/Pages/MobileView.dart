@@ -53,7 +53,7 @@ class MobileView extends PageView
 
 	_displayIdentities()
 	{
-		displayIdentityList(null, _navRegion);
+		displayIdentityList(_viewModel, null, _navRegion);
 	}
 
 	_displayGroups()

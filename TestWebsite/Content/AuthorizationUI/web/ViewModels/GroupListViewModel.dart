@@ -1,6 +1,7 @@
 ﻿import 'dart:async';
 import '../MVVM/Mvvm.dart';
 import '../ViewModels/GroupViewModel.dart';
+import '../ViewModels/AuthorizationViewModel.dart';
 import '../Models/GroupModel.dart';
 import '../Models/ApiResponseModel.dart';
 import '../Server.dart';
@@ -9,14 +10,16 @@ class GroupListViewModel extends ViewModel
 {
     ModelList<GroupModel, GroupViewModel> groups;
 
-	GroupListViewModel([List<GroupModel> groupModels]): super(false)
+	AuthorizationViewModel _authorizationViewModel;
+
+	GroupListViewModel(this._authorizationViewModel,[List<GroupModel> groupModels]): super(false)
 	{
 		groups = new ModelList<GroupModel, GroupViewModel>(
 			(Map json) => new GroupModel(null)
 				..codeName = '[unique_code_name]'
 				..displayName = '[display_name]'
 				..description = '[description]',
-			(GroupModel m) => new GroupViewModel(m));
+			(GroupModel m) => new GroupViewModel(_authorizationViewModel, m));
 
 		if (groupModels == null)
 			reload();

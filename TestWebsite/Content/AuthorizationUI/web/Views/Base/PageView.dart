@@ -141,12 +141,13 @@ class PageView extends View
 	IdentityListSelectView _identityListView;
 
 	displayIdentityList(
+		AuthorizationViewModel authorizationViewModel, 
 		IdentityListViewModel identityListViewModel, 
 		Element container)
 	{
 		if (_identityListView == null)
 		{
-			_identityListView = new IdentityListSelectView(identityListViewModel);
+			_identityListView = new IdentityListSelectView(authorizationViewModel, identityListViewModel);
 		}
 		else
 		{
