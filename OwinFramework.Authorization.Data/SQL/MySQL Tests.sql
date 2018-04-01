@@ -77,7 +77,7 @@ CALL sp_AddGroupRole(@group_cs, @role_cs); -- CS manager has the 'cs' role
 CALL sp_ChangeIdentityGroup('urn:identity:baltmzbu1uypqajj1n9dv87m6v', @group_cs_manager);
 CALL sp_ChangeIdentityGroup('urn:identity:bb7m2ss1hi858bwgc111h3zk1o', @group_cs);
 CALL sp_ChangeIdentityGroup('urn:identity:bcw1qpn09prjmdnvnwdht1hcge', @group_cs);
-CALL sp_ChangeIdentityGroup('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh', @group_cs);
+CALL sp_ChangeIdentityGroup('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh', 1);
 
 /************************************************************/
 
@@ -120,6 +120,13 @@ CALL sp_GetIdentity('urn:identity:bcw1qpn09prjmdnvnwdht1hcge');
 CALL sp_GetIdentity('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh');
 CALL sp_GetIdentity('annonymous@domain');
 CALL sp_GetIdentity('urn:identity:bhsmp4h51ha8bcywxqhba1rvn6');
+
+CALL sp_ChangeIdentityGroup('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh', NULL);
+CALL sp_GetIdentity('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh');
+CALL sp_ChangeIdentityGroup('urn:identity:bcxc0ermlshfxa3tmstwyyzvbh', 1);
+
+
+SELECT * FROM tbl_identity_groups;
 
 /************************************************************/
 

@@ -27,9 +27,10 @@ class IdentityDisplayView extends View
 		[IdentityViewModel viewModel])
 	{
 		addBlockText(
-			'<p>An <b>Identity</b> is someone or something that is allowed access to the system. ' +
-			'Identities can have have one or more ways to identify themselves to the system, including logging in with credentials. ' +
-			'Identities are assigned to a group, this determines their roles.</p>',
+			'<p>An <b>Identity</b> is someone or something that is allowed access to the system. These identities '+
+			'are managed by the Identification System, but some information from that system is displayed here for convenience.</p>' +
+			'<p>Within this Authorization System identities are assigned to a group and this determines their roles. ' +
+			'Assigning an identity to a group is the only thing that you can do with identities in this system.</p>',
 			className: 'help-note');
 
 		var form = addForm();
@@ -41,9 +42,11 @@ class IdentityDisplayView extends View
 		
 		addBlockText(
 			'<p><b>Claims</b> are additional information about the identity. Some of this information ' +
-			'is provided by the identity, some is manually entered into this UI, and some is captured ' +
-			'by the system automatically. The status of each claim indicates whether the claim was just ' +
-			'made by the identity, or whether is was validated manually, or by some system process.</p>',
+			'is claimed by the identity (for example a user can claim that their first name is Martin), ' +
+			'some claims are manually entered into the Identification System, and some claims are captured '+
+			'by the system automatically (for example the originalting IP address).</p>'+
+			'<p>The status of each claim indicates whether the claim was made by the identity, or '+
+			'whether is was validated. Validation can be manual, or by some system process.</p>',
 			className: 'help-note');
 
 		var claimTableHeading = addDiv(className: 'tr', parent: addDiv(className: 'table'));
@@ -60,6 +63,11 @@ class IdentityDisplayView extends View
 		_groupNameBinding = new BoundLabel<String>(
 			addHeading(3, 'Identity group membership', parent: _groupPanel), 
 			formatMethod: (s) => 'Belongs to the ' + s + ' group');
+
+		addBlockText(
+			'<p>These are details of the Group that this identity is currently assigned to.</p>',
+			className: 'help-note',
+			parent: _groupPanel);
 
 		_groupView = new GroupDisplayView(_authorizationViewModel.groupRoleList);
 		_groupView.addTo(_groupPanel);

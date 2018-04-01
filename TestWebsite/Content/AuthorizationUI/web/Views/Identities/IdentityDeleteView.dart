@@ -1,19 +1,21 @@
 ﻿import '../../MVVM/Mvvm.dart';
+import '../../Server.dart';
+import '../../Models/ApiResponseModel.dart';
 import '../../ViewModels/IdentityViewModel.dart';
-import '../../ViewModels/IdentityListViewModel.dart';
 import '../../Views/Base/EditView.dart';
 
 class IdentityDeleteView extends EditView
 {
-	BoundLabel<String> _displayNameBinding;
+	BoundLabel<String> _identityBinding;
 
 	IdentityDeleteView([IdentityViewModel viewModel])
 	{
-		_displayNameBinding = new BoundLabel<String>(
+		_identityBinding = new BoundLabel<String>(
 			addDiv(),
 			formatMethod: (s) => 
-				'<p>Are you sure you want to delete the "' + s +
-				'" identity.</p><p>Deleting this identity will prevent it from accessing the system.</p>');
+				'<p>Are you sure you want to delete the "' + s + '" identity from the authorization system.</p>' +
+				'<p>Deleting this identity from this Authorization System will remove any permissions assigned to it, and give it the same level of access as public users.</p>' +
+				'<p><i>Note that this will not delete anything from the Identification System; the claims, credentials and other information that is managed by the Identification System will not be deleted</i></p>');
 
 		this.viewModel = viewModel;
 	}
@@ -21,30 +23,28 @@ class IdentityDeleteView extends EditView
 	IdentityViewModel _viewModel;
 	IdentityViewModel get viewModel => _viewModel;
 
-	IdentityListViewModel _identityListViewModel;
-
 	void set viewModel(IdentityViewModel value)
 	{
 		_viewModel = value;
 		if (value == null)
 		{
-			_displayNameBinding.binding = null;
+			_identityBinding.binding = null;
 		}
 		else
 		{
-			_displayNameBinding.binding = value.displayName;
+			_identityBinding.binding = value.identity;
 		}
 	}
 
 	void deleteRecord(void onSuccess())
 	{
-		_identityListViewModel.identities.deleteViewModel(_viewModel);
+		if (_viewModel == null) return;
 
-		_identityListViewModel
-			.save()
-			.then((SaveResult result)
+		Server
+			.deleteIdentity(_viewModel.identity.getter())
+			.then((ApiResponseModel response)
 				{
-					if (result == SaveResult.saved)
+					if (response.isSuccess)
 						onSuccess();
 				});
 	}

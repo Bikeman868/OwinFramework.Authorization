@@ -56,7 +56,8 @@ namespace OwinFramework.Authorization.Data.Interfaces
         bool IsInRole(IIdentification identification, string roleCodeName);
         bool HasPermission(IIdentification identification, string permissionCodeName, string resourceName);
 
-        Group ChangeGroup(IIdentification identification, long groupId);
+        long? FindGroup(IIdentification identification);
+        Group ChangeGroup(IIdentification identification, long? groupId);
 
         void AddRoleToGroup(long roleId, long groupId);
         void AddPermissionToRole(long permissionId, long roleId);

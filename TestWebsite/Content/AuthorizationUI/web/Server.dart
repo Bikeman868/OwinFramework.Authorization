@@ -487,25 +487,10 @@ static Future<ConfigurationModel> getConfiguration() async
 			.catchError((e) => handleError(e.target, action));
 	}
 
-	static Future<NewIdentityResponseModel> createIdentity(IdentityModel identity) async
-	{
-		var request = await HttpRequest.request(
-			_apiUrl + '/identities', 
-			method: 'POST',
-			sendData: JSON.encode(identity.json),
-			mimeType: 'application/json');
-
-		if (request.status != 200)
-			throw 'Failed to create identity ' + request.statusText;
-
-		Map json = JSON.decode(request.responseText);
-		return new NewIdentityResponseModel(json);
-	}
-  
 	static Future<ApiResponseModel> updateIdentity(IdentityModel identity) async
 	{
 		var request = await HttpRequest.request(
-			_apiUrl + '/identity/' + identity.identity.toString(), 
+			_apiUrl + '/identity?identity=' + identity.identity, 
 			method: 'PUT',
 			sendData: JSON.encode(identity.json),
 			mimeType: 'application/json');
@@ -520,7 +505,7 @@ static Future<ConfigurationModel> getConfiguration() async
 	static Future<ApiResponseModel> deleteIdentity(String identity) async
 	{
 		var request = await HttpRequest.request(
-			_apiUrl + '/identity/' + identity, 
+			_apiUrl + '/identity?identity=' + identity, 
 			method: 'DELETE',
 			mimeType: 'application/json');
 

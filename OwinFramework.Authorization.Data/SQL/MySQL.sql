@@ -267,17 +267,26 @@ CREATE PROCEDURE `sp_ChangeIdentityGroup`
 )
 DETERMINISTIC
 BEGIN
-	REPLACE INTO 
-		`tbl_identity_groups`
-	(
-		`groupId`,
-		`identity`
-	) VALUES (
-		`groupId`,
-		`identity`
-	);
-	
-	CALL sp_GetGroup(`groupId`);	
+   IF `groupId` IS NULL THEN
+   	DELETE 
+   		i
+		FROM
+			`tbl_identity_groups` i
+		WHERE
+		   i.`identity` = `identity`;	
+   ELSE
+		REPLACE INTO 
+			`tbl_identity_groups`
+		(
+			`groupId`,
+			`identity`
+		) VALUES (
+			`groupId`,
+			`identity`
+		);
+		
+		CALL sp_GetGroup(`groupId`);	
+	END IF;
 END//
 DELIMITER ;
 

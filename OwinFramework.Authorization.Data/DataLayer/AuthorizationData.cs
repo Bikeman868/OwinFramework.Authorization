@@ -145,7 +145,13 @@ namespace OwinFramework.Authorization.Data.DataLayer
             _identityGroupIds = new Dictionary<string, long>();
         }
 
-        private IdentityGroup FindGroup(IIdentification identification)
+        public long? FindGroup(IIdentification identification)
+        {
+            var group = FindIdentityGroup(identification);
+            return group == null ? (long?)null : group.GroupId;
+        }
+
+        private IdentityGroup FindIdentityGroup(IIdentification identification)
         {
             var groupId = (long?)null;
 
@@ -188,7 +194,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public void GetIdentity(IIdentification identification, out Group group, out List<string> roles, out List<string> permissions)
         {
-            var identityGroup = FindGroup(identification);
+            var identityGroup = FindIdentityGroup(identification);
 
             group = GetGroup(identityGroup.GroupId);
 
@@ -203,7 +209,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public bool IsInRole(IIdentification identification, string roleCodeName)
         {
-            var group = FindGroup(identification);
+            var group = FindIdentityGroup(identification);
             if (group == null) return false;
 
             var internedRoleName = string.Intern(roleCodeName.ToLower());
@@ -218,7 +224,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public bool HasPermission(IIdentification identification, string permissionCodeName, string resourceName)
         {
-            var group = FindGroup(identification);
+            var group = FindIdentityGroup(identification);
             if (group == null) return false;
 
             if (group.GroupId == _administratorsGroupId) return true;
@@ -738,7 +744,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public Group ChangeGroup(IIdentification identification, long groupId)
+        public Group ChangeGroup(IIdentification identification, long? groupId)
         {
             try
             {

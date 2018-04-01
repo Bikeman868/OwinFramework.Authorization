@@ -123,7 +123,7 @@ class IdentityViewModel extends ViewModel
 			if (response.isSuccess)
 			{
 				result = SaveResult.saved;
-				// alertMessage = 'Changes to "' + model.displayName + '" group successfully saved';
+				// alertMessage = 'Changes to "' + model.displayName + '" identity successfully saved';
 			}
 			else
 			{
@@ -133,18 +133,8 @@ class IdentityViewModel extends ViewModel
 		}
 		else if (state == ChangeState.added)
 		{
-			var response = await Server.createIdentity(model);
-			if (response.isSuccess)
-			{
-				_model.identity = response.id;
-				result = SaveResult.saved;
-				alertMessage = 'New identity "' + model.identity + '" successfully added';
-			}
-			else
-			{
-				result = SaveResult.failed;
-				alertMessage = 'New identity "' + model.identity + '" was not added. ' + response.error;
-			}
+			result = SaveResult.failed;
+			alertMessage = 'You can not add identities here, identities are managed by the Identification System';
 		}
 		else if (state == ChangeState.deleted)
 		{

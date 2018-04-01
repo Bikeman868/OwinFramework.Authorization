@@ -28,6 +28,15 @@ class IdentityListSelectView extends View
 		addInlineText('&nbsp;', parent: _formContainer);
 		addButton('Search', (MouseEvent e) => search(), parent: _formContainer);
 
+		searchText.onKeyUp.listen((KeyboardEvent e)
+		{
+			if (e.keyCode == 13)
+			{
+				e.preventDefault();
+				search();
+			}
+		});
+
 		_resultContainer = addContainer();
 		_resultContainer.hidden = true;
 
@@ -53,6 +62,10 @@ class IdentityListSelectView extends View
 			{
 				_resultContainer.hidden = false;
 				this.viewModel = new IdentityListViewModel(_authorizationViewModel, identityModels);
+				if (this.viewModel.identities.viewModels.length > 0)
+				{
+					AppEvents.identitySelected.raise(new IdentitySelectedEvent(this.viewModel.identities.viewModels.first));
+				}
 			});
 		}
 	}

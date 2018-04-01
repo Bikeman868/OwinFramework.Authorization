@@ -173,14 +173,7 @@ namespace OwinFramework.Authorization.UI
             }
             else if (context.Request.Method == "POST")
             {
-                if (path.StartsWithSegments(_identityListPath))
-                {
-                    apiContext.Handler = NewIdentityHandler;
-                    if (upstreamAuthorization != null)
-                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditIdentity);
-                    Trace(context, () => GetType().Name + " routing request to POST new identity handler");
-                }
-                else if (path.StartsWithSegments(_groupListPath))
+                if (path.StartsWithSegments(_groupListPath))
                 {
                     apiContext.Handler = NewGroupHandler;
                     if (upstreamAuthorization != null)
@@ -225,6 +218,13 @@ namespace OwinFramework.Authorization.UI
             }
             else if (context.Request.Method == "PUT")
             {
+                if (path.StartsWithSegments(_identityPath))
+                {
+                    apiContext.Handler = UpdateIdentityHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignUserToGroup);
+                    Trace(context, () => GetType().Name + " routing request to PUT identity group handler");
+                }
                 if (path.StartsWithSegments(_groupPath))
                 {
                     apiContext.Handler = UpdateGroupHandler;
@@ -249,7 +249,14 @@ namespace OwinFramework.Authorization.UI
             }
             else if (context.Request.Method == "DELETE")
             {
-                if (path.StartsWithSegments(_groupPath))
+                if (path.StartsWithSegments(_identityPath))
+                {
+                    apiContext.Handler = DeleteIdentityHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignUserToGroup);
+                    Trace(context, () => GetType().Name + " routing request to DELETE identity handler");
+                }
+                else if (path.StartsWithSegments(_groupPath))
                 {
                     apiContext.Handler = DeleteGroupHandler;
                     if (upstreamAuthorization != null)
@@ -343,7 +350,7 @@ namespace OwinFramework.Authorization.UI
             response.Identities = searchResult.Identities.Select(i => new IdentityDto
             {
                 Identity = i.Identity,
-                GroupId = _authorizationData.GetIdentityGroupId(i.Identity),
+                GroupId = _authorizationData.FindGroup(new Identification(i.Identity, null, false)),
                 Claims = i.Claims.Select(c => new ClaimDto
                 {
                     Name = c.Name,
@@ -403,37 +410,38 @@ namespace OwinFramework.Authorization.UI
 
             return Json(context, response);
         }
-        
-        private Task NewIdentityHandler(IOwinContext context)
+
+        private Task UpdateIdentityHandler(IOwinContext context)
         {
-            var response = new NewIdentityResponse
+            var response = new ApiResponse();
+            var identityDto = GetBody<IdentityDto>(context);
+
+            if (string.IsNullOrEmpty(identityDto.Identity))
             {
-                Identity = GetBody<IdentityDto>(context)
-            };
-
-            try
-            {
-                response.Identity.Identity = _identityDirectory.CreateIdentity();
-
-                if (response.Identity.Claims != null)
-                {
-                    foreach (var claimDto in response.Identity.Claims)
-                    {
-                        _identityDirectory.UpdateClaim(response.Identity.Identity, claimDto);
-                    }
-                }
-
-                if (response.Identity.GroupId.HasValue)
-                {
-                    var identification = new Identification { Identity = response.Identity.Identity };
-                    _authorizationData.ChangeGroup(identification, response.Identity.GroupId.Value);
-                }
+                response.Result = ApiResult.BadRequest;
+                response.ErrorMessage = "No identity was specified in the request body";
+                return Json(context, response);
             }
-            catch (Exception ex)
+
+            _authorizationData.ChangeGroup(new Identification { Identity = identityDto.Identity }, identityDto.GroupId);
+
+            return Json(context, response);
+        }
+
+        private Task DeleteIdentityHandler(IOwinContext context)
+        {
+            var response = new ApiResponse();
+
+            var identity = context.Request.Query["identity"];
+
+            if (string.IsNullOrEmpty(identity))
             {
-                response.Result = ApiResult.FatalError;
-                response.ErrorMessage = "Failed to add identity: " + ex.Message;
+                response.Result = ApiResult.BadRequest;
+                response.ErrorMessage = "No identity was specified in the query string";
+                return Json(context, response);
             }
+
+            _authorizationData.ChangeGroup(new Identification { Identity = identity }, null);
 
             return Json(context, response);
         }
