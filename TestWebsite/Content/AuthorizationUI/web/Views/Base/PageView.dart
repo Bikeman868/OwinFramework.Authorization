@@ -245,7 +245,7 @@ class PageView extends View
 			_identityView = new EditableView(
 				'Identity',
 				new IdentityDisplayView(authorizationViewModel, identityViewModel),
-				new IdentityEditView(identityViewModel),
+				new IdentityEditView(authorizationViewModel, identityViewModel),
 				new IdentityDeleteView(identityViewModel));
 		}
 		else

@@ -11,8 +11,10 @@ class RoleEditView extends EditView
 
 	RoleEditView([RoleViewModel viewModel])
 	{
+		// This form is shared between the New and Edit pages
 		var formView = merge(new RoleEditFormView()) as RoleEditFormView;
 
+		// Bind the merged formView view with the view model
 		_displayNameBinding = new BoundTextInput<String>(formView.displayName);
 		_descriptionBinding = new BoundTextArea<String>(formView.description);
 		_codeNameBinding = new BoundTextInput<String>(formView.codeName);
@@ -42,7 +44,12 @@ class RoleEditView extends EditView
 
 	void saveEdits(void onSuccess())
 	{
-		_viewModel.save();
-		onSuccess();
+		_viewModel
+			.save()
+			.then((SaveResult result)
+			{
+				if (result == SaveResult.saved)
+					onSuccess();
+			});
 	}
 }

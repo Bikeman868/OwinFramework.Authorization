@@ -42,7 +42,12 @@ class GroupEditView extends EditView
 
 	void saveEdits(void onSuccess())
 	{
-		_viewModel.save();
-		onSuccess();
+		_viewModel
+			.save()
+			.then((SaveResult result)
+			{
+				if (result == SaveResult.saved)
+					onSuccess();
+			});
 	}
 }
