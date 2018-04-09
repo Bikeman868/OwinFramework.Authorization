@@ -67,7 +67,7 @@ class GroupDropdownSelectView extends View
 			if (groupViewModel != null)
 				groupId = groupViewModel.id;
 
-			_groupIdBinding.setter(groupId);
+			_groupIdBinding.setPropertyValue(groupId);
 		}
 
 		if (onGroupChanged != null)

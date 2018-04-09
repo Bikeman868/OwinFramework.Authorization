@@ -24,30 +24,35 @@ class PropertyBinding<T>
 	FormatFunction<T> get formatter => _formatter;
 	ParseFunction<T> get parser => _parser;
 
+  // Specifies how to get the current value of the bound value
 	void set getter (PropertyGetFunction<T> value)
 	{
 		_getter = value;
 		_broadcastChange();
 	}
 
+	// Specifies how to save changes to the bound balue
 	void set setter (PropertySetFunction<T> value)
 	{
 		_setter = value;
 		_broadcastChange();
 	}
 
+	// Specifies how to format type T as a string
 	void set formatter (FormatFunction<T> value)
 	{
 		_formatter = value;
 		_broadcastChange();
 	}
 
+	// Specifies how to parse a string to type T
 	void set parser (ParseFunction<T> value)
 	{
 		_parser = value;
 		_broadcastChange();
 	}
 
+	// Gets the bound value as a formatted string
 	String getProperty()
 	{
 		if (getter == null || formatter == null)
@@ -57,7 +62,8 @@ class PropertyBinding<T>
 		_value = formatter(value);
 		return _value;
 	}
-  
+
+	// Parses a string into the bound value
 	bool setProperty(String text)
 	{
 		if (parser == null)
@@ -68,10 +74,20 @@ class PropertyBinding<T>
     
 		T value = parser(text);
     
+		if (setPropertyValue(value))
+		{
+			_value = text;
+			return true;
+		}
+
+		return false;
+	}
+  
+	// Changes the bound value and broadcasts the change to observers
+	bool setPropertyValue(T value)
+	{
 		if (value == null)
 			return false;
-
-		_value = text;
 
 		if (setter != null)
 			setter(value);

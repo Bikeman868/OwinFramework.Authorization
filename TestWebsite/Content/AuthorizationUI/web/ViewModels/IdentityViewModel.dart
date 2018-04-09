@@ -5,15 +5,17 @@ import '../Models/IdentityModel.dart';
 import '../Models/ClaimModel.dart';
 import '../ViewModels/ClaimViewModel.dart';
 import '../ViewModels/AuthorizationViewModel.dart';
+import '../ViewModels/GroupViewModel.dart';
 
 class IdentityViewModel extends ViewModel
 {
-    StringBinding identity;
-		IntBinding groupId;
-    StringBinding displayName;
-	  ModelList<ClaimModel, ClaimViewModel> claims;
+	StringBinding identity;
+	IntBinding groupId;
+	StringBinding displayName;
+	ViewModelBinding<GroupViewModel, int> group;
+	ModelList<ClaimModel, ClaimViewModel> claims;
 
-		AuthorizationViewModel _authorizationViewModel;
+	AuthorizationViewModel _authorizationViewModel;
 
 	IdentityViewModel(
 		this._authorizationViewModel,
@@ -24,6 +26,11 @@ class IdentityViewModel extends ViewModel
 		identity = new StringBinding();
 		groupId = new IntBinding();
 		displayName = new StringBinding();
+
+		group = new ViewModelBinding<GroupViewModel, int>(
+			groupId,
+			(int groupId) => _authorizationViewModel.groupList.groups.viewModels.firstWhere((g) => g.id == groupId, orElse: () => null),
+			(GroupViewModel group) => group.id);
 
 		claims = new ModelList<ClaimModel, ClaimViewModel>(
 			(Map json) => new ClaimModel(json),

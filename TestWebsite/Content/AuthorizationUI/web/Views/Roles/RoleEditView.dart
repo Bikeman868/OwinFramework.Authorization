@@ -52,4 +52,10 @@ class RoleEditView extends EditView
 					onSuccess();
 			});
 	}
+
+	void cancelEdits(void onSuccess())
+	{
+		_viewModel.reload();
+		onSuccess();
+	}
 }

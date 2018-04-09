@@ -81,42 +81,42 @@ class GroupRoleViewModel extends ViewModel
 			{
 				var vm  = groupViewModel();
 				if (vm == null) return '';
-				return vm.codeName.getter();
+				return vm.codeName.getProperty();
 			};
 
 			groupDisplayName.getter = ()
 			{
 				var vm  = groupViewModel();
 				if (vm == null) return '';
-				return vm.displayName.getter();
+				return vm.displayName.getProperty();
 			};
 
 			groupDescription.getter = ()
 			{
 				var vm  = groupViewModel();
 				if (vm == null) return '';
-				return vm.description.getter();
+				return vm.description.getProperty();
 			};
 
 			roleCodeName.getter = ()
 			{
 				var vm  = roleViewModel();
 				if (vm == null) return '';
-				return vm.codeName.getter();
+				return vm.codeName.getProperty();
 			};
 
 			roleDisplayName.getter = ()
 			{
 				var vm  = roleViewModel();
 				if (vm == null) return '';
-				return vm.displayName.getter();
+				return vm.displayName.getProperty();
 			};
 
 			roleDescription.getter = ()
 			{
 				var vm  = roleViewModel();
 				if (vm == null) return '';
-				return vm.description.getter();
+				return vm.description.getProperty();
 			};
 		}
 

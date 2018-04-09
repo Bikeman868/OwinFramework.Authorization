@@ -14,6 +14,9 @@ typedef void ViewModelUpdater<TM extends Model, TVM extends ViewModel>(TVM viewM
 typedef void ViewModelMethod<TVM extends ViewModel>(TVM viewModel);
 typedef TVM ViewModelGetter<TVM extends ViewModel>();
 
+typedef TVM ViewModelLookupFunction<TVM extends ViewModel, T>(T reference);
+typedef T ViewModelReferenceFunction<TVM extends ViewModel, T>(TVM viewModel);
+
 typedef Formatter(String text, Element container);
 
 typedef bool Filter<T>(T element);

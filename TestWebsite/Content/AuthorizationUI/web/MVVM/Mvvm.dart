@@ -13,6 +13,7 @@ part 'ViewModel.dart';
 
 part 'ModelList.dart';
 part 'PropertyBinding.dart';
+part 'ViewModelBinding.dart';
 part 'StringBinding.dart';
 part 'IntBinding.dart';
 
@@ -28,6 +29,7 @@ part 'BoundRepeater.dart';
 part 'BoundSelect.dart';
 part 'BoundTextArea.dart';
 part 'BoundTextInput.dart';
+part 'BoundView.dart';
 
 enum ChangeState
 {

@@ -7,14 +7,14 @@ import '../../ViewModels/IdentityViewModel.dart';
 import '../../ViewModels/ClaimViewModel.dart';
 import '../../ViewModels/GroupViewModel.dart';
 import '../../Views/Groups/GroupDisplayView.dart';
+import '../../Views/Groups/BoundGroupView.dart';
 import '../../Views/Identities/ClaimTableRowView.dart';
 
 class IdentityDisplayView extends View
 {
 	BoundLabel<String> _displayNameBinding;
 	BoundLabel<String> _identityBinding;
-	BoundLabel<String> _groupNameBinding;
-	GroupDisplayView _groupView;
+	BoundGroupView _groupViewBinding;
 
 	BoundRepeater<ClaimModel, ClaimViewModel, ClaimTableRowView> _claimListBinding;
 
@@ -60,17 +60,16 @@ class IdentityDisplayView extends View
 		_groupPanel = addContainer();
 
 		addHR(parent: _groupPanel);
-		_groupNameBinding = new BoundLabel<String>(
-			addHeading(3, 'Identity group membership', parent: _groupPanel), 
-			formatMethod: (s) => 'Belongs to the ' + s + ' group');
+		addHeading(3, 'Identity group membership', parent: _groupPanel);
 
 		addBlockText(
 			'<p>These are details of the Group that this identity is currently assigned to.</p>',
 			className: 'help-note',
 			parent: _groupPanel);
 
-		_groupView = new GroupDisplayView(_authorizationViewModel.groupRoleList);
-		_groupView.addTo(_groupPanel);
+		var groupView = new GroupDisplayView(_authorizationViewModel.groupRoleList);
+		groupView.addTo(_groupPanel);
+		_groupViewBinding = new BoundGroupView(groupView);
 
 		this.viewModel = viewModel;
 	}
@@ -85,56 +84,24 @@ class IdentityDisplayView extends View
 		{
 			_displayNameBinding.binding = null;
 			_identityBinding.binding = null;
-			_groupView.viewModel = null;
+			_groupViewBinding.binding = null;
 			_claimListBinding.binding = null;
+			_groupPanel.hidden = true;
 		}
 		else
 		{
 			_displayNameBinding.binding = identity.displayName;
 			_identityBinding.binding = identity.identity;
+			_groupViewBinding.binding = identity.group;
 			_claimListBinding.binding = identity.claims;
-
-		}
-
-		displayGroup();
-	}
-
-	displayGroup()
-	{
-		if (_viewModel == null)
-		{
-			_groupPanel.hidden = true;
-		}
-		else
-		{
-			int groupId = _viewModel.groupId.getter();
-
-			var groupViewModel = _authorizationViewModel.groupList.groups.viewModels.firstWhere(
-				(GroupViewModel group) => group.id == groupId, 
-				orElse: () => null);
-
-			if (groupViewModel == null)
-			{
-				_groupView.viewModel = null;
-				_groupNameBinding.binding = null;
-				_groupPanel.hidden = true;
-			}
-			else
-			{
-				_groupView.viewModel = groupViewModel;
-				_groupNameBinding.binding = groupViewModel.displayName;
-				_groupPanel.hidden = false;
-			}
+			_groupPanel.hidden = false;
 		}
 	}
 
 	reload()
 	{
 		if (_viewModel != null)
-		{
 			_viewModel.reload();
-			displayGroup();
-		}
 	}
 
 }
