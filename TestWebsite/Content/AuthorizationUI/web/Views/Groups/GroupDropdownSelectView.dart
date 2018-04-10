@@ -7,6 +7,7 @@ import '../../ViewModels/GroupListViewModel.dart';
 import 'GroupNameView.dart';
 
 // This is a drop down list control that allows the user to choose a group
+// Can be bound to a ViewModelBinding<GroupViewModel, int> to maintain sync
 
 class GroupDropdownSelectView extends View
 {
@@ -15,17 +16,26 @@ class GroupDropdownSelectView extends View
 	GroupDropdownSelectView(
 		[
 			GroupListViewModel groupList,
-			IntBinding groupIdBinding
+			ViewModelBinding<GroupViewModel, int> groupBinding
 		])
 	{
 		_groupSelector = new BoundSelect<GroupModel, GroupViewModel, GroupNameView>(
 			(vm) => new GroupNameView(vm), 
 			addDropdownList(),
-			(vm) => selectedGroup = vm,
+			(vm) 
+			{
+				_selectedGroup = vm;
+
+				if (_groupBinding != null)
+					_groupBinding.setViewModel(vm);
+
+				if (onGroupChanged != null)
+					onGroupChanged(vm);				
+			},
 			staticListItems: [new View()]);
 
 		this.groupList = groupList;
-		this.groupIdBinding = groupIdBinding;
+		this.groupBinding = groupBinding;
 	}
 
 	ViewModelMethod<GroupViewModel> onGroupChanged;
@@ -39,53 +49,51 @@ class GroupDropdownSelectView extends View
 		
 		if (value == null)
 		{
-			_groupSelector.listBbinding = null;
+			_groupSelector.listBinding = null;
 		}
 		else
 		{
-			_groupSelector.listBbinding = value.groups;
+			_groupSelector.listBinding = value.groups;
 		}
 	}
 
-	IntBinding _groupIdBinding;
-	IntBinding get groupIdBinding => _groupIdBinding;
-	StreamSubscription<String> _groupIdSubscription;
-
-	void set groupIdBinding(IntBinding intBinding)
+	// Set groupBinding to keep the selected value in the drop-down
+	// list synchronized with the group property of a view model
+	ViewModelBinding<GroupViewModel, int> _groupBinding;
+	ViewModelBinding<GroupViewModel, int> get groupBinding => _groupBinding;
+	StreamSubscription<GroupViewModel> _groupSubscription;
+	void set groupBinding(ViewModelBinding<GroupViewModel, int> viewModelBinding)
 	{
-		if (_groupIdSubscription != null)
+		if (_groupSubscription != null)
 		{
-			_groupIdSubscription.cancel();
-			_groupIdSubscription = null;
+			_groupSubscription.cancel();
+			_groupSubscription = null;
 		}
 
-		_groupIdBinding = intBinding;
+		_groupBinding = viewModelBinding;
 
-		// if (intBinding != null)
-		// {
-		// 	_groupIdSubscription = intBinding.onChange.listen((s)
-		// 	{
-		// 		var index = int.parse(s);
-		// 		_groupSelector.selectedIndex = index;
-		// 	});
-		// }
+		if (viewModelBinding == null)
+		{
+			selectedGroup = null;
+		}
+		else
+		{
+			_groupSubscription = viewModelBinding.onChange.listen((vm) => selectedGroup = vm);
+			selectedGroup = viewModelBinding.getViewModel();
+		}
 	}
 
+	// The selectedGroup property is for the use case where there is
+	// no binding to a group view model, instead you allow the user to choose
+	// a group then read the selectedGroup property to see which one 
+	// they selected. You can also set the selectedGroup property to
+	// change which group is currently selected in the drop-down list
 	GroupViewModel _selectedGroup;
 	GroupViewModel get selectedGroup => _selectedGroup;
-	
 	void set selectedGroup(GroupViewModel groupViewModel)
 	{
 		_selectedGroup = groupViewModel;
-
-		if (_groupIdBinding != null && _groupIdBinding.setter != null)
-		{
-			int groupId = 0;
-			if (groupViewModel != null)
-				groupId = groupViewModel.id;
-
-			_groupIdBinding.setPropertyValue(groupId);
-		}
+		_groupSelector.selectedViewModel = groupViewModel;
 
 		if (onGroupChanged != null)
 			onGroupChanged(groupViewModel);

@@ -5,7 +5,6 @@ import '../../Models/ClaimModel.dart';
 import '../../ViewModels/AuthorizationViewModel.dart';
 import '../../ViewModels/IdentityViewModel.dart';
 import '../../ViewModels/ClaimViewModel.dart';
-import '../../ViewModels/GroupViewModel.dart';
 import '../../Views/Groups/GroupDisplayView.dart';
 import '../../Views/Groups/BoundGroupView.dart';
 import '../../Views/Identities/ClaimTableRowView.dart';

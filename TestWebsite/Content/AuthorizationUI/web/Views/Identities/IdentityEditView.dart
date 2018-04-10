@@ -1,7 +1,6 @@
 ﻿import '../../MVVM/Mvvm.dart';
 import '../../ViewModels/IdentityViewModel.dart';
 import '../../ViewModels/AuthorizationViewModel.dart';
-import '../../ViewModels/GroupViewModel.dart';
 import '../../Views/Base/EditView.dart';
 import '../../Views/Identities/IdentityEditFormView.dart';
 import '../../Views/Groups/GroupDropdownSelectView.dart';
@@ -38,12 +37,12 @@ class IdentityEditView extends EditView
 		_viewModel = identityViewModel;
 		if (identityViewModel == null)
 		{
-			_groupSelector.groupIdBinding = null;
+			_groupSelector.groupBinding = null;
 			_groupView.binding = null;
 		}
 		else
 		{
-			_groupSelector.groupIdBinding = identityViewModel.groupId;
+			_groupSelector.groupBinding = identityViewModel.group;
 			_groupView.binding = identityViewModel.group;
 		}
 	}

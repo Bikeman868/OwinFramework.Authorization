@@ -104,7 +104,7 @@ class ViewModelBinding<TVM extends ViewModel, T>
 		return true;
 	}
 
-	void _boundPropertyChanged(String setPropertyValue)
+	void _boundPropertyChanged(String propertyValue)
 	{
 		_broadcastChange();
 	}

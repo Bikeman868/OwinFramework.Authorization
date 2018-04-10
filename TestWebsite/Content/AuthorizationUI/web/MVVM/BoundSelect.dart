@@ -3,6 +3,7 @@ part of mvvm;
 // Provides two-way binding of a list of view models to a drop-down list of views
 // * Generates <option> elements and adds them to a <select> container
 // * Wraps each view in a container that provides a list selection mechanism
+// * Selected option can be get/set as a view model
 
 class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 {
@@ -33,10 +34,10 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
     StreamSubscription<ListEvent> _deleteSubscription;
     StreamSubscription<ListEvent> _listChangedSubscription;
 
-    ModelList<TM, TVM> _listBbinding;
-    ModelList<TM, TVM> get listBbinding => _listBbinding;
+    ModelList<TM, TVM> _listBinding;
+    ModelList<TM, TVM> get listBinding => _listBinding;
 
-    void set listBbinding(ModelList<TM, TVM> value)
+    void set listBinding(ModelList<TM, TVM> value)
     {
         if (_addSubscription != null)
         {
@@ -54,7 +55,7 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 			_listChangedSubscription = null;
 		}
 
-        _listBbinding = value;
+        _listBinding = value;
 		refresh();
 
         if (value != null)
@@ -85,18 +86,18 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 			}
 		}
 
-        if (_listBbinding != null && _listBbinding.viewModels != null)
+        if (_listBinding != null && _listBinding.viewModels != null)
         {
-            for (var index = 0; index < _listBbinding.viewModels.length; index++)
+            for (var index = 0; index < _listBinding.viewModels.length; index++)
             {
-				var viewModel = _listBbinding.viewModels[index];
+				var viewModel = _listBinding.viewModels[index];
 				if ((showDeleted || viewModel.getState() != ChangeState.deleted) && 
 					(viewModelFilter == null || viewModelFilter(viewModel)))
 				{
 					var option = builder.addDropdownListElement(className:'bound-list-item');
 					option.value = index.toString();
 
-					var view = _viewFactory(_listBbinding.viewModels[index]);
+					var view = _viewFactory(_listBinding.viewModels[index]);
 					view.addTo(option);
 				}
             }
@@ -105,21 +106,17 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 		builder.displayIn(_container);
     }
 
-	void set selectedIndex(int index)
-	{
-		_container.value = index.toString();
-	}
-
 	void set selectedViewModel(TVM viewModel)
 	{
-		for (var index = 0; index < _listBbinding.viewModels.length; index++)
+		for (var index = 0; index < _listBinding.viewModels.length; index++)
 		{
-			if (_listBbinding.viewModels[index] == viewModel)
+			if (_listBinding.viewModels[index] == viewModel)
 			{
-				selectedIndex = index;
+				_container.value = index.toString();
 				return;
 			}
 		}
+		_container.value = '';
 	}
 
 	void _optionSelected(MouseEvent e)
@@ -132,7 +129,7 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 		else
 		{
 			int index = int.parse(selectedValue);
-			var viewModel = _listBbinding.viewModels[index];
+			var viewModel = _listBinding.viewModels[index];
 			_selectionMethod(viewModel);
 		}
 	}
