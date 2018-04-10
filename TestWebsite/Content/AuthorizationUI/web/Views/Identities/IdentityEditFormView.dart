@@ -1,15 +1,20 @@
-﻿import 'dart:html';
-
-import '../../MVVM/Mvvm.dart';
+﻿import '../../MVVM/Mvvm.dart';
 import '../../Views/Groups/GroupDropdownSelectView.dart';
+import '../../Views/Groups/GroupDisplayView.dart';
 import '../../ViewModels/GroupListViewModel.dart';
+import '../../ViewModels/GroupRoleListViewModel.dart';
 
 class IdentityEditFormView extends View
 {
 	GroupListViewModel _groupListViewModel;
-	GroupDropdownSelectView groupSelector;
+	GroupRoleListViewModel _groupRoleListViewModel;
 
-	IdentityEditFormView(this._groupListViewModel)
+	GroupDropdownSelectView groupSelector;
+	GroupDisplayView groupView;
+
+	IdentityEditFormView(
+		this._groupListViewModel,
+		this._groupRoleListViewModel)
 	{
 		addBlockText(
 			'<p>Identities are managed by the Identification System. The Identification System has a UI for ' +
@@ -23,5 +28,7 @@ class IdentityEditFormView extends View
 		addInlineText('Assign this identity to ', parent: selectDiv);
 		groupSelector = new GroupDropdownSelectView(_groupListViewModel);
 		groupSelector.addTo(selectDiv);
+
+		groupView = merge(new GroupDisplayView(_groupRoleListViewModel));
 	}
 }
