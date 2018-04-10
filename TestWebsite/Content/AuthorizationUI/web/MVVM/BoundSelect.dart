@@ -33,10 +33,10 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
     StreamSubscription<ListEvent> _deleteSubscription;
     StreamSubscription<ListEvent> _listChangedSubscription;
 
-    ModelList<TM, TVM> _binding;
-    ModelList<TM, TVM> get binding => _binding;
+    ModelList<TM, TVM> _listBbinding;
+    ModelList<TM, TVM> get listBbinding => _listBbinding;
 
-    void set binding(ModelList<TM, TVM> value)
+    void set listBbinding(ModelList<TM, TVM> value)
     {
         if (_addSubscription != null)
         {
@@ -54,7 +54,7 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 			_listChangedSubscription = null;
 		}
 
-        _binding = value;
+        _listBbinding = value;
 		refresh();
 
         if (value != null)
@@ -85,18 +85,18 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 			}
 		}
 
-        if (binding != null && binding.viewModels != null)
+        if (_listBbinding != null && _listBbinding.viewModels != null)
         {
-            for (var index = 0; index < binding.viewModels.length; index++)
+            for (var index = 0; index < _listBbinding.viewModels.length; index++)
             {
-				var viewModel = binding.viewModels[index];
+				var viewModel = _listBbinding.viewModels[index];
 				if ((showDeleted || viewModel.getState() != ChangeState.deleted) && 
 					(viewModelFilter == null || viewModelFilter(viewModel)))
 				{
 					var option = builder.addDropdownListElement(className:'bound-list-item');
 					option.value = index.toString();
 
-					var view = _viewFactory(binding.viewModels[index]);
+					var view = _viewFactory(_listBbinding.viewModels[index]);
 					view.addTo(option);
 				}
             }
@@ -104,6 +104,23 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 
 		builder.displayIn(_container);
     }
+
+	void set selectedIndex(int index)
+	{
+		_container.value = index.toString();
+	}
+
+	void set selectedViewModel(TVM viewModel)
+	{
+		for (var index = 0; index < _listBbinding.viewModels.length; index++)
+		{
+			if (_listBbinding.viewModels[index] == viewModel)
+			{
+				selectedIndex = index;
+				return;
+			}
+		}
+	}
 
 	void _optionSelected(MouseEvent e)
 	{
@@ -115,7 +132,7 @@ class BoundSelect<TM extends Model, TVM extends ViewModel, TV extends View>
 		else
 		{
 			int index = int.parse(selectedValue);
-			var viewModel = _binding.viewModels[index];
+			var viewModel = _listBbinding.viewModels[index];
 			_selectionMethod(viewModel);
 		}
 	}

@@ -46,7 +46,7 @@ class IdentityDisplayView extends View
 			'some claims are manually entered into the Identification System, and some claims are captured '+
 			'by the system automatically (for example the originalting IP address).</p>'+
 			'<p>The status of each claim indicates whether the claim was made by the identity, or '+
-			'whether is was validated. Validation can be manual, or by some system process.</p>',
+			'whether is was verified. Verification can be manual, or by some system process.</p>',
 			className: 'help-note');
 
 		var claimTableHeading = addDiv(className: 'tr', parent: addDiv(className: 'table'));

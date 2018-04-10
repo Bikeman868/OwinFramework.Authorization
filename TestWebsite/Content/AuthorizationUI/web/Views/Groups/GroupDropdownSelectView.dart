@@ -1,4 +1,5 @@
-﻿import '../../MVVM/Mvvm.dart';
+﻿import 'dart:async';
+import '../../MVVM/Mvvm.dart';
 import '../../Models/GroupModel.dart';
 import '../../ViewModels/GroupViewModel.dart';
 import '../../ViewModels/GroupListViewModel.dart';
@@ -38,20 +39,36 @@ class GroupDropdownSelectView extends View
 		
 		if (value == null)
 		{
-			_groupSelector.binding = null;
+			_groupSelector.listBbinding = null;
 		}
 		else
 		{
-			_groupSelector.binding = value.groups;
+			_groupSelector.listBbinding = value.groups;
 		}
 	}
 
 	IntBinding _groupIdBinding;
 	IntBinding get groupIdBinding => _groupIdBinding;
+	StreamSubscription<String> _groupIdSubscription;
 
 	void set groupIdBinding(IntBinding intBinding)
 	{
+		if (_groupIdSubscription != null)
+		{
+			_groupIdSubscription.cancel();
+			_groupIdSubscription = null;
+		}
+
 		_groupIdBinding = intBinding;
+
+		// if (intBinding != null)
+		// {
+		// 	_groupIdSubscription = intBinding.onChange.listen((s)
+		// 	{
+		// 		var index = int.parse(s);
+		// 		_groupSelector.selectedIndex = index;
+		// 	});
+		// }
 	}
 
 	GroupViewModel _selectedGroup;
