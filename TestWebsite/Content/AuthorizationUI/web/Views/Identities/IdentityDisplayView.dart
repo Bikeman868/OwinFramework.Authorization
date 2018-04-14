@@ -37,7 +37,7 @@ class IdentityDisplayView extends View
 		_identityBinding = new BoundLabel<String>(addLabeledField(form, 'Identity'));
 
 		addHR();
-		addHeading(3, 'Identity claims');
+		addHeading(3, 'Claims');
 		
 		addBlockText(
 			'<p><b>Claims</b> are additional information about the identity. Some of this information ' +
@@ -59,7 +59,7 @@ class IdentityDisplayView extends View
 		_groupPanel = addContainer();
 
 		addHR(parent: _groupPanel);
-		addHeading(3, 'Identity group membership', parent: _groupPanel);
+		addHeading(3, 'Group membership', parent: _groupPanel);
 
 		addBlockText(
 			'<p>These are details of the Group that this identity is currently assigned to.</p>',
