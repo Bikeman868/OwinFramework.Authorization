@@ -58,9 +58,11 @@ class AssignRolePermissionsView extends View
 
   void _removePermission(PermissionViewModel permission)
   {
+    _rolePermissions.revokePermission(permission);
   }
 
   void _addPermission(PermissionViewModel permission)
   {
+    _rolePermissions.grantPermission(permission);
   }
 }

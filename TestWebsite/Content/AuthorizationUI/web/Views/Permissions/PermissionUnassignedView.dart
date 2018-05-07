@@ -20,7 +20,7 @@ class PermissionUnassignedView extends View
     addButton('Add', _addButtonClick, parent: actionsDiv);
 
     var detailsDiv = addDiv(parent: listElement, className: 'details');
-		_displayNameBinding = new BoundLabel<String>(addSpan(parent: detailsDiv));
+		_displayNameBinding = new BoundLabel<String>(addSpan(parent: detailsDiv, className: 'data-field'));
 		_descriptionBinding = new BoundLabel<String>(addDiv(parent: detailsDiv));
     
 		this.viewModel = viewModel;

@@ -46,6 +46,18 @@ class RolePermissionsViewModel extends ViewModel
     reload();
   }
 
+  void grantPermission(PermissionViewModel permission)
+  {
+    assignedPermissions.addViewModel(permission);
+    otherPermissions.deleteViewModel(permission);
+  }
+
+  void revokePermission(PermissionViewModel permission)
+  {
+    assignedPermissions.deleteViewModel(permission);
+    otherPermissions.addViewModel(permission);
+  }
+
   bool _reloading = false;
 
 	void reload()
