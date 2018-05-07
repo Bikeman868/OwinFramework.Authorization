@@ -20,8 +20,8 @@ class RoleDisplayView extends View
 	BoundLabel<String> _nameBinding3;
 	BoundLabel<String> _nameBinding4;
 
-	BoundRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView> _groupListBinding;
-	BoundRepeater<ParentChildModel, RolePermissionViewModel, RolePermissionView> _permissionListBinding;
+	BoundModelListRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView> _groupListBinding;
+	BoundModelListRepeater<ParentChildModel, RolePermissionViewModel, RolePermissionView> _permissionListBinding;
 
 	GroupRoleListViewModel _groupRoleListViewModel;
 	RolePermissionListViewModel _rolePermissionListViewModel;
@@ -63,7 +63,7 @@ class RoleDisplayView extends View
 		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: groupTableHeader);
 		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: groupTableHeader);
 
-		_groupListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView>(
+		_groupListBinding = new BoundModelListRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView>(
 			(vm) => new RoleGroupView(vm), addDiv(className: 'table'))
 			..binding = _groupRoleListViewModel.groupRoles;
 
@@ -83,7 +83,7 @@ class RoleDisplayView extends View
 		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: permissionTableHeader);
 		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: permissionTableHeader);
 
-		_permissionListBinding = new BoundRepeater<ParentChildModel, RolePermissionViewModel, RolePermissionView>
+		_permissionListBinding = new BoundModelListRepeater<ParentChildModel, RolePermissionViewModel, RolePermissionView>
 			((vm) => new RolePermissionView(vm), addDiv(className: 'table'))
 			..binding = _rolePermissionListViewModel.rolePermissions;
 

@@ -11,7 +11,7 @@ import 'IdentityNameView.dart';
 
 class IdentityListSelectView extends View
 {
-	BoundList<IdentityModel, IdentityViewModel, IdentityNameView> _identitiesBinding;
+	BoundModelListList<IdentityModel, IdentityViewModel, IdentityNameView> _identitiesBinding;
 	InputElement searchText;
 	Element _resultContainer;
 
@@ -47,7 +47,7 @@ class IdentityListSelectView extends View
 			className: 'help-note',
 			parent: _resultContainer);
 
-		_identitiesBinding = new BoundList<IdentityModel, IdentityViewModel, IdentityNameView>(
+		_identitiesBinding = new BoundModelListList<IdentityModel, IdentityViewModel, IdentityNameView>(
 			(vm) => new IdentityNameView(vm), addList(parent: _resultContainer), allowAdd: false, allowRemove: false,
 			selectionMethod: (vm) => AppEvents.identitySelected.raise(new IdentitySelectedEvent(vm)));
 	}

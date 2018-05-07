@@ -15,7 +15,7 @@ class IdentityDisplayView extends View
 	BoundLabel<String> _identityBinding;
 	BoundGroupView _groupViewBinding;
 
-	BoundRepeater<ClaimModel, ClaimViewModel, ClaimTableRowView> _claimListBinding;
+	BoundModelListRepeater<ClaimModel, ClaimViewModel, ClaimTableRowView> _claimListBinding;
 
 	AuthorizationViewModel _authorizationViewModel;
 
@@ -53,7 +53,7 @@ class IdentityDisplayView extends View
 		addDiv(html:'Value', classNames: ['th', 'claim-value', 'claim'], parent: claimTableHeading);
 		addDiv(html:'Status', classNames: ['th', 'claim-status', 'claim'], parent: claimTableHeading);
 
-		_claimListBinding = new BoundRepeater<ClaimModel, ClaimViewModel, ClaimTableRowView>
+		_claimListBinding = new BoundModelListRepeater<ClaimModel, ClaimViewModel, ClaimTableRowView>
 			((vm) => new ClaimTableRowView(vm), addDiv(className: 'table'));
 
 		_groupPanel = addContainer();

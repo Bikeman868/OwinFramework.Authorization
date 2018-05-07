@@ -12,7 +12,7 @@ class PermissionDisplayView extends View
 	BoundLabel<String> _codeNameBinding;
 	BoundLabel<String> _resourceBinding;
 
-	BoundRepeater<ParentChildModel, RolePermissionViewModel, PermissionRoleView> _permissionListBinding;
+	BoundModelListRepeater<ParentChildModel, RolePermissionViewModel, PermissionRoleView> _permissionListBinding;
 
 	RolePermissionListViewModel _rolePermissionListViewModel;
 
@@ -53,7 +53,7 @@ class PermissionDisplayView extends View
 		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: permissionTableHeading);
 		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: permissionTableHeading);
 
-		_permissionListBinding = new BoundRepeater<ParentChildModel, RolePermissionViewModel, PermissionRoleView>
+		_permissionListBinding = new BoundModelListRepeater<ParentChildModel, RolePermissionViewModel, PermissionRoleView>
 			((vm) => new PermissionRoleView(vm), addDiv(className: 'table'))
 			..binding = _rolePermissionListViewModel.rolePermissions;
 

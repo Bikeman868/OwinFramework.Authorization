@@ -7,7 +7,7 @@ import '../../Views/Permissions/PermissionNameView.dart';
 
 class PermissionListEditView extends EditView
 {
-	BoundList<PermissionModel, PermissionViewModel, PermissionNameView> _permissionsBinding;
+	BoundModelListList<PermissionModel, PermissionViewModel, PermissionNameView> _permissionsBinding;
 
 	PermissionListEditView([PermissionListViewModel viewModel])
 	{
@@ -19,7 +19,7 @@ class PermissionListEditView extends EditView
 			'because they know which permissions the application is checking for.</p>',
 			className: 'help-note');
 
-		_permissionsBinding = new BoundList<PermissionModel, PermissionViewModel, PermissionNameView>(
+		_permissionsBinding = new BoundModelListList<PermissionModel, PermissionViewModel, PermissionNameView>(
 			(vm) => new PermissionNameView(vm), addList(), allowAdd: false);
 
 		this.viewModel = viewModel;

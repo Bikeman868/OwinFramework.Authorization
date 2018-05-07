@@ -7,7 +7,7 @@ import '../../Views/Roles/RoleNameView.dart';
 
 class RoleListEditView extends EditView
 {
-	BoundList<RoleModel, RoleViewModel, RoleNameView> _rolesBinding;
+	BoundModelListList<RoleModel, RoleViewModel, RoleNameView> _rolesBinding;
 
 	RoleListEditView([RoleListViewModel viewModel])
 	{
@@ -19,7 +19,7 @@ class RoleListEditView extends EditView
 			'because they know which roles the application is checking for.</p>',
 			className: 'help-note');
 
-		_rolesBinding = new BoundList<RoleModel, RoleViewModel, RoleNameView>(
+		_rolesBinding = new BoundModelListList<RoleModel, RoleViewModel, RoleNameView>(
 			(vm) => new RoleNameView(vm), addList(), allowAdd: false);
 
 		this.viewModel = viewModel;

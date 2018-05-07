@@ -13,7 +13,7 @@ class GroupDisplayView extends View
 
 	BoundLabel<String> _nameBinding1;
 
-	BoundRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView> _roleListBinding;
+	BoundModelListRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView> _roleListBinding;
 
 	GroupRoleListViewModel _groupRoleListViewModel;
 
@@ -51,7 +51,7 @@ class GroupDisplayView extends View
 		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: roleTableHeading);
 		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: roleTableHeading);
 
-		_roleListBinding = new BoundRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView>
+		_roleListBinding = new BoundModelListRepeater<ParentChildModel, GroupRoleViewModel, GroupRoleView>
 			((vm) => new GroupRoleView(vm), addDiv(className: 'table'))
 			..binding = _groupRoleListViewModel.groupRoles;
 

@@ -2,10 +2,9 @@
 
 // Creates tiles in a grid with one view inside each tile
 
-class BoundGrid<TM extends Model, TVM extends ViewModel, TV extends View> extends BoundContainer
+class BoundModelListGrid<TM extends Model, TVM extends ViewModel, TV extends View> extends BoundModelList
 {
-
-    BoundGrid(
+  BoundModelListGrid(
 		ViewFactory<TVM, TV> viewFactory,
 		Element gridContainer, 
 		{
@@ -16,22 +15,22 @@ class BoundGrid<TM extends Model, TVM extends ViewModel, TV extends View> extend
     {
     }
  
-    void initializeContainer(Element container)
-    {
-		container.classes.add('bound-grid');
-    }
+  void initializeContainer(Element container)
+  {
+    container.classes.add('bound-grid');
+  }
 
 	bool showDeleted;
   
-    void refresh()
-    {
-        if (container == null) return;
+  void refresh()
+  {
+    if (container == null) return;
 
 		var builder = new HtmlBuilder();
-        if (binding != null && binding.viewModels != null)
-        {
-            for (var index = 0; index < binding.viewModels.length; index++)
-            {
+    if (binding != null && binding.viewModels != null)
+    {
+      for (var index = 0; index < binding.viewModels.length; index++)
+      {
 				var viewModel = binding.viewModels[index];
 				if (showDeleted || viewModel.getState() != ChangeState.deleted)
 				{
@@ -45,8 +44,8 @@ class BoundGrid<TM extends Model, TVM extends ViewModel, TV extends View> extend
 
 					viewFactory(viewModel).addTo(tile);
 				}
-            }
-        }
-		builder.displayIn(container);
+      }
     }
+    builder.displayIn(container);
+  }
 }

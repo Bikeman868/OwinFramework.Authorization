@@ -8,7 +8,7 @@ import 'PermissionNameView.dart';
 
 class PermissionListSelectView extends View
 {
-	BoundList<PermissionModel, PermissionViewModel, PermissionNameView> _permissionsBinding;
+	BoundModelListList<PermissionModel, PermissionViewModel, PermissionNameView> _permissionsBinding;
 
 	PermissionListSelectView([PermissionListViewModel viewModel])
 	{
@@ -17,7 +17,7 @@ class PermissionListSelectView extends View
 			'a group of users will give them access to functionallity within the system.', 
 			className: 'help-note');
 
-		_permissionsBinding = new BoundList<PermissionModel, PermissionViewModel, PermissionNameView>(
+		_permissionsBinding = new BoundModelListList<PermissionModel, PermissionViewModel, PermissionNameView>(
 			(vm) => new PermissionNameView(vm), addList(), allowAdd: false, allowRemove: false,
 			selectionMethod: (vm) => AppEvents.permissionSelected.raise(new PermissionSelectedEvent(vm)));
 

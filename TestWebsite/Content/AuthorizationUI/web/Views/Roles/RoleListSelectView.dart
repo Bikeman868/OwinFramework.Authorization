@@ -8,7 +8,7 @@ import 'RoleNameView.dart';
 
 class RoleListSelectView extends View
 {
-	BoundList<RoleModel, RoleViewModel, RoleNameView> _rolesBinding;
+	BoundModelListList<RoleModel, RoleViewModel, RoleNameView> _rolesBinding;
 
 	RoleListSelectView([RoleListViewModel viewModel])
 	{
@@ -17,7 +17,7 @@ class RoleListSelectView extends View
 			'a group of users will give them access to functionallity within the system.', 
 			className: 'help-note');
 
-		_rolesBinding = new BoundList<RoleModel, RoleViewModel, RoleNameView>(
+		_rolesBinding = new BoundModelListList<RoleModel, RoleViewModel, RoleNameView>(
 			(vm) => new RoleNameView(vm), addList(), allowAdd: false, allowRemove: false,
 			selectionMethod: (vm) => AppEvents.roleSelected.raise(new RoleSelectedEvent(vm)));
 

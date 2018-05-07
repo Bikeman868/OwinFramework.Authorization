@@ -1,11 +1,10 @@
 ﻿import '../MVVM/Mvvm.dart';
 import '../ViewModels/AuthorizationViewModel.dart';
 import '../ViewModels/RolePermissionViewModel.dart';
-import '../ViewModels/RoleListViewModel.dart';
-import '../ViewModels/PermissionListViewModel.dart';
 import '../Models/ParentChildModel.dart';
 import '../Server.dart';
 
+// Retrieves all of the role/permission assignmentd from the server
 class RolePermissionListViewModel extends ViewModel
 {
   ModelList<ParentChildModel, RolePermissionViewModel> rolePermissions;

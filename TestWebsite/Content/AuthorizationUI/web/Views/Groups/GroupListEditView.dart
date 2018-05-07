@@ -7,7 +7,7 @@ import '../../Views/Groups/GroupNameView.dart';
 
 class GroupListEditView extends EditView
 {
-	BoundList<GroupModel, GroupViewModel, GroupNameView> _groupsBinding;
+	BoundModelListList<GroupModel, GroupViewModel, GroupNameView> _groupsBinding;
 
 	GroupListEditView([GroupListViewModel viewModel])
 	{
@@ -19,7 +19,7 @@ class GroupListEditView extends EditView
 			'because they know which groups the application is checking for.</p>',
 			className: 'help-note');
 
-		_groupsBinding = new BoundList<GroupModel, GroupViewModel, GroupNameView>(
+		_groupsBinding = new BoundModelListList<GroupModel, GroupViewModel, GroupNameView>(
 			(vm) => new GroupNameView(vm), addList(), allowAdd: false);
 
 		this.viewModel = viewModel;

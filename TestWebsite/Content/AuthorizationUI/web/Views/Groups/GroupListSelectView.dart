@@ -8,7 +8,7 @@ import 'GroupNameView.dart';
 
 class GroupListSelectView extends View
 {
-	BoundList<GroupModel, GroupViewModel, GroupNameView> _groupsBinding;
+	BoundModelListList<GroupModel, GroupViewModel, GroupNameView> _groupsBinding;
 
 	GroupListSelectView([GroupListViewModel viewModel])
 	{
@@ -18,7 +18,7 @@ class GroupListSelectView extends View
 			'associated with that group.', 
 			className: 'help-note');
 
-		_groupsBinding = new BoundList<GroupModel, GroupViewModel, GroupNameView>(
+		_groupsBinding = new BoundModelListList<GroupModel, GroupViewModel, GroupNameView>(
 			(vm) => new GroupNameView(vm), addList(), allowAdd: false, allowRemove: false,
 			selectionMethod: (vm) => AppEvents.groupSelected.raise(new GroupSelectedEvent(vm)));
 

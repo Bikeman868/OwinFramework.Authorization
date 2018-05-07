@@ -194,7 +194,7 @@ class PageView extends View
 			_roleView = new EditableView(
 				'Role',
 				new RoleDisplayView(authorizationViewModel, roleViewModel),
-				new RoleEditView(roleViewModel),
+				new RoleEditView(authorizationViewModel, roleViewModel),
 				new RoleDeleteView(authorizationViewModel.roleList, roleViewModel));
 		}
 		else

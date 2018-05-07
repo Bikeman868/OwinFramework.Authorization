@@ -25,7 +25,7 @@ class RoleEditFormView extends View
 		fieldValidationError = addBlockText('', className: 'validation-error');
 		var fieldHelpNote = addBlockText('', className: 'help-note');
 
-		displayName.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
+    displayName.onFocus.listen((Event e) => fieldHelpNote.innerHtml = 
 			'<p>The display name is only used by this user interface to allow you to select the role. ' +
 			'If you have a large number of roles you should use a naming convention that makes it easier ' +
 			'to find roles when they are sorted alphabetically.</p>');

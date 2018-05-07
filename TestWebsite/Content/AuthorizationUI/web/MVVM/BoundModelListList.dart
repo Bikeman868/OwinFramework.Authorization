@@ -5,9 +5,9 @@
 // * Wraps each view in a container that provides a list selection mechanism
 // * Can optionally display add/remove buttons to manage the list
 
-class BoundList<TM extends Model, TVM extends ViewModel, TV extends View> extends BoundContainer 
+class BoundModelListList<TM extends Model, TVM extends ViewModel, TV extends View> extends BoundModelList 
 {
-  BoundList(
+  BoundModelListList(
     ViewFactory<TVM, TV> viewFactory,
     Element listContainer,
     {

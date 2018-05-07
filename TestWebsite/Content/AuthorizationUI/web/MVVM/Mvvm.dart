@@ -12,20 +12,27 @@ part 'View.dart';
 part 'ViewModel.dart';
 
 part 'ModelList.dart';
+part 'ViewModelList.dart';
 part 'PropertyBinding.dart';
 part 'ViewModelBinding.dart';
 part 'StringBinding.dart';
 part 'IntBinding.dart';
 
-part 'BoundContainer.dart';
+part 'BoundViewModelListBase.dart';
+part 'BoundViewModelList.dart';
+part 'BoundModelList.dart';
+
+part 'BoundModelListRepeater.dart';
+part 'BoundModelListGrid.dart';
+part 'BoundModelListList.dart';
+
+part 'BoundViewModelListRepeater.dart';
+
 part 'BoundElement.dart';
 part 'BoundFormatter.dart';
-part 'BoundGrid.dart';
 part 'BoundIframe.dart';
 part 'BoundImage.dart';
 part 'BoundLabel.dart';
-part 'BoundList.dart';
-part 'BoundRepeater.dart';
 part 'BoundSelect.dart';
 part 'BoundTextArea.dart';
 part 'BoundTextInput.dart';

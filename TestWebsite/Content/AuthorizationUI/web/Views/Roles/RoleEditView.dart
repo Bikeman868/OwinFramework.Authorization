@@ -1,7 +1,9 @@
 ﻿import '../../MVVM/Mvvm.dart';
 import '../../ViewModels/RoleViewModel.dart';
+import '../../ViewModels/AuthorizationViewModel.dart';
 import '../../Views/Base/EditView.dart';
 import '../../Views/Roles/RoleEditFormView.dart';
+import '../../Views/Roles/AssignRolePermissionsView.dart';
 
 class RoleEditView extends EditView
 {
@@ -9,17 +11,23 @@ class RoleEditView extends EditView
 	BoundTextArea<String> _descriptionBinding;
 	BoundTextInput<String> _codeNameBinding;
 
-	RoleEditView([RoleViewModel viewModel])
+  AuthorizationViewModel _authorizationViewModel;
+  AssignRolePermissionsView _selectRolePermissions;
+
+	RoleEditView(this._authorizationViewModel, [RoleViewModel roleViewModel])
 	{
 		// This form is shared between the New and Edit pages
 		var formView = merge(new RoleEditFormView()) as RoleEditFormView;
+
+    // This view allows the user to add and remove permissions from the role
+    _selectRolePermissions = merge(new AssignRolePermissionsView(_authorizationViewModel, roleViewModel)) as AssignRolePermissionsView;
 
 		// Bind the merged formView view with the view model
 		_displayNameBinding = new BoundTextInput<String>(formView.displayName);
 		_descriptionBinding = new BoundTextArea<String>(formView.description);
 		_codeNameBinding = new BoundTextInput<String>(formView.codeName);
 
-		this.viewModel = viewModel;
+		this.viewModel = roleViewModel;
 	}
 
 	RoleViewModel _viewModel;
@@ -33,12 +41,14 @@ class RoleEditView extends EditView
 			_displayNameBinding.binding = null;
 			_descriptionBinding.binding = null;
 			_codeNameBinding.binding = null;
+      _selectRolePermissions.viewModel = null;
 		}
 		else
 		{
 			_displayNameBinding.binding = value.displayName;
 			_descriptionBinding.binding = value.description;
 			_codeNameBinding.binding = value.codeName;
+      _selectRolePermissions.viewModel = value;
 		}
 	}
 
