@@ -536,6 +536,14 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
+        public Permission EnsurePermission(Permission permission)
+        {
+            var existing = GetPermission(permission.CodeName);
+            if (existing != null) return existing;
+
+            return NewPermission(permission);
+        }
+
         public Group UpdateGroup(Group group)
         {
             Validate(group);
