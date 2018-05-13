@@ -225,7 +225,14 @@ namespace OwinFramework.Authorization.UI
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignUserToGroup);
                     Trace(context, () => GetType().Name + " routing request to PUT identity group handler");
                 }
-                if (path.StartsWithSegments(_groupPath))
+                else if (path.StartsWithSegments(_rolePermissionListPath))
+                {
+                    apiContext.Handler = UpdateRolePermissionListHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignPermissionToRole);
+                    Trace(context, () => GetType().Name + " routing request to PUT role permission list handler");
+                }
+                else if (path.StartsWithSegments(_groupPath))
                 {
                     apiContext.Handler = UpdateGroupHandler;
                     if (upstreamAuthorization != null)
@@ -852,6 +859,79 @@ namespace OwinFramework.Authorization.UI
             return Json(context, response);
         }
 
+        private Task UpdateRolePermissionListHandler(IOwinContext context)
+        {
+            var response = new ApiResponse();
+            var updatedPermissions = GetBody<List<RelationDto>>(context);
+
+            long? roleId = null;
+            var residualPath = context.Request.Path.Value.Substring(_rolePermissionListPath.Value.Length);
+            if (residualPath.Length > 0)
+            {
+                if (residualPath.StartsWith("/")) residualPath = residualPath.Substring(1);
+
+                long id;
+                if (!long.TryParse(residualPath, out id))
+                {
+                    response.Result = ApiResult.BadRequest;
+                    response.ErrorMessage = "The role ID in the URL must be a valid integer";
+                    return Json(context, response);
+                }
+                roleId = id;
+            }
+
+            var permissionsToAdd = new List<RelationDto>();
+            var permissionsToRemove = new List<RelationDto>();
+
+            if (roleId.HasValue)
+            {
+                updatedPermissions = updatedPermissions.Where(r => r.ParentId == roleId.Value).ToList();
+                var currentPermissions = _authorizationData.GetRolePermissions(roleId.Value);
+
+                foreach (var permission in currentPermissions)
+                {
+                    var permissionId = permission.Id;
+                    if (updatedPermissions.FirstOrDefault(p => p.ChildId == permissionId) == null)
+                        permissionsToRemove.Add(new RelationDto { ParentId = roleId.Value, ChildId = permission.Id });
+                }
+
+                foreach (var permission in updatedPermissions)
+                {
+                    var permissionId = permission.ChildId;
+                    if (currentPermissions.FirstOrDefault(p => p.Id == permissionId) == null)
+                        permissionsToAdd.Add(permission);
+                }
+            }
+            else
+            {
+                var currentPermissions = _authorizationData.GetAllRolePermissions();
+
+                foreach (var currentPermission in currentPermissions)
+                {
+                    var currentRoleId = currentPermission.Item1;
+                    var currentPermissionId = currentPermission.Item2;
+                    if (updatedPermissions.FirstOrDefault(p => p.ParentId == currentRoleId && p.ChildId == currentPermissionId) == null)
+                        permissionsToRemove.Add(new RelationDto { ParentId = currentRoleId, ChildId = currentPermissionId });
+                }
+
+                foreach (var updatedPermission in updatedPermissions)
+                {
+                    var updatedRoleId = updatedPermission.ParentId;
+                    var updatedPermissionId = updatedPermission.ChildId;
+                    if (currentPermissions.FirstOrDefault(p => p.Item1 == updatedRoleId && p.Item2 == updatedPermissionId) == null)
+                        permissionsToAdd.Add(updatedPermission);
+                }
+            }
+
+            foreach (var permissionToAdd in permissionsToAdd)
+                _authorizationData.AddPermissionToRole(permissionToAdd.ChildId, permissionToAdd.ParentId);
+
+            foreach (var permissionToRemove in permissionsToRemove)
+                _authorizationData.RemovePermissionFromRole(permissionToRemove.ChildId, permissionToRemove.ParentId);
+
+            return Json(context, response);
+        }
+
         #endregion
 
         #region Permission related handlers
@@ -1107,7 +1187,7 @@ namespace OwinFramework.Authorization.UI
                     : new PathString(p.Value + "/" + f);
             };
 
-            _documentationPath = normalizePath(_configuration.DocumentationRootUrl);
+            _documentationPath = normalizePath(configuration.DocumentationRootUrl);
 
             _rootPath = normalizePath(configuration.ApiRootUrl);
 
@@ -1132,8 +1212,71 @@ namespace OwinFramework.Authorization.UI
             _validatePermissionPath = filePath(_rootPath, "validate/permission");
 
             _configurationPath = filePath(_rootPath, "configuration");
-        }
 
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToAssignPermissionToRole,
+                    DisplayName = "Auth: Assign permission to role",
+                    Description = "Users with this permission can grant any permission to any user, and therefore have full access to everything in the system"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToAssignRoleToGroup,
+                    DisplayName = "Auth: Assign role to group",
+                    Description = "Users with this permission can add any role to a group of users, and therefore have full access to everything in the system"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToAssignUserToGroup,
+                    DisplayName = "Auth: Assign user to group",
+                    Description = "Users with this permission can add any user to a group of users, and therefore have full access to everything in the system"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToCallApi,
+                    DisplayName = "Auth: Call authentication API",
+                    Description = "This permission is required to use the user interface but also alows programatic access to the authorization system configuration"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToEditGroups,
+                    DisplayName = "Auth: Modify groups",
+                    Description = "Users with this permission can change the name and description of user groups"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToEditPermissions,
+                    DisplayName = "Auth: Modify permissions",
+                    Description = "Users with this permission can change the name and description of permissions. Note that the code name of the permissions must match what is programmed into the software"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToEditRoles,
+                    DisplayName = "Auth: Modify roles",
+                    Description = "Users with this permission can change the name and description of roles"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToViewIdentities,
+                    DisplayName = "Auth: View users",
+                    Description = "Users with this permission can search for users and see user claims"
+                });
+        }
 
         #endregion
 
@@ -1356,25 +1499,41 @@ namespace OwinFramework.Authorization.UI
                                     {
                                         Type = "Method",
                                         Name = "GET",
-                                        Description = "Returns a list of permission IDs assigned to a role"
+                                        Description = "Returns a list of permissions assigned to a role"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Method",
-                                        Name = "POST",
-                                        Description = "Adds a list of permissions to a role"
-                                    },
-                                    new EndpointAttributeDocumentation
-                                    {
-                                        Type = "Method",
-                                        Name = "DELETE",
-                                        Description = "Removes a list of permissions from a role"
+                                        Name = "PUT",
+                                        Description = "Replaces the current list of permissions for a role"
                                     },
                                     new EndpointAttributeDocumentation
                                     {
                                         Type = "Path element",
                                         Name = "{roleId}",
                                         Description = "The ID of the role to perform the operation on"
+                                    }
+                                }
+                    });
+
+                documentation.Add(
+                    new EndpointDocumentation
+                    {
+                        RelativePath = _rolePermissionListPath.Value,
+                        Description = "The list of permissions for all roles.",
+                        Attributes = new List<IEndpointAttributeDocumentation>
+                                {
+                                    new EndpointAttributeDocumentation
+                                    {
+                                        Type = "Method",
+                                        Name = "GET",
+                                        Description = "Returns a list of all permissions assigned roles"
+                                    },
+                                    new EndpointAttributeDocumentation
+                                    {
+                                        Type = "Method",
+                                        Name = "PUT",
+                                        Description = "Replaces all permissions for all roles"
                                     }
                                 }
                     });

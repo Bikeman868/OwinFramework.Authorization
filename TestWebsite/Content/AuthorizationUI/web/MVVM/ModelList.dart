@@ -109,18 +109,18 @@ class ModelList<TM extends Model, TVM extends ViewModel>
 
 	void deleteViewModel(TVM viewModel)
 	{
-		delete(findIndex(viewModel));
+		delete(findIndex((vm) => vm == viewModel));
 	}
 
 	// Use this to find the index position of a view model so that you
 	// can delete it from the list
-	int findIndex(TVM viewModel)
+	int findIndex(bool predicate(TVM))
 	{
 		if (_viewModels != null)
 		{
 			for (var index = _viewModels.length - 1; index >= 0; index--)
 			{
-				if (_viewModels[index] == viewModel)
+				if (predicate(_viewModels[index]))
 					return index;
 			}
 		}

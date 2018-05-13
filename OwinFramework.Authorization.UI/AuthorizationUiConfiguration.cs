@@ -33,7 +33,6 @@ namespace OwinFramework.Authorization.UI
 
             PermissionToViewIdentities = "auth:identity.view";
 
-            PermissionToEditIdentity = "auth:identity.edit";
             PermissionToEditPermissions = "auth:permission.edit";
             PermissionToEditRoles = "auth:role.edit";
             PermissionToEditGroups = "auth:group.edit";

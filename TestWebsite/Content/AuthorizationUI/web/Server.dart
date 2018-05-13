@@ -6,7 +6,6 @@ import 'MVVM/Mvvm.dart';
 
 import 'Models/ApiResponseModel.dart';
 import 'Models/NewRecordResponseModel.dart';
-import 'Models/NewIdentityResponseModel.dart';
 import 'Models/GroupModel.dart';
 import 'Models/PermissionModel.dart';
 import 'Models/RoleModel.dart';
@@ -581,4 +580,24 @@ static Future<ConfigurationModel> getConfiguration() async
 
 			.catchError((e) => handleError(e.target, action));
 	}
+
+	static Future<ApiResponseModel> updateRolePermissions(List<ParentChildModel> rolePermissions) async
+	{
+    var requestJson = new List<Map>();
+    for (ParentChildModel rolePermission in rolePermissions)
+      requestJson.add(rolePermission.json);
+
+		var request = await HttpRequest.request(
+			_apiUrl + '/role/permissions', 
+			method: 'PUT',
+			sendData: JSON.encode(requestJson),
+			mimeType: 'application/json');
+
+		if (request.status != 200)
+			throw 'Failed to update role permissions ' + request.statusText;
+
+		Map responseJson = JSON.decode(request.responseText);
+		return new ApiResponseModel(responseJson);
+	}
+
 }

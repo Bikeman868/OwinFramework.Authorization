@@ -20,17 +20,17 @@ namespace OwinFramework.Authorization.Data.Interfaces
         /// <summary>
         /// Returns a list of all groups with optional filtering
         /// </summary>
-        IEnumerable<Group> GetGroups(Func<Group, bool> filterFunction = null);
+        IList<Group> GetGroups(Func<Group, bool> filterFunction = null);
 
         /// <summary>
         /// Returns a list of all roles with optional filtering
         /// </summary>
-        IEnumerable<Role> GetRoles(Func<Role, bool> filterFunction = null);
+        IList<Role> GetRoles(Func<Role, bool> filterFunction = null);
 
         /// <summary>
         /// Returns a list of all permissions with optional filtering
         /// </summary>
-        IEnumerable<Permission> GetPermissions(Func<Permission, bool> filterFunction = null);
+        IList<Permission> GetPermissions(Func<Permission, bool> filterFunction = null);
 
         /// <summary>
         /// Returns a specific group by ID
@@ -136,22 +136,22 @@ namespace OwinFramework.Authorization.Data.Interfaces
         /// <summary>
         /// Gets a list of the roles assigned to a group
         /// </summary>
-        IEnumerable<Role> GetGroupRoles(long groupId);
+        IList<Role> GetGroupRoles(long groupId);
 
         /// <summary>
         /// Gets a list of the permissions assigned to a role
         /// </summary>
-        IEnumerable<Permission> GetRolePermissions(long roleId);
+        IList<Permission> GetRolePermissions(long roleId);
 
         /// <summary>
         /// Gets a list of all group/role assignments in the database
         /// </summary>
-        IEnumerable<Tuple<long, long>> GetAllGroupRoles();
+        IList<Tuple<long, long>> GetAllGroupRoles();
 
         /// <summary>
         /// Gets a list of all role/permission assignments in the database
         /// </summary>
-        IEnumerable<Tuple<long, long>> GetAllRolePermissions();
+        IList<Tuple<long, long>> GetAllRolePermissions();
 
         /// <summary>
         /// Finds the id of the group that an identity belongs to
@@ -171,14 +171,14 @@ namespace OwinFramework.Authorization.Data.Interfaces
         /// <summary>
         /// Retrieves a list of the roles assigned to an identity
         /// </summary>
-        IEnumerable<Role> GetRoles(IIdentification identification);
+        IList<Role> GetRoles(IIdentification identification);
 
         /// <summary>
         /// Retrieves a list of permissions assigned to an identity. If the identity
         /// has the same permission assigned to them multiple times (by different roles)
         /// then this permission will only be in the list once.
         /// </summary>
-        IEnumerable<Permission> GetPermissions(IIdentification identification);
+        IList<Permission> GetPermissions(IIdentification identification);
 
         /// <summary>
         /// Checks if an identity has the specified role. This is an unusual thing

@@ -370,7 +370,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Group> GetGroups(Func<Group, bool> filterFunction = null)
+        public IList<Group> GetGroups(Func<Group, bool> filterFunction = null)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -416,7 +416,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Role> GetRoles(Func<Role, bool> filterFunction = null)
+        public IList<Role> GetRoles(Func<Role, bool> filterFunction = null)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -462,7 +462,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Permission> GetPermissions(Func<Permission, bool> filterFunction = null)
+        public IList<Permission> GetPermissions(Func<Permission, bool> filterFunction = null)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -642,7 +642,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Role> GetGroupRoles(long groupId)
+        public IList<Role> GetGroupRoles(long groupId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -657,7 +657,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Permission> GetRolePermissions(long roleId)
+        public IList<Permission> GetRolePermissions(long roleId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -672,7 +672,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Permission> GetGroupPermissions(long groupId)
+        public IList<Permission> GetGroupPermissions(long groupId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -722,7 +722,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Role> GetRoles(IIdentification identification)
+        public IList<Role> GetRoles(IIdentification identification)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -737,7 +737,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Permission> GetPermissions(IIdentification identification)
+        public IList<Permission> GetPermissions(IIdentification identification)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -828,7 +828,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Tuple<long, long>> GetAllGroupRoles()
+        public IList<Tuple<long, long>> GetAllGroupRoles()
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
@@ -847,7 +847,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IEnumerable<Tuple<long, long>> GetAllRolePermissions()
+        public IList<Tuple<long, long>> GetAllRolePermissions()
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {

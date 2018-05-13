@@ -1,12 +1,12 @@
 ﻿import '../../MVVM/Mvvm.dart';
-import '../../ViewModels/RolePermissionViewModel.dart';
+import '../../ViewModels/PermissionViewModel.dart';
 
-class PermissionRoleView extends View
+class PermissionTableRowView extends View
 {
 	BoundLabel<String> _displayNameBinding;
 	BoundLabel<String> _descriptionBinding;
 
-	PermissionRoleView([RolePermissionViewModel viewModel])
+	PermissionTableRowView([PermissionViewModel viewModel])
 	{
 		var tableRow = addDiv(className: 'tr');
 
@@ -19,10 +19,10 @@ class PermissionRoleView extends View
 		this.viewModel = viewModel;
 	}
 
-	RolePermissionViewModel _viewModel;
-	RolePermissionViewModel get viewModel => _viewModel;
+	PermissionViewModel _viewModel;
+	PermissionViewModel get viewModel => _viewModel;
 
-	void set viewModel(RolePermissionViewModel value)
+	void set viewModel(PermissionViewModel value)
 	{
 		_viewModel = value;
 		if (value == null)
@@ -32,8 +32,8 @@ class PermissionRoleView extends View
 		}
 		else
 		{
-			_displayNameBinding.binding = value.roleDisplayName;
-			_descriptionBinding.binding = value.roleDescription;
+			_displayNameBinding.binding = value.displayName;
+			_descriptionBinding.binding = value.description;
 		}
 	}
 }

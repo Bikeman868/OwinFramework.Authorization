@@ -4,10 +4,9 @@ import '../../ViewModels/AuthorizationViewModel.dart';
 import '../../ViewModels/RoleViewModel.dart';
 import '../../ViewModels/GroupRoleViewModel.dart';
 import '../../ViewModels/GroupRoleListViewModel.dart';
-import '../../ViewModels/RolePermissionViewModel.dart';
-import '../../ViewModels/RolePermissionListViewModel.dart';
+import '../../ViewModels/PermissionViewModel.dart';
 import '../../Views/Roles/RoleGroupView.dart';
-import '../../Views/Roles/RolePermissionView.dart';
+import '../../Views/Permissions/PermissionTableRowView.dart';
 
 class RoleDisplayView extends View
 {
@@ -21,10 +20,9 @@ class RoleDisplayView extends View
 	BoundLabel<String> _nameBinding4;
 
 	BoundModelListRepeater<ParentChildModel, GroupRoleViewModel, RoleGroupView> _groupListBinding;
-	BoundModelListRepeater<ParentChildModel, RolePermissionViewModel, RolePermissionView> _permissionListBinding;
+	BoundViewModelListRepeater<PermissionViewModel, PermissionTableRowView> _permissionListBinding;
 
 	GroupRoleListViewModel _groupRoleListViewModel;
-	RolePermissionListViewModel _rolePermissionListViewModel;
 
 	RoleDisplayView(
 		AuthorizationViewModel authorizationViewModel,
@@ -33,7 +31,6 @@ class RoleDisplayView extends View
 		])
 	{
 		_groupRoleListViewModel = authorizationViewModel.groupRoleList;
-		_rolePermissionListViewModel = authorizationViewModel.rolePermissionList;
 
 		addBlockText(
 			'<p>A <b>Role</b> is a set of permissions that are required to perform a specific function. ' +
@@ -83,9 +80,8 @@ class RoleDisplayView extends View
 		addDiv(html:'Name', classNames: ['th', 'display-name', 'role'], parent: permissionTableHeader);
 		addDiv(html:'Description', classNames: ['th', 'description', 'role'], parent: permissionTableHeader);
 
-		_permissionListBinding = new BoundModelListRepeater<ParentChildModel, RolePermissionViewModel, RolePermissionView>
-			((vm) => new RolePermissionView(vm), addDiv(className: 'table'))
-			..binding = _rolePermissionListViewModel.rolePermissions;
+		_permissionListBinding = new BoundViewModelListRepeater<PermissionViewModel, PermissionTableRowView>
+			((vm) => new PermissionTableRowView(vm), addDiv(className: 'table'));
 
 		this.viewModel = viewModel;
 	}
@@ -108,7 +104,7 @@ class RoleDisplayView extends View
 			_nameBinding4.binding = null;
 
 			_groupListBinding.viewModelFilter = (vm) => false;
-			_permissionListBinding.viewModelFilter = (vm) => false;
+			_permissionListBinding.binding = null;
 		}
 		else
 		{
@@ -124,8 +120,7 @@ class RoleDisplayView extends View
 			_groupListBinding.viewModelFilter = (vm) => vm.model.childId == value.model.id;
 			_groupListBinding.refresh();
 
-			_permissionListBinding.viewModelFilter = (vm) => vm.model.parentId == value.model.id;
-			_permissionListBinding.refresh();
+			_permissionListBinding.binding = value.assignedPermissions;
 		}
 	}
 
