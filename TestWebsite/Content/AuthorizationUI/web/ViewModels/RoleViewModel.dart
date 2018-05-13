@@ -2,6 +2,8 @@
 import '../MVVM/Mvvm.dart';
 import '../Server.dart';
 import '../ViewModels/AuthorizationViewModel.dart';
+import '../ViewModels/PermissionViewModel.dart';
+import '../ViewModels/RolePermissionListViewModel.dart';
 import '../Models/RoleModel.dart';
 
 class RoleViewModel extends ViewModel
@@ -9,16 +11,24 @@ class RoleViewModel extends ViewModel
     StringBinding codeName;
     StringBinding displayName;
     StringBinding description;
+    ViewModelList<PermissionViewModel> assignedPermissions;
+    ViewModelList<PermissionViewModel> otherPermissions;
 
 	int id;
 
 	AuthorizationViewModel _authorizationViewModel;
 
-	RoleViewModel(this._authorizationViewModel, [RoleModel model])
+	RoleViewModel(
+    this._authorizationViewModel, 
+    [
+        RoleModel model
+    ])
 	{
 		codeName = new StringBinding();
 		displayName = new StringBinding();
 		description = new StringBinding();
+		assignedPermissions = new ViewModelList<PermissionViewModel>(null);
+		otherPermissions = new ViewModelList<PermissionViewModel>(null);
 
 		this.model = model;
 	}
@@ -70,10 +80,97 @@ class RoleViewModel extends ViewModel
 				modified();
 			};
 			description.getter = () => value.description;
-		}
+
+            if (_authorizationViewModel.permissionList.isLoaded)
+                _authorizationViewModel.rolePermissionList.whenLoaded(_loadRolePermissions);
+            else
+                _authorizationViewModel.permissionList.whenLoaded(_loadPermissions);
+        }
+
+        _permissionsToAdd = new List<int>();
+        _permissionsToRemove = new List<int>();
 
 		loaded();
 	}
+
+    void _loadPermissions(ViewModel permissionListViewModel)
+    {
+        _authorizationViewModel.rolePermissionList.whenLoaded(_loadRolePermissions);
+    }
+
+    void _loadRolePermissions(RolePermissionListViewModel rolePermissionList)
+    {
+        var rolePermissionModels = rolePermissionList.models;
+        if (rolePermissionModels == null) return;
+
+        var assignedPermissionList = new List<PermissionViewModel>();
+        var otherPermissionList = new List<PermissionViewModel>();
+
+        for (var parentChildModel in rolePermissionModels)
+        {
+            var permissionId = parentChildModel.childId;
+            var permission = _authorizationViewModel.permissionList.permissions.findViewModel((vm) => vm.id == permissionId);
+            if (permission != null)
+            {
+                if (parentChildModel.parentId == id)
+                {
+                    assignedPermissionList.add(permission);
+                }
+                else
+                {
+                    otherPermissionList.add(permission);
+                }
+            }
+        }
+
+        assignedPermissions.viewModels = assignedPermissionList;
+        otherPermissions.viewModels = otherPermissionList;
+    }
+
+    List<int> _permissionsToAdd;
+    List<int> _permissionsToRemove;
+
+    void grantPermission(PermissionViewModel permission)
+    {
+        assignedPermissions.addViewModel(permission);
+        otherPermissions.deleteViewModel(permission);
+
+        var permissionId = permission.id;
+        if (_permissionsToRemove.contains(permissionId))
+        {
+            _permissionsToRemove.remove(permissionId);
+            modified();
+        }
+        else
+        {
+            if (!_permissionsToAdd.contains(permissionId))
+            {
+                _permissionsToAdd.add(permissionId);
+                modified();
+            }
+        }
+    }
+
+    void revokePermission(PermissionViewModel permission)
+    {
+        assignedPermissions.deleteViewModel(permission);
+        otherPermissions.addViewModel(permission);
+
+        var permissionId = permission.id;
+        if (_permissionsToAdd.contains(permissionId))
+        {
+            _permissionsToAdd.remove(permissionId);
+            modified();
+        }
+        else
+        {
+            if (!_permissionsToRemove.contains(permissionId))
+            {
+                _permissionsToRemove.add(permissionId);
+                modified();
+            }
+        }
+    }
 
 	List<ModelList> getModelLists()
 	{
@@ -84,15 +181,33 @@ class RoleViewModel extends ViewModel
 	{
 		if (_model != null)
 		{
-			Server.getRole(_model.id)
+			Server
+                .getRole(_model.id)
 				.then((m) => model = m);
 		}
 	}
 
-	Future<SaveResult> saveChanges(ChangeState state, bool alert) async
-	{
+    Future<SaveResult> saveChanges(ChangeState state, bool alert) async
+    {
 		SaveResult result = SaveResult.unmodified;
 		String alertMessage;
+        bool permissionsChanged = false;
+
+        if (_permissionsToAdd.length > 0)
+        {
+            permissionsChanged = true;
+            for (var id in _permissionsToAdd)
+            {
+            }
+        }
+
+        if (_permissionsToRemove.length > 0)
+        {
+            permissionsChanged = true;
+            for (var id in _permissionsToRemove)
+            {
+            }
+        }
 
 		if (state == ChangeState.modified)
 		{
@@ -139,7 +254,8 @@ class RoleViewModel extends ViewModel
 		}
 		else
 		{
-			alertMessage = 'There were no changes to the "' + model.displayName + '" role to save';
+      if (!permissionsChanged)
+			  alertMessage = 'There were no changes to the "' + model.displayName + '" role to save';
 		}
 
 		if (alert && alertMessage != null && alertMessage.length > 0)

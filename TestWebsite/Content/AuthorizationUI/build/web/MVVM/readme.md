@@ -173,6 +173,8 @@ of the model. There are also:
 
 `ModelList` binds to a list of model objects.
 
+`ViewModelList` binds to a list of view models.
+
 ## View
 
 Views produce HTML that is bound to a view model. When the bound properties of the view model
@@ -233,16 +235,21 @@ element. It also provides an optional lambda expression to format the html.
 `BoundFormatter` is designed for syntax highlighting applications where the text from the view model
 property needs to be expanded into a complex nested html fragment.
 
-`BoundRepeater` binds to `ModelList` property in the view model, and presents all of the items in the
+`BoundModelListRepeater` binds to `ModelList` property in the view model, and presents all of the items in the
 list by constructing a view for each view model in the bound list. When items are added or removed from the list
-the `BoundRepeater` will add and remove views from the UI.
+the `BoundModelListRepeater` will add and remove views from the UI.
 
-`BoundList` is similar to `BoundRepeater` except that it wraps each view in a `li` and attaches `onCllick` handlers
-to allow the user to choose items from the list. It can also render add/remove buttons that allow the user to
-create new models with corresponding view models.
+`BoundModelListList` is similar to `BoundModelListRepeater` except that it wraps each view in a `li` and attaches
+`onCllick` handlers to allow the user to choose items from the list. It can also render add/remove buttons that
+allow the user to create new models with corresponding view models.
 
-`BoundGrid` is similar to `BoundRepeater` except that it wraps each view in a `div` decorated with css classes
-that can make the divs tile. It also attaches `onCllick` handlers to allow the user to choose items from the grid. 
+`BoundModelListGrid` is similar to `BoundModelListRepeater` except that it wraps each view in a `div` decorated 
+with css classes that can make the divs tile. It also attaches `onCllick` handlers to allow the user to choose 
+items from the grid. 
+
+`BoundViewModelListRepeater` binds to `ViewModelList` property in the view model, and presents all of the items in the
+list by constructing a view for each view model in the bound list. When items are added or removed from the list
+the `BoundViewModelListRepeater` will add and remove views from the UI.
 
 `BoundTextInput` provides two-way binding of the `value` attribute of an `input` element to a bindable property
 of a view model.

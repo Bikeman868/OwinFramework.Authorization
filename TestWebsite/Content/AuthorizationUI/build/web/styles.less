@@ -2,7 +2,7 @@
 @heading-font: helvetica;
 @base-font-size: 16px;
 
-@phone-width: 760px;
+@phone-width: 768px;
 @tablet-width: 1024px;
 
 body,html
@@ -238,7 +238,6 @@ option
 .nav-region
 {
     display:block;
-    vertical-align: top;
     width: auto;
     padding: 2px;
     margin: 1px;
@@ -629,6 +628,52 @@ span.modified
     &:hover
     {
         border: 1px solid red;
+    }
+}
+
+
+.action-list-element
+{
+    border-top: 1px solid white;
+    margin: 4px;
+    padding: 10px;
+    white-space: nowrap;
+
+    .actions
+    {
+        display: inline-block;
+        white-space: normal;
+        padding-right: 10px;
+        vertical-align: top;
+
+        .button
+        {
+            padding: 5px;
+            border: 1px solid navy;
+            border-radius: 3px;
+            background: cornflowerblue;
+            color:white;
+            cursor: pointer;
+        }
+    }
+
+    .details
+    {
+        display: inline-block;
+        white-space: normal;
+        width: 300px;
+        vertical-align: top;
+    }
+}
+
+@media only screen and (min-width: @tablet-width)
+{
+    .action-list-element
+    {
+        .details
+        {
+            width: 550px;
+        }
     }
 }
 

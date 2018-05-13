@@ -11,6 +11,11 @@ class ListEvent
 class SubscriptionEvent<E>
 {
 	StreamController<E> _controller = new StreamController.broadcast();
+
+  void dispose()
+  {
+    _controller.close();
+  }
   
 	raise(E e)
 	{
@@ -25,5 +30,5 @@ class SubscriptionEvent<E>
 
 class MvvmEvents
 {
-	static SubscriptionEvent<String>alert = new SubscriptionEvent<String>();
+	static SubscriptionEvent<String> alert = new SubscriptionEvent<String>();
 }
