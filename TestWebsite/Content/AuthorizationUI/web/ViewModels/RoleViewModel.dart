@@ -108,21 +108,12 @@ class RoleViewModel extends ViewModel
         var assignedPermissionList = new List<PermissionViewModel>();
         var otherPermissionList = new List<PermissionViewModel>();
 
-        for (var parentChildModel in rolePermissionModels)
+        for (var permission in _authorizationViewModel.permissionList.permissions.viewModels)
         {
-            var permissionId = parentChildModel.childId;
-            var permission = _authorizationViewModel.permissionList.permissions.findViewModel((vm) => vm.id == permissionId);
-            if (permission != null)
-            {
-                if (parentChildModel.parentId == id)
-                {
-                    assignedPermissionList.add(permission);
-                }
-                else
-                {
-                    otherPermissionList.add(permission);
-                }
-            }
+            if (rolePermissionList.rolePermissions.findIndex((RolePermissionViewModel rp) => rp.roleId == id && rp.permissionId == permission.id) == -1)
+                otherPermissionList.add(permission);
+            else            
+                assignedPermissionList.add(permission);
         }
 
         assignedPermissions.viewModels = assignedPermissionList;

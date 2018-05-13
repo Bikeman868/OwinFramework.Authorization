@@ -497,6 +497,7 @@ namespace OwinFramework.Authorization.UI
                     DisplayName = g.DisplayName,
                     Description = g.Description
                 })
+                .OrderBy(g => g.DisplayName)
                 .ToList()
             };
 
@@ -708,6 +709,7 @@ namespace OwinFramework.Authorization.UI
                     DisplayName = r.DisplayName,
                     Description = r.Description
                 })
+                .OrderBy(r => r.DisplayName)
                 .ToList()
             };
 
@@ -923,6 +925,34 @@ namespace OwinFramework.Authorization.UI
                 }
             }
 
+            var authorization = context.GetFeature<IAuthorization>();
+            if (authorization != null)
+            {
+                foreach (var permissionToAdd in permissionsToAdd)
+                {
+                    var permission = _authorizationData.GetPermission(permissionToAdd.ChildId);
+                    if (!authorization.HasPermission(_configuration.PermissionToAssignPermissionToRole,
+                            "permission:" + permission.CodeName))
+                    {
+                        response.Result = ApiResult.AccessDenied;
+                        response.ErrorMessage = "You do not have permission to grant '" + permission.DisplayName + "'";
+                        return Json(context, response);
+                    }
+                }
+
+                foreach (var permissionToRemove in permissionsToRemove)
+                {
+                    var permission = _authorizationData.GetPermission(permissionToRemove.ChildId);
+                    if (!authorization.HasPermission(_configuration.PermissionToAssignPermissionToRole,
+                            "permission:" + permission.CodeName))
+                    {
+                        response.Result = ApiResult.AccessDenied;
+                        response.ErrorMessage = "You do not have permission to revoke '" + permission.DisplayName + "'";
+                        return Json(context, response);
+                    }
+                }
+            }
+
             foreach (var permissionToAdd in permissionsToAdd)
                 _authorizationData.AddPermissionToRole(permissionToAdd.ChildId, permissionToAdd.ParentId);
 
@@ -978,6 +1008,7 @@ namespace OwinFramework.Authorization.UI
                     DisplayName = p.DisplayName,
                     Description = p.Description
                 })
+                .OrderBy(p => p.DisplayName)
                 .ToList()
             };
 
@@ -1217,8 +1248,17 @@ namespace OwinFramework.Authorization.UI
                 new Permission
                 {
                     CodeName = configuration.PermissionToAssignPermissionToRole,
-                    DisplayName = "Auth: Assign permission to role",
+                    DisplayName = "Auth: Assign any permission to a role",
                     Description = "Users with this permission can grant any permission to any user, and therefore have full access to everything in the system"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToAssignPermissionToRole,
+                    Resource = "permission:{my.permission}",
+                    DisplayName = "Auth: Assign my permissions to a role",
+                    Description = "Users with this permission can grant any permissions they already have to any user"
                 });
 
             _authorizationData.EnsurePermission(
@@ -1232,9 +1272,27 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
+                    CodeName = configuration.PermissionToAssignRoleToGroup,
+                    Resource = "role:{my.role}",
+                    DisplayName = "Auth: Assign my role to a group",
+                    Description = "Users with this permission can add their own role to any group of users, giving them the ability to grant any user access to the things that they have access to"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
                     CodeName = configuration.PermissionToAssignUserToGroup,
                     DisplayName = "Auth: Assign user to group",
                     Description = "Users with this permission can add any user to a group of users, and therefore have full access to everything in the system"
+                });
+
+            _authorizationData.EnsurePermission(
+                new Permission
+                {
+                    CodeName = configuration.PermissionToAssignUserToGroup,
+                    Resource = "group:{my.group}",
+                    DisplayName = "Auth: Assign user to my group",
+                    Description = "Users with this permission can add any user to the same group as themselves, giving them the ability to give someone else the same permissions as they have"
                 });
 
             _authorizationData.EnsurePermission(

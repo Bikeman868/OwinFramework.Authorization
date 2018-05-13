@@ -50,12 +50,18 @@ class RolePermissionViewModel extends ViewModel
 	ParentChildModel _model;
 	ParentChildModel get model => _model;
 
+  int roleId;
+  int permissionId;
+
 	void set model(ParentChildModel value)
 	{
 		_model = value;
 
 		if (value == null)
 		{
+			roleId = -1;
+			permissionId = -1;
+
 			roleCodeName.getter = null;
 			roleDisplayName.getter = null;
 			roleDescription.getter = null;
@@ -67,8 +73,8 @@ class RolePermissionViewModel extends ViewModel
 		}
 		else
 		{
-			var roleId = value.parentId;
-			var permissionId = value.childId;
+			roleId = value.parentId;
+			permissionId = value.childId;
 
 			ViewModelGetter<RoleViewModel> roleViewModel = ()
 			{

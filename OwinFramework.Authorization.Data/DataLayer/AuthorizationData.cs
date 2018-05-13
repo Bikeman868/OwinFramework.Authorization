@@ -9,6 +9,7 @@ using OwinFramework.Authorization.Data.DataContracts;
 using OwinFramework.Authorization.Data.Interfaces;
 using OwinFramework.InterfacesV1.Middleware;
 using Prius.Contracts.Interfaces;
+using Prius.Contracts.Utility;
 using Urchin.Client.Interfaces;
 using Group = OwinFramework.Authorization.Data.DataContracts.Group;
 
@@ -299,6 +300,14 @@ namespace OwinFramework.Authorization.Data.DataLayer
                         case "{my.group}":
                             expressionElement = group.CodeName;
                             break;
+                        case "{my.role}":
+                            if (group.IdentityRoles.Any(r => string.Equals(r.CodeName, resourcePath[i], StringComparison.InvariantCultureIgnoreCase)))
+                                continue;
+                            return false;
+                        case "{my.permission}":
+                            if (group.IdentityPermissions.Any(p => string.Equals(p.CodeName, resourcePath[i], StringComparison.InvariantCultureIgnoreCase)))
+                                continue;
+                            return false;
                         case "{my.username}":
                             expressionElement = identification
                                 .Claims
@@ -456,7 +465,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("codeName", codeName);
                     using (var results = context.ExecuteEnumerable<Permission>(command))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault(p => string.IsNullOrEmpty(p.Resource));
                     }
                 }
             }
@@ -538,8 +547,19 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         public Permission EnsurePermission(Permission permission)
         {
-            var existing = GetPermission(permission.CodeName);
-            if (existing != null) return existing;
+            if (string.IsNullOrEmpty(permission.Resource))
+            {
+                var existing = GetPermission(permission.CodeName);
+                if (existing != null) return existing;
+            }
+            else
+            {
+                var existing = GetPermissions(p => 
+                    string.Equals(p.CodeName, permission.CodeName, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(p.Resource, permission.Resource, StringComparison.InvariantCultureIgnoreCase))
+                    .FirstOrDefault();
+                if (existing != null) return existing;
+            }
 
             return NewPermission(permission);
         }

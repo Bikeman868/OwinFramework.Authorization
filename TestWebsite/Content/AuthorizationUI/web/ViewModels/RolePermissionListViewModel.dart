@@ -59,6 +59,7 @@ class RolePermissionListViewModel extends ViewModel
 
   Future<SaveResult> saveChanges(ChangeState state, bool alert) async
   {
+    removeDeleted();
     var response = await Server.updateRolePermissions(models);
     return response.isSuccess ? SaveResult.saved : SaveResult.failed;
   }
