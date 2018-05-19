@@ -18,6 +18,7 @@ namespace OwinFramework.Authorization.Data
             {
                 return new List<IocRegistration>
                 {
+                    new IocRegistration().Init<IIdentityData, AuthorizationData>(),
                     new IocRegistration().Init<IAuthorizationData, AuthorizationData>(),
 
                     new IocRegistration().Init<IContextFactory>(),

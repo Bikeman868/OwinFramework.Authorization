@@ -85,6 +85,7 @@
     <Compile Include="Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Exceptions\UpdateFailedException.cs" />
     <Compile Include="Interfaces\IAuthorizationData.cs" />
+    <Compile Include="Interfaces\IIdentityData.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
