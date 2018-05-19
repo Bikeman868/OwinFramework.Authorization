@@ -600,4 +600,23 @@ static Future<ConfigurationModel> getConfiguration() async
 		return new ApiResponseModel(responseJson);
 	}
 
+	static Future<ApiResponseModel> updateGroupRoles(List<ParentChildModel> groupRoles) async
+	{
+    var requestJson = new List<Map>();
+    for (ParentChildModel rolePermission in groupRoles)
+      requestJson.add(rolePermission.json);
+
+		var request = await HttpRequest.request(
+			_apiUrl + '/group/roles', 
+			method: 'PUT',
+			sendData: JSON.encode(requestJson),
+			mimeType: 'application/json');
+
+		if (request.status != 200)
+			throw 'Failed to update group roles ' + request.statusText;
+
+		Map responseJson = JSON.decode(request.responseText);
+		return new ApiResponseModel(responseJson);
+	}
+
 }

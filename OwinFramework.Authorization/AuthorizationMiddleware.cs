@@ -31,18 +31,18 @@ namespace OwinFramework.Authorization
         string IMiddleware.Name { get; set; }
         public Action<IOwinContext, Func<string>> Trace { get; set; }
 
-        private readonly IAuthorizationData _authorizationData;
+        private readonly IIdentityData _identityData;
 
-        public AuthorizationMiddleware(IAuthorizationData authorizationData)
+        public AuthorizationMiddleware(IIdentityData identityData)
         {
-            _authorizationData = authorizationData;
+            _identityData = identityData;
 
             this.RunAfter<IIdentification>();
         }
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            var authorization = new Authorization(_authorizationData, s => Trace(context, () => s));
+            var authorization = new Authorization(_identityData, s => Trace(context, () => s));
             context.SetFeature<IUpstreamAuthorization>(authorization);
 
             return next();
@@ -168,12 +168,23 @@ namespace OwinFramework.Authorization
 
         string ISelfDocumenting.LongDescription
         {
-            get { return "Provides a mechanism for defining identity groups, roles and permissionn"; }
+            get { return 
+                "<p>Provides a mechanism for defining identity groups, roles and permissions.</p>"+
+                "<p>Identities (users, computers, services etc) can be assigned to a group, all " +
+                "identities in the same group have identical permissions.</p>" +
+                "<p>Roles define the jobs that identities can do, and permissions define the " +
+                "things that identities need to have access to to be able to do that job. For " +
+                "example there could be a role of producing the company payroll that needs permission "+
+                "to access employee salaries.<p>" +
+                "<p>Permissions are defined by the software development team. These are the things that "+
+                "the software will check before executing a request. For example if an identity makes "+
+                "an API call to retrieve an employee's salary the software will check that the calling "+
+                "identity has this permission before returning the salary information.</p>"; }
         }
 
         string ISelfDocumenting.ShortDescription
         {
-            get { return "Provides a mechanism for defining identity groups, roles and permissionn"; }
+            get { return "Provides a mechanism for defining identity groups, roles and permissions"; }
         }
 
         #endregion
@@ -204,7 +215,7 @@ namespace OwinFramework.Authorization
 
         private class Authorization : IUpstreamAuthorization, IAuthorization
         {
-            private readonly IAuthorizationData _authorizationData;
+            private readonly IIdentityData _identityData;
             private readonly Action<string> _trace;
             public IIdentification Identification;
 
@@ -212,10 +223,10 @@ namespace OwinFramework.Authorization
             private readonly List<string> _requiredPermissions = new List<string>();
 
             public Authorization(
-                IAuthorizationData authorizationData, 
+                IIdentityData identityData, 
                 Action<string> trace)
             {
-                _authorizationData = authorizationData;
+                _identityData = identityData;
                 _trace = trace;
             }
 
@@ -241,7 +252,7 @@ namespace OwinFramework.Authorization
 
             public bool HasPermission(string permissionName, string resourceName)
             {
-                var result = _authorizationData.HasPermission(Identification, permissionName, resourceName);
+                var result = _identityData.HasPermission(Identification, permissionName, resourceName);
 
                 if (!result)
                     _trace(
@@ -255,7 +266,7 @@ namespace OwinFramework.Authorization
 
             public bool IsInRole(string roleName)
             {
-                var result = _authorizationData.IsInRole(Identification, roleName);
+                var result = _identityData.IsInRole(Identification, roleName);
 
                 if (!result)
                     _trace(GetType().Name + " '" + Identification.Identity + " does not have '" + roleName + "' role");

@@ -48,12 +48,18 @@ class GroupRoleViewModel extends ViewModel
 	ParentChildModel _model;
 	ParentChildModel get model => _model;
 
+  int groupId;
+  int roleId;
+
 	void set model(ParentChildModel value)
 	{
 		_model = value;
 
 		if (value == null)
 		{
+			groupId = -1;
+			roleId = -1;
+
 			groupCodeName.getter = null;
 			groupDisplayName.getter = null;
 			groupDescription.getter = null;
@@ -64,8 +70,8 @@ class GroupRoleViewModel extends ViewModel
 		}
 		else
 		{
-			var groupId = value.parentId;
-			var roleId = value.childId;
+			groupId = value.parentId;
+			roleId = value.childId;
 
 			ViewModelGetter<GroupViewModel> groupViewModel = ()
 			{

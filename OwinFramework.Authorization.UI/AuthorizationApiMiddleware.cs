@@ -232,6 +232,13 @@ namespace OwinFramework.Authorization.UI
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignPermissionToRole);
                     Trace(context, () => GetType().Name + " routing request to PUT role permission list handler");
                 }
+                else if (path.StartsWithSegments(_groupRoleListPath))
+                {
+                    apiContext.Handler = UpdateGroupRoleListHandler;
+                    if (upstreamAuthorization != null)
+                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignRoleToGroup);
+                    Trace(context, () => GetType().Name + " routing request to PUT group role list handler");
+                }
                 else if (path.StartsWithSegments(_groupPath))
                 {
                     apiContext.Handler = UpdateGroupHandler;
@@ -665,6 +672,116 @@ namespace OwinFramework.Authorization.UI
             return Json(context, response);
         }
 
+        private Task UpdateGroupRoleListHandler(IOwinContext context)
+        {
+            Trace(context, () => GetType().Name + " updating group roles");
+
+            var response = new ApiResponse();
+            var updatedGroupRoles = GetBody<List<RelationDto>>(context);
+
+            long? groupId = null;
+            var residualPath = context.Request.Path.Value.Substring(_groupRoleListPath.Value.Length);
+            if (residualPath.Length > 0)
+            {
+                if (residualPath.StartsWith("/")) residualPath = residualPath.Substring(1);
+
+                long id;
+                if (!long.TryParse(residualPath, out id))
+                {
+                    response.Result = ApiResult.BadRequest;
+                    response.ErrorMessage = "The group ID in the URL must be a valid integer";
+                    return Json(context, response);
+                }
+                groupId = id;
+            }
+
+            var rolesToAdd = new List<RelationDto>();
+            var rolesToRemove = new List<RelationDto>();
+
+            if (groupId.HasValue)
+            {
+                Trace(context, () => GetType().Name + " only updating roles for group #" + groupId.Value);
+
+                updatedGroupRoles = updatedGroupRoles.Where(r => r.ParentId == groupId.Value).ToList();
+                var currentRoles = _authorizationData.GetGroupRoles(groupId.Value);
+
+                foreach (var role in currentRoles)
+                {
+                    var roleId = role.Id;
+                    if (updatedGroupRoles.FirstOrDefault(p => p.ChildId == roleId) == null)
+                        rolesToRemove.Add(new RelationDto { ParentId = groupId.Value, ChildId = role.Id });
+                }
+
+                foreach (var groupRole in updatedGroupRoles)
+                {
+                    var roleId = groupRole.ChildId;
+                    if (currentRoles.FirstOrDefault(p => p.Id == roleId) == null)
+                        rolesToAdd.Add(groupRole);
+                }
+            }
+            else
+            {
+                var currentGroupRoles = _authorizationData.GetAllGroupRoles();
+
+                foreach (var currentGroupRole in currentGroupRoles)
+                {
+                    var currentGroupId = currentGroupRole.Item1;
+                    var currentRoleId = currentGroupRole.Item2;
+                    if (updatedGroupRoles.FirstOrDefault(p => p.ParentId == currentGroupId && p.ChildId == currentRoleId) == null)
+                        rolesToRemove.Add(new RelationDto { ParentId = currentGroupId, ChildId = currentRoleId });
+                }
+
+                foreach (var updatedGroupRole in updatedGroupRoles)
+                {
+                    var updatedGroupId = updatedGroupRole.ParentId;
+                    var updatedRoleId = updatedGroupRole.ChildId;
+                    if (currentGroupRoles.FirstOrDefault(p => p.Item1 == updatedGroupId && p.Item2 == updatedRoleId) == null)
+                        rolesToAdd.Add(updatedGroupRole);
+                }
+            }
+
+            Trace(context, () => GetType().Name + " request contains " + rolesToAdd.Count + " roles to assign");
+            Trace(context, () => GetType().Name + " request contains " + rolesToRemove.Count + " roles to remove");
+
+            var authorization = context.GetFeature<IAuthorization>();
+            if (authorization != null)
+            {
+                foreach (var roleToAdd in rolesToAdd)
+                {
+                    var role = _authorizationData.GetRole(roleToAdd.ChildId);
+                    if (!authorization.HasPermission(_configuration.PermissionToAssignRoleToGroup,
+                            "role:" + role.CodeName))
+                    {
+                        response.Result = ApiResult.AccessDenied;
+                        response.ErrorMessage = "You do not have permission to assign '" + role.DisplayName + "' to a group";
+                        return Json(context, response);
+                    }
+                }
+
+                foreach (var roleToRemove in rolesToRemove)
+                {
+                    var role = _authorizationData.GetRole(roleToRemove.ChildId);
+                    if (!authorization.HasPermission(_configuration.PermissionToAssignRoleToGroup,
+                            "role:" + role.CodeName))
+                    {
+                        response.Result = ApiResult.AccessDenied;
+                        response.ErrorMessage = "You do not have permission to remove '" + role.DisplayName + "' from a group";
+                        return Json(context, response);
+                    }
+                }
+            }
+
+            Trace(context, () => GetType().Name + " the requesting user is authorized to make these changes");
+
+            foreach (var roleToAdd in rolesToAdd)
+                _authorizationData.AddRoleToGroup(roleToAdd.ChildId, roleToAdd.ParentId);
+
+            foreach (var roleToRemove in rolesToRemove)
+                _authorizationData.RemoveRoleFromGroup(roleToRemove.ChildId, roleToRemove.ParentId);
+
+            return Json(context, response);
+        }
+
         #endregion
 
         #region Role related handlers
@@ -863,6 +980,8 @@ namespace OwinFramework.Authorization.UI
 
         private Task UpdateRolePermissionListHandler(IOwinContext context)
         {
+            Trace(context, () => GetType().Name + " updating role permissions");
+
             var response = new ApiResponse();
             var updatedPermissions = GetBody<List<RelationDto>>(context);
 
@@ -887,6 +1006,8 @@ namespace OwinFramework.Authorization.UI
 
             if (roleId.HasValue)
             {
+                Trace(context, () => GetType().Name + " only updating permissions for role #" + roleId.Value);
+
                 updatedPermissions = updatedPermissions.Where(r => r.ParentId == roleId.Value).ToList();
                 var currentPermissions = _authorizationData.GetRolePermissions(roleId.Value);
 
@@ -925,6 +1046,9 @@ namespace OwinFramework.Authorization.UI
                 }
             }
 
+            Trace(context, () => GetType().Name + " request contains " + permissionsToAdd.Count + " permissions to grant");
+            Trace(context, () => GetType().Name + " request contains " + permissionsToRemove.Count + " permissions to revoke");
+
             var authorization = context.GetFeature<IAuthorization>();
             if (authorization != null)
             {
@@ -952,6 +1076,8 @@ namespace OwinFramework.Authorization.UI
                     }
                 }
             }
+
+            Trace(context, () => GetType().Name + " the requesting user is authorized to make these changes");
 
             foreach (var permissionToAdd in permissionsToAdd)
                 _authorizationData.AddPermissionToRole(permissionToAdd.ChildId, permissionToAdd.ParentId);

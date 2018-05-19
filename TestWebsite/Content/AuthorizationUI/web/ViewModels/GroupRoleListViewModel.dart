@@ -1,7 +1,6 @@
-﻿import '../MVVM/Mvvm.dart';
+﻿import 'dart:async';
+import '../MVVM/Mvvm.dart';
 import '../ViewModels/GroupRoleViewModel.dart';
-import '../ViewModels/GroupListViewModel.dart';
-import '../ViewModels/RoleListViewModel.dart';
 import '../ViewModels/AuthorizationViewModel.dart';
 import '../Models/ParentChildModel.dart';
 import '../Server.dart';
@@ -16,7 +15,7 @@ class GroupRoleListViewModel extends ViewModel
 		this._authorizationViewModel,
 		[
 			List<ParentChildModel> groupRoleModels
-		]): super(false)
+		]): super(true)
 	{
 		groupRoles = new ModelList<ParentChildModel, GroupRoleViewModel>(
 			(Map json) => new ParentChildModel(json),
@@ -55,6 +54,13 @@ class GroupRoleListViewModel extends ViewModel
 			.then((List<ParentChildModel> m) => models = m)
 			.catchError((Error error) => MvvmEvents.alert.raise(error.toString()));
 	}
+
+  Future<SaveResult> saveChanges(ChangeState state, bool alert) async
+  {
+    removeDeleted();
+    var response = await Server.updateGroupRoles(models);
+    return response.isSuccess ? SaveResult.saved : SaveResult.failed;
+  }
 
 	String toString() => 'group roles';
 }
