@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
-using OwinFramework.Authorization.Data.DataContracts;
-using OwinFramework.Authorization.Data.Interfaces;
+using OwinFramework.Authorization.Core.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
 using OwinFramework.InterfacesV1.Middleware;
 using OwinFramework.InterfacesV1.Upstream;
+using OwinFramework.Authorization.Core.DataContracts;
 
 namespace TestWebsite.Middleware
 {

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Owin;
-using OwinFramework.Authorization.Data.Interfaces;
+using OwinFramework.Authorization.Core.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;

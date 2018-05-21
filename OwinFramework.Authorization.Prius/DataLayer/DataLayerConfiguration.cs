@@ -1,4 +1,4 @@
-﻿namespace OwinFramework.Authorization.Data.DataLayer
+﻿namespace OwinFramework.Authorization.Prius.DataLayer
 {
     public class DataLayerConfiguration
     {

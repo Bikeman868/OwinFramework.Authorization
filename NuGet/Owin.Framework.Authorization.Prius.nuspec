@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Owin.Framework.Authorization.Prius</id>
+    <version>1.0.9</version>
+    <title>Owin.Framework.Authorization.Prius</title>
+    <authors>Martin Halliday</authors>
+    <owners>Martin Halliday</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Data access layer for the Owin Framework authorization middleware that uses the Prius ORM</description>
+    <copyright>Copyright Martin Halliday 2018</copyright>
+    <releaseNotes>Published in separate Nuget package</releaseNotes>
+    <summary>
+		Adding this package to your project will provide an implementation of IAuthorizationData and IIdentityData 
+		using the Prius ORM to store authorization data in a relational database. The Owin Framework authorization
+		middleware depends on IIdentityData and the user interface depends on both interfaces.
+	</summary>
+    <projectUrl>https://github.com/Bikeman868/OwinFramework.Authorization</projectUrl>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <tags>OWIN framework middleware authorization security permissions</tags>
+    <dependencies>
+      <dependency id="Owin.Framework" version="2.6.4" />
+      <dependency id="Owin.Framework.Authorization.Core" version="1.0.9" />
+      <dependency id="Ioc.Modules" version="1.3.0" />
+      <dependency id="Prius" version="2.0.5" />
+    </dependencies>
+    <references>
+    </references>
+  </metadata>
+  <files>
+    <file src="..\OwinFramework.Authorization.Prius\bin\Net40\Release\OwinFramework.Authorization.Prius.dll" target="lib\net40"/>
+    <file src="..\OwinFramework.Authorization.Prius\bin\Net45\Release\OwinFramework.Authorization.Prius.dll" target="lib\net45"/>
+    
+    <file src="..\*.md" target=""/>
+  </files>
+</package>

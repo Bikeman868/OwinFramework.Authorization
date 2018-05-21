@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ioc.Modules;
-using OwinFramework.Authorization.Data.Interfaces;
+using OwinFramework.Authorization.Core.Interfaces;
 
 namespace OwinFramework.Authorization.UI
 {

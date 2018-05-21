@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4E4A8513-FCD5-4EFF-8F19-109DCD8421E7}</ProjectGuid>
+    <ProjectGuid>{B5860F84-9158-4177-81DF-9497F0A4EA20}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OwinFramework.Authorization</RootNamespace>
-    <AssemblyName>OwinFramework.Authorization</AssemblyName>
+    <RootNamespace>OwinFramework.Authorization.Prius</RootNamespace>
+    <AssemblyName>OwinFramework.Authorization.Prius</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseIntermediateOutputPath>obj\Net40\</BaseIntermediateOutputPath>
@@ -52,6 +52,14 @@
       <HintPath>..\packages\Owin.Framework.2.6.4\lib\net40\OwinFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Prius.Contracts, Version=2.0.5.24, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prius.2.0.5\lib\net40\Prius.Contracts.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Prius.Orm, Version=2.0.5.24, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prius.2.0.5\lib\net40\Prius.Orm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -66,13 +74,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorizationMiddleware.cs" />
-    <Compile Include="AuthorizationConfiguration.cs" />
+    <Compile Include="Poco\IdentityGroup.cs" />
+    <Compile Include="Poco\IdentityRole.cs" />
+    <Compile Include="Poco\IdentityPermission.cs" />
+    <Compile Include="DatabaseRecords\Group.cs" />
+    <Compile Include="DatabaseRecords\Permission.cs" />
+    <Compile Include="DatabaseRecords\Role.cs" />
+    <Compile Include="DataLayer\AuthorizationData.cs" />
+    <Compile Include="DataLayer\DataLayerConfiguration.cs" />
+    <Compile Include="Exceptions\DataException.cs" />
+    <Compile Include="Exceptions\UpdateFailedException.cs" />
+    <Compile Include="Exceptions\DeleteFailedException.cs" />
+    <Compile Include="Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.OwinFramework.Authorization.Net40.config" />
+    <Content Include="SQL\MySQL Tests.sql" />
+    <Content Include="SQL\MySQL.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.OwinFramework.Authorization.Prius.Net40.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OwinFramework.Authorization.Core\OwinFramework.Authorization.Core.Net40.csproj">

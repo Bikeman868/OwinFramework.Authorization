@@ -5,17 +5,22 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
-using OwinFramework.Authorization.Data.DataContracts;
-using OwinFramework.Authorization.Data.Interfaces;
+using OwinFramework.Authorization.Core.Interfaces;
+using OwinFramework.Authorization.Prius.DatabaseRecords;
+using OwinFramework.Authorization.Prius.Poco;
 using OwinFramework.InterfacesV1.Middleware;
 using Prius.Contracts.Interfaces;
-using Prius.Contracts.Utility;
+using Prius.Contracts.Interfaces.External;
 using Urchin.Client.Interfaces;
-using Group = OwinFramework.Authorization.Data.DataContracts.Group;
+using Group = OwinFramework.Authorization.Prius.DatabaseRecords.Group;
 
-namespace OwinFramework.Authorization.Data.DataLayer
+namespace OwinFramework.Authorization.Prius.DataLayer
 {
-    internal class AuthorizationData: IAuthorizationData
+    internal class AuthorizationData: 
+        IAuthorizationData, 
+        IFactory<IGroup>,
+        IFactory<IPermission>,
+        IFactory<IRole>
     {
         private readonly IContextFactory _contextFactory;
         private readonly ICommandFactory _commandFactory;
@@ -84,14 +89,16 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     }
                     catch
                     {
-                        Thread.Sleep(TimeSpan.FromSeconds(10));
+                        Thread.Sleep(TimeSpan.FromMinutes(5));
                     }
                 }
-            });
+            }) 
+            {
+                Priority = ThreadPriority.BelowNormal, 
+                Name = "Reload permissions", 
+                IsBackground = true
+            };
 
-            _reloadThread.Priority = ThreadPriority.BelowNormal;
-            _reloadThread.Name = "Reload permissions";
-            _reloadThread.IsBackground = true;
             _reloadThread.Start();
         }
 
@@ -193,7 +200,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             return identityGroup;
         }
 
-        public void GetIdentity(IIdentification identification, out Group group, out List<string> roles, out List<string> permissions)
+        public void GetIdentity(IIdentification identification, out Core.DataContracts.Group group, out List<string> roles, out List<string> permissions)
         {
             var identityGroup = FindIdentityGroup(identification);
 
@@ -349,145 +356,150 @@ namespace OwinFramework.Authorization.Data.DataLayer
 
         #region Stored procedure wrappers
 
-        public Group GetGroup(long groupId)
+        public Core.DataContracts.Group GetGroup(long groupId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroup"))
                 {
                     command.AddParameter("groupId", groupId);
-                    using (var results = context.ExecuteEnumerable<Group>(command))
+                    using (var results = context.ExecuteEnumerable<IGroup>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Group;
                     }
                 }
             }
         }
 
-        public Group GetGroup(string codeName)
+        public Core.DataContracts.Group GetGroup(string codeName)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroupByCodeName"))
                 {
                     command.AddParameter("codeName", codeName);
-                    using (var results = context.ExecuteEnumerable<Group>(command))
+                    using (var results = context.ExecuteEnumerable<IGroup>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Group;
                     }
                 }
             }
         }
 
-        public IList<Group> GetGroups(Func<Group, bool> filterFunction = null)
+        public IList<Core.DataContracts.Group> GetGroups(Func<Core.DataContracts.Group, bool> filterFunction = null)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroups"))
                 {
-                    using (var results = context.ExecuteEnumerable<Group>(command))
+                    using (var results = context.ExecuteEnumerable<IGroup>(command, null, this))
                     {
+                        var groups = results.Cast<Core.DataContracts.Group>();
                         return filterFunction == null
-                            ? results.ToList()
-                            : results.Where(filterFunction).ToList();
+                            ? groups.ToList()
+                            : groups.Where(filterFunction).ToList();
                     }
                 }
             }
         }
 
-        public Role GetRole(long roleId)
+        public Core.DataContracts.Role GetRole(long roleId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetRole"))
                 {
                     command.AddParameter("roleId", roleId);
-                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    using (var results = context.ExecuteEnumerable<IRole>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Role;
                     }
                 }
             }
         }
 
-        public Role GetRole(string codeName)
+        public Core.DataContracts.Role GetRole(string codeName)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetRoleByCodeName"))
                 {
                     command.AddParameter("codeName", codeName);
-                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    using (var results = context.ExecuteEnumerable<IRole>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Role;
                     }
                 }
             }
         }
 
-        public IList<Role> GetRoles(Func<Role, bool> filterFunction = null)
+        public IList<Core.DataContracts.Role> GetRoles(Func<Core.DataContracts.Role, bool> filterFunction = null)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetRoles"))
                 {
-                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    using (var results = context.ExecuteEnumerable<IRole>(command, null, this))
                     {
+                        var roles = results.Cast<Core.DataContracts.Role>();
                         return filterFunction == null
-                            ? results.ToList()
-                            : results.Where(filterFunction).ToList();
+                            ? roles.ToList()
+                            : roles.Where(filterFunction).ToList();
                     }
                 }
             }
         }
 
-        public Permission GetPermission(long permissionId)
+        public Core.DataContracts.Permission GetPermission(long permissionId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetPermission"))
                 {
                     command.AddParameter("permissionId", permissionId);
-                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    using (var results = context.ExecuteEnumerable<IPermission>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Permission;
                     }
                 }
             }
         }
 
-        public Permission GetPermission(string codeName)
+        public Core.DataContracts.Permission GetPermission(string codeName)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetPermissionByCodeName"))
                 {
                     command.AddParameter("codeName", codeName);
-                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    using (var results = context.ExecuteEnumerable<IPermission>(command, null, this))
                     {
-                        return results.FirstOrDefault(p => string.IsNullOrEmpty(p.Resource));
+                        return results
+                            .Cast<Core.DataContracts.Permission>()
+                            .FirstOrDefault(p => string.IsNullOrEmpty(p.Resource));
                     }
                 }
             }
         }
 
-        public IList<Permission> GetPermissions(Func<Permission, bool> filterFunction = null)
+        public IList<Core.DataContracts.Permission> GetPermissions(Func<Core.DataContracts.Permission, bool> filterFunction = null)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetPermissions"))
                 {
-                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    using (var results = context.ExecuteEnumerable<IPermission>(command, null, this))
                     {
+                        var permissions = results.Cast<Core.DataContracts.Permission>();
                         return filterFunction == null
-                            ? results.ToList()
-                            : results.Where(filterFunction).ToList();
+                            ? permissions.ToList()
+                            : permissions.Where(filterFunction).ToList();
                     }
                 }
             }
         }
 
-        public Group NewGroup(Group group)
+        public Core.DataContracts.Group NewGroup(Core.DataContracts.Group group)
         {
             Validate(group);
 
@@ -498,15 +510,15 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("groupCodeName", group.CodeName);
                     command.AddParameter("groupDisplayName", group.DisplayName);
                     command.AddParameter("groupDescription", group.Description);
-                    using (var results = context.ExecuteEnumerable<Group>(command))
+                    using (var results = context.ExecuteEnumerable<IGroup>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Group;
                     }
                 }
             }
         }
 
-        public Role NewRole(Role role)
+        public Core.DataContracts.Role NewRole(Core.DataContracts.Role role)
         {
             Validate(role);
 
@@ -517,15 +529,15 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("roleCodeName", role.CodeName);
                     command.AddParameter("roleDisplayName", role.DisplayName);
                     command.AddParameter("roleDescription", role.Description);
-                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    using (var results = context.ExecuteEnumerable<IRole>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Role;
                     }
                 }
             }
         }
 
-        public Permission NewPermission(Permission permission)
+        public Core.DataContracts.Permission NewPermission(Core.DataContracts.Permission permission)
         {
             Validate(permission);
 
@@ -537,15 +549,15 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("permissionResource", permission.Resource);
                     command.AddParameter("permissionDisplayName", permission.DisplayName);
                     command.AddParameter("permissionDescription", permission.Description);
-                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    using (var results = context.ExecuteEnumerable<IPermission>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Permission;
                     }
                 }
             }
         }
 
-        public Permission EnsurePermission(Permission permission)
+        public Core.DataContracts.Permission EnsurePermission(Core.DataContracts.Permission permission)
         {
             if (string.IsNullOrEmpty(permission.Resource))
             {
@@ -564,7 +576,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             return NewPermission(permission);
         }
 
-        public Group UpdateGroup(Group group)
+        public Core.DataContracts.Group UpdateGroup(Core.DataContracts.Group group)
         {
             Validate(group);
 
@@ -576,15 +588,15 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("groupCodeName", group.CodeName);
                     command.AddParameter("groupDisplayName", group.DisplayName);
                     command.AddParameter("groupDescription", group.Description);
-                    using (var results = context.ExecuteEnumerable<Group>(command))
+                    using (var results = context.ExecuteEnumerable<IGroup>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Group;
                     }
                 }
             }
         }
 
-        public Role UpdateRole(Role role)
+        public Core.DataContracts.Role UpdateRole(Core.DataContracts.Role role)
         {
             Validate(role);
 
@@ -596,15 +608,15 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("roleCodeName", role.CodeName);
                     command.AddParameter("roleDisplayName", role.DisplayName);
                     command.AddParameter("roleDescription", role.Description);
-                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    using (var results = context.ExecuteEnumerable<IRole>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Role;
                     }
                 }
             }
         }
 
-        public Permission UpdatePermission(Permission permission)
+        public Core.DataContracts.Permission UpdatePermission(Core.DataContracts.Permission permission)
         {
             Validate(permission);
 
@@ -617,9 +629,9 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     command.AddParameter("permissionResource", permission.Resource);
                     command.AddParameter("permissionDisplayName", permission.DisplayName);
                     command.AddParameter("permissionDescription", permission.Description);
-                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    using (var results = context.ExecuteEnumerable<IPermission>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Permission;
                     }
                 }
             }
@@ -662,46 +674,46 @@ namespace OwinFramework.Authorization.Data.DataLayer
             }
         }
 
-        public IList<Role> GetGroupRoles(long groupId)
+        public IList<Core.DataContracts.Role> GetGroupRoles(long groupId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroupRoles"))
                 {
                     command.AddParameter("groupId", groupId);
-                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    using (var results = context.ExecuteEnumerable<IRole>(command, null, this))
                     {
-                        return results.ToList();
+                        return results.Cast<Core.DataContracts.Role>().ToList();
                     }
                 }
             }
         }
 
-        public IList<Permission> GetRolePermissions(long roleId)
+        public IList<Core.DataContracts.Permission> GetRolePermissions(long roleId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetRolePermissions"))
                 {
                     command.AddParameter("roleId", roleId);
-                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    using (var results = context.ExecuteEnumerable<IPermission>(command, null, this))
                     {
-                        return results.ToList();
+                        return results.Cast<Core.DataContracts.Permission>().ToList();
                     }
                 }
             }
         }
 
-        public IList<Permission> GetGroupPermissions(long groupId)
+        public IList<Core.DataContracts.Permission> GetGroupPermissions(long groupId)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroupPermissions"))
                 {
                     command.AddParameter("groupId", groupId);
-                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    using (var results = context.ExecuteEnumerable<IPermission>(command, null, this))
                     {
-                        return results.ToList();
+                        return results.Cast<Core.DataContracts.Permission>().ToList();
                     }
                 }
             }
@@ -724,7 +736,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
             return GetIdentityGroupId(identification.Identity);
         }
 
-        public Group GetGroup(IIdentification identification)
+        public Core.DataContracts.Group GetGroup(IIdentification identification)
         {
             var groupId = GetGroupId(identification);
             if (!groupId.HasValue) return null;
@@ -734,45 +746,45 @@ namespace OwinFramework.Authorization.Data.DataLayer
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetGroup"))
                 {
                     command.AddParameter("groupId", groupId.Value);
-                    using (var results = context.ExecuteEnumerable<Group>(command))
+                    using (var results = context.ExecuteEnumerable<IGroup>(command, null, this))
                     {
-                        return results.FirstOrDefault();
+                        return results.FirstOrDefault() as Core.DataContracts.Group;
                     }
                 }
             }
         }
 
-        public IList<Role> GetRoles(IIdentification identification)
+        public IList<Core.DataContracts.Role> GetRoles(IIdentification identification)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityRoles"))
                 {
                     command.AddParameter("identity", identification.Identity);
-                    using (var results = context.ExecuteEnumerable<Role>(command))
+                    using (var results = context.ExecuteEnumerable<IRole>(command, null, this))
                     {
-                        return results.ToList();
+                        return results.Cast<Core.DataContracts.Role>().ToList();
                     }
                 }
             }
         }
 
-        public IList<Permission> GetPermissions(IIdentification identification)
+        public IList<Core.DataContracts.Permission> GetPermissions(IIdentification identification)
         {
             using (var context = _contextFactory.Create(_repositoryReadonlyName))
             {
                 using (var command = _commandFactory.CreateStoredProcedure("sp_GetIdentityPermissions"))
                 {
                     command.AddParameter("identity", identification.Identity);
-                    using (var results = context.ExecuteEnumerable<Permission>(command))
+                    using (var results = context.ExecuteEnumerable<IPermission>(command, null, this))
                     {
-                        return results.ToList();
+                        return results.Cast<Core.DataContracts.Permission>().ToList();
                     }
                 }
             }
         }
 
-        public Group ChangeGroup(IIdentification identification, long? groupId)
+        public Core.DataContracts.Group ChangeGroup(IIdentification identification, long? groupId)
         {
             try
             {
@@ -782,9 +794,9 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     {
                         command.AddParameter("identity", identification.Identity);
                         command.AddParameter("groupId", groupId);
-                        using (var results = context.ExecuteEnumerable<Group>(command))
+                        using (var results = context.ExecuteEnumerable<IGroup>(command, null, this))
                         {
-                            return results.FirstOrDefault();
+                            return results.FirstOrDefault() as Core.DataContracts.Group;
                         }
                     }
                 }
@@ -895,7 +907,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
         private readonly Regex _resourceRegex = new Regex("^[a-z0-9_\\-.]+:[a-z0-9_\\-.@/]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _resourceMatchRegex = new Regex("^[a-z0-9_\\-.]+:(\\*|{[a-z\\.]+}|[a-z0-9_\\-.@]+)(/(\\*|{[a-z\\.]+}|[a-z0-9_\\-.@]+))*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        public void Validate(Group group)
+        public void Validate(Core.DataContracts.Group group)
         {
             if (group.CodeName == null || group.CodeName.Length > 30 || group.CodeName.Length < 1)
                 throw new HttpException((int)HttpStatusCode.BadRequest,
@@ -910,7 +922,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     "Group display name length must be between 1 and 50 characters");
         }
 
-        public void Validate(Role role)
+        public void Validate(Core.DataContracts.Role role)
         {
             if (role.CodeName == null || role.CodeName.Length > 30 || role.CodeName.Length < 1)
                 throw new HttpException((int)HttpStatusCode.BadRequest,
@@ -925,7 +937,7 @@ namespace OwinFramework.Authorization.Data.DataLayer
                     "Role display name length must be between 1 and 50 characters");
         }
 
-        public void Validate(Permission permission)
+        public void Validate(Core.DataContracts.Permission permission)
         {
             if (permission.CodeName == null || permission.CodeName.Length > 80 || permission.CodeName.Length < 1)
                 throw new HttpException((int)HttpStatusCode.BadRequest,
@@ -952,5 +964,24 @@ namespace OwinFramework.Authorization.Data.DataLayer
         }
 
         #endregion
+
+        #region Record factory methods
+
+        IGroup global::Prius.Contracts.Interfaces.External.IFactory<IGroup>.Create()
+        {
+            return new Group();
+        }
+
+        IPermission global::Prius.Contracts.Interfaces.External.IFactory<IPermission>.Create()
+        {
+            return new Permission();
+        }
+
+        IRole global::Prius.Contracts.Interfaces.External.IFactory<IRole>.Create()
+        {
+            return new Role();
+        }
+
+        #endregion;
     }
 }

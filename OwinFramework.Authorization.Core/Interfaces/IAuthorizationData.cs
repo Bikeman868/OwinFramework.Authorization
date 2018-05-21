@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using OwinFramework.Authorization.Data.DataContracts;
+using OwinFramework.Authorization.Core.DataContracts;
 using OwinFramework.InterfacesV1.Middleware;
 
-namespace OwinFramework.Authorization.Data.Interfaces
+namespace OwinFramework.Authorization.Core.Interfaces
 {
+    /// <summary>
+    /// Defines the interface to a data access layer that is required by the
+    /// authorization system user interface
+    /// </summary>
     public interface IAuthorizationData : IIdentityData
     {
         /// <summary>

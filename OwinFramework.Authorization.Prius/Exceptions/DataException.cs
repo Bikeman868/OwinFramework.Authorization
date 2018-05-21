@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OwinFramework.Authorization.Data.Exceptions
+namespace OwinFramework.Authorization.Prius.Exceptions
 {
     public class DataException: Exception
     {

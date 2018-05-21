@@ -10,8 +10,7 @@ using System.Web;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using OwinFramework.Authorization.Data.DataContracts;
-using OwinFramework.Authorization.Data.Interfaces;
+using OwinFramework.Authorization.Core.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
@@ -21,6 +20,7 @@ using OwinFramework.InterfacesV1.Middleware;
 using OwinFramework.InterfacesV1.Upstream;
 using OwinFramework.MiddlewareHelpers.Identification;
 using OwinFramework.MiddlewareHelpers.SelfDocumenting;
+using OwinFramework.Authorization.Core.DataContracts;
 
 namespace OwinFramework.Authorization.UI
 {

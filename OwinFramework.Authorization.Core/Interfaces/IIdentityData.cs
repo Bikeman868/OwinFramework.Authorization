@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using OwinFramework.Authorization.Data.DataContracts;
+﻿using System.Collections.Generic;
+using OwinFramework.Authorization.Core.DataContracts;
 using OwinFramework.InterfacesV1.Middleware;
 
-namespace OwinFramework.Authorization.Data.Interfaces
+namespace OwinFramework.Authorization.Core.Interfaces
 {
+    /// <summary>
+    /// Defines the interface to the data access layer that is required
+    /// for the authorization system to check permissions on incomming requests
+    /// </summary>
     public interface IIdentityData
     {
         /// <summary>
@@ -18,7 +21,7 @@ namespace OwinFramework.Authorization.Data.Interfaces
             out List<string> permissions);
 
         /// <summary>
-        /// Creates a permission if the permission does not excist, or returns the
+        /// Creates a permission if the permission does not exist, or returns the
         /// existing permission definition. Applications can use this at startup to
         /// ensure that the permissions they check for exist in the database.
         /// </summary>

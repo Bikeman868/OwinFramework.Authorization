@@ -2,31 +2,29 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization</id>
-    <version>1.0.7</version>
+    <version>1.0.9</version>
     <title>Owin.Framework.Authorization</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Owin Framework authorization middleware allows users, groups, roles and permissions to be managed, and checks that the user making the request is authorized to do so</description>
+    <description>Owin Framework authorization middleware that checks if the identity making the request has permission to do so and returns a 403 response if it does not</description>
     <copyright>Copyright Martin Halliday 2018</copyright>
-    <releaseNotes>Added UI for managing role permissions</releaseNotes>
-    <summary>Adding this package to your project will allow you to manage user access to protected resources</summary>
+    <releaseNotes>Split out the data access layer into a separate package so that other implementations can be used</releaseNotes>
+    <summary>Adding this package to your project will allow you to block access to features that the requesting identity does not have permission for</summary>
     <projectUrl>https://github.com/Bikeman868/OwinFramework.Authorization</projectUrl>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <tags>OWIN framework middleware authorization security permissions</tags>
     <dependencies>
-      <dependency id="Owin.Framework" version="2.6.0" />
-      <dependency id="Ioc.Modules" version="1.2.1" />
-      <dependency id="Prius" version="2.0.4" />
+      <dependency id="Owin.Framework" version="2.6.4" />
+      <dependency id="Owin.Framework.Authorization.Core" version="1.0.9" />
+      <dependency id="Ioc.Modules" version="1.3.0" />
     </dependencies>
     <references>
     </references>
   </metadata>
   <files>
     <file src="..\OwinFramework.Authorization\bin\Net40\Release\OwinFramework.Authorization.dll" target="lib\net40"/>
-    <file src="..\OwinFramework.Authorization\bin\Net40\Release\OwinFramework.Authorization.Data.dll" target="lib\net40"/>
     <file src="..\OwinFramework.Authorization\bin\Net45\Release\OwinFramework.Authorization.dll" target="lib\net45"/>
-    <file src="..\OwinFramework.Authorization\bin\Net45\Release\OwinFramework.Authorization.Data.dll" target="lib\net45"/>
     <file src="..\*.md" target=""/>
   </files>
 </package>

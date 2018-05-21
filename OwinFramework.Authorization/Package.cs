@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ioc.Modules;
-using OwinFramework.Authorization.Data.Interfaces;
+using OwinFramework.Authorization.Core.Interfaces;
 
 namespace OwinFramework.Authorization
 {
@@ -15,7 +15,7 @@ namespace OwinFramework.Authorization
             {
                 return new List<IocRegistration>
                 {
-                    new IocRegistration().Init<IAuthorizationData>(),
+                    new IocRegistration().Init<IIdentityData>(),
                 };
             }
         }
