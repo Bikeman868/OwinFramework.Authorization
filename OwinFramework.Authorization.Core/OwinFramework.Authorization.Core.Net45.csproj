@@ -65,8 +65,6 @@
     <Compile Include="DataContracts\Group.cs" />
     <Compile Include="DataContracts\Permission.cs" />
     <Compile Include="DataContracts\Role.cs" />
-    <Compile Include="interfaces\IAuthorizationData.cs" />
-    <Compile Include="interfaces\IIdentityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

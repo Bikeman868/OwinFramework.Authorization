@@ -111,3 +111,31 @@ this middleware will only grant permission if the caller has a validated
 "username" claim from the Identification middleware that matches the 
 username of the user information that was requested.
 
+## Packages
+
+If you add all of these packages to your project it will: store 
+authentication data in a MySQL database, validate requests and return 
+404 responses, provide a user interface for managing user permissions.
+
+The only piece that is not provided here and is required to make the
+user interface work is an implementation of `IIdentityDirectory`. This
+interface is required to search for users so that they can be assigned 
+to groups.
+
+### Owin.Framework.Authorization.Core
+
+This package defines all of th interfaces between the other packages.
+There is no funcionallity here, but all of the other packages depend on it.
+
+### Owin.Framework.Authorization.Core
+
+This package contains Owin middleware that uses the `IIdentityData` interface 
+to validate requests. Whenever a request comes into the Owin pipeline this
+middleware will check if any permissions are required and if the caller does
+not have those permissions then a 403 response is rerurned.
+
+### Owin.Framework.Authorization.Prius
+
+This package contains an implementation of `IIdentityData` and `IAuthorizationData`
+using the Prius ORM. The Prius ORM has drivers for a number of popular relational
+database engines.
