@@ -16,7 +16,6 @@
     <tags>OWIN framework middleware authorization security permissions</tags>
     <dependencies>
       <dependency id="Owin.Framework" version="2.6.4" />
-      <dependency id="Ioc.Modules" version="1.3.0" />
     </dependencies>
     <references>
     </references>
