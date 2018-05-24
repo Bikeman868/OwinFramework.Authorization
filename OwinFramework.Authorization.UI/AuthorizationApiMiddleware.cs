@@ -25,8 +25,8 @@ using OwinFramework.Authorization.Core.DataContracts;
 namespace OwinFramework.Authorization.UI
 {
     public class AuthorizationApiMiddleware:
-        IMiddleware<IAuthorization>,
-        IUpstreamCommunicator<IUpstreamAuthorization>,
+        IMiddleware<object>,
+        IRoutingProcessor,
         IConfigurable,
         ISelfDocumenting,
         ITraceable
