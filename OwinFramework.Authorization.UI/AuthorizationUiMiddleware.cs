@@ -14,6 +14,7 @@ using OwinFramework.InterfacesV1.Capability;
 using OwinFramework.InterfacesV1.Middleware;
 using OwinFramework.InterfacesV1.Upstream;
 using OwinFramework.MiddlewareHelpers.EmbeddedResources;
+using OwinFramework.MiddlewareHelpers.SelfDocumenting;
 
 namespace OwinFramework.Authorization.UI
 {
@@ -25,7 +26,8 @@ namespace OwinFramework.Authorization.UI
         IMiddleware<object>,
         IRoutingProcessor,
         ITraceable,
-        IConfigurable
+        IConfigurable,
+        ISelfDocumenting
     {
         private readonly IList<IDependency> _dependencies = new List<IDependency>();
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
@@ -129,5 +131,70 @@ namespace OwinFramework.Authorization.UI
 
             return _resourceManager.GetResource(Assembly.GetExecutingAssembly(), filename);
         }
+
+        #region ISelfDocumenting
+
+        public string ShortDescription
+        {
+            get { return "A user interface for managing groups, roles and permissions"; }
+        }
+
+        public string LongDescription
+        {
+            get 
+            {
+                return
+                    "<h3>Identity</h3>" +
+                    "<p>An identity is anything that has access to the system. This can be a user but also can " +
+                    "by a service, third party system or anything else that can send requests over " +
+                    "the network</p>" +
+                    "<p>When an identity makes a request to the system it must provide evidence of who it is. " +
+                    "There are many ways to do this including username and password, IP address, " +
+                    "shared secret keys, certificates and social media OAuth login. The job of identifying " +
+                    "the identity is not done by this middleware, you need separete Identification middleware " +
+                    "for that. After the Identification middleware identifies the identity, then this " +
+                    "Authorization middleware has the job of deciding if they are permitted to make the request.</p>" +
+                    "<h3>Group</h3>" +
+                    "<p>Each identity belongs to a single group and all identities in the " +
+                    "group have identical permissions</p>" +
+                    "<h3>Role</h3>" +
+                    "<p>Each group can have many roles. The role can be thought of as a job or task " +
+                    "that the identity is permitted to perform. In order to perform this task the identity " +
+                    "will need to have access to a number of features of the system</p>" +
+                    "<h3>Permission</h3>" +
+                    "<p>Permissions are defined by the application software. These are the things that the " +
+                    "application software checks before allowing the request to execute. Permissions are assigned " +
+                    "to roles.</p>" +
+                    "<p>When checking permissions the application also provides a resource string if appropriate. " +
+                    "The resource string defines the entity that the operation is being performed on, and this allows " +
+                    "the authorization checks to be a bit more granular. For example in a shopping cart system there " +
+                    "could be a request that cancels an order in the system. There would need to be a permission for " +
+                    "this, because you don't want everybody to be able to cancel orders, and some identities can " +
+                    "have this permission and be allowed to cancel any order, but the application software could " +
+                    "also pass the identity of the person who placed the order as the resource, this would allow the " +
+                    "permission to be configured to only allow identities to cancel their own orders.</p>";
+            }
+        }
+
+        public IList<IEndpointDocumentation> Endpoints
+        {
+            get 
+            { return new List<IEndpointDocumentation> 
+                { 
+                    new EndpointDocumentation
+                    {
+                        RelativePath = _uiRootPath.ToString(),
+                        Description = "Authorization manager user interface"
+                    }
+                }; 
+            }
+        }
+
+        public Uri GetDocumentation(DocumentationTypes documentationType)
+        {
+            return null;
+        }
+
+        #endregion
     }
 }

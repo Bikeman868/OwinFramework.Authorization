@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Owin;
@@ -21,6 +22,8 @@ using OwinFramework.InterfacesV1.Upstream;
 using OwinFramework.MiddlewareHelpers.Identification;
 using OwinFramework.MiddlewareHelpers.SelfDocumenting;
 using OwinFramework.Authorization.Core.DataContracts;
+using OwinFramework.Interfaces.Utility;
+using OwinFramework.MiddlewareHelpers.EmbeddedResources;
 
 namespace OwinFramework.Authorization.UI
 {
@@ -38,6 +41,8 @@ namespace OwinFramework.Authorization.UI
 
         private readonly IIdentityDirectory _identityDirectory;
         private readonly IAuthorizationData _authorizationData;
+        private readonly ResourceManager _resourceManager;
+
 
         private PathString _rootPath;
         private PathString _documentationPath;
@@ -65,13 +70,16 @@ namespace OwinFramework.Authorization.UI
 
         public AuthorizationApiMiddleware(
             IIdentityDirectory identityDirectory,
-            IAuthorizationData authorizationData)
+            IAuthorizationData authorizationData,
+            IHostingEnvironment hostingEnvironment)
         {
             _identityDirectory = identityDirectory;
             _authorizationData = authorizationData;
 
             this.RunAfter<IAuthorization>(null, false);
             this.RunAfter<IIdentification>(null, false);
+
+            _resourceManager = new ResourceManager(hostingEnvironment, new MimeTypeEvaluator());
 
             ConfigurationChanged(new AuthorizationUiConfiguration());
         }
@@ -1370,10 +1378,33 @@ namespace OwinFramework.Authorization.UI
 
             _configurationPath = filePath(_rootPath, "configuration");
 
+            // We have to delay the creation of permissions in the database
+            // because the IAuthorizationData implementation might not be
+            // configured before this middleware is configured.
+            var thread = new Thread(() =>
+                {
+                    Thread.Sleep(TimeSpan.FromSeconds(30));
+                    EnsurePermissions();
+                })
+                {
+                    IsBackground = true,
+                    Name = "Ensure permissions",
+                    Priority = ThreadPriority.BelowNormal
+                };
+            thread.Start();
+        }
+
+        /// <summary>
+        /// Adds any permissions that are missing from the authorization data. This
+        /// makes it easier for system administrators who don't have to read the
+        /// documentation to know what permissions are available.
+        /// </summary>
+        private void EnsurePermissions()
+        {
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToAssignPermissionToRole,
+                    CodeName = _configuration.PermissionToAssignPermissionToRole,
                     DisplayName = "Auth: Assign any permission to a role",
                     Description = "Users with this permission can grant any permission to any user, and therefore have full access to everything in the system"
                 });
@@ -1381,7 +1412,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToAssignPermissionToRole,
+                    CodeName = _configuration.PermissionToAssignPermissionToRole,
                     Resource = "permission:{my.permission}",
                     DisplayName = "Auth: Assign my permissions to a role",
                     Description = "Users with this permission can grant any permissions they already have to any user"
@@ -1390,7 +1421,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToAssignRoleToGroup,
+                    CodeName = _configuration.PermissionToAssignRoleToGroup,
                     DisplayName = "Auth: Assign role to group",
                     Description = "Users with this permission can add any role to a group of users, and therefore have full access to everything in the system"
                 });
@@ -1398,7 +1429,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToAssignRoleToGroup,
+                    CodeName = _configuration.PermissionToAssignRoleToGroup,
                     Resource = "role:{my.role}",
                     DisplayName = "Auth: Assign my role to a group",
                     Description = "Users with this permission can add their own role to any group of users, giving them the ability to grant any user access to the things that they have access to"
@@ -1407,7 +1438,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToAssignUserToGroup,
+                    CodeName = _configuration.PermissionToAssignUserToGroup,
                     DisplayName = "Auth: Assign user to group",
                     Description = "Users with this permission can add any user to a group of users, and therefore have full access to everything in the system"
                 });
@@ -1415,7 +1446,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToAssignUserToGroup,
+                    CodeName = _configuration.PermissionToAssignUserToGroup,
                     Resource = "group:{my.group}",
                     DisplayName = "Auth: Assign user to my group",
                     Description = "Users with this permission can add any user to the same group as themselves, giving them the ability to give someone else the same permissions as they have"
@@ -1424,7 +1455,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToCallApi,
+                    CodeName = _configuration.PermissionToCallApi,
                     DisplayName = "Auth: Call authentication API",
                     Description = "This permission is required to use the user interface but also alows programatic access to the authorization system configuration"
                 });
@@ -1432,7 +1463,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToEditGroups,
+                    CodeName = _configuration.PermissionToEditGroups,
                     DisplayName = "Auth: Modify groups",
                     Description = "Users with this permission can change the name and description of user groups"
                 });
@@ -1440,7 +1471,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToEditPermissions,
+                    CodeName = _configuration.PermissionToEditPermissions,
                     DisplayName = "Auth: Modify permissions",
                     Description = "Users with this permission can change the name and description of permissions. Note that the code name of the permissions must match what is programmed into the software"
                 });
@@ -1448,7 +1479,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToEditRoles,
+                    CodeName = _configuration.PermissionToEditRoles,
                     DisplayName = "Auth: Modify roles",
                     Description = "Users with this permission can change the name and description of roles"
                 });
@@ -1456,7 +1487,7 @@ namespace OwinFramework.Authorization.UI
             _authorizationData.EnsurePermission(
                 new Permission
                 {
-                    CodeName = configuration.PermissionToViewIdentities,
+                    CodeName = _configuration.PermissionToViewIdentities,
                     DisplayName = "Auth: View users",
                     Description = "Users with this permission can search for users and see user claims"
                 });
@@ -1466,18 +1497,27 @@ namespace OwinFramework.Authorization.UI
 
         #region ISelfDocumenting
 
-        private Task DocumentConfiguration(IOwinContext context)
+        string ISelfDocumenting.ShortDescription
         {
-            var document = GetScriptResource("configuration.html");
-            document = document.Replace("{documentationRootUrl}", _configuration.DocumentationRootUrl);
-
-            var defaultConfiguration = new AuthorizationUiConfiguration();
-            document = document.Replace("{documentationRootUrl.default}", defaultConfiguration.DocumentationRootUrl);
-
-            context.Response.ContentType = "text/html";
-            return context.Response.WriteAsync(document);
+            get { return "Provides a REST API for managing identity groups, roles and permissionn"; }
         }
-        
+
+        string ISelfDocumenting.LongDescription { get { return null; } }
+
+        Uri ISelfDocumenting.GetDocumentation(DocumentationTypes documentationType)
+        {
+            switch (documentationType)
+            {
+                case DocumentationTypes.Configuration:
+                    return new Uri(_configuration.DocumentationRootUrl, UriKind.Relative);
+                case DocumentationTypes.Overview:
+                    return new Uri("https://github.com/Bikeman868/OwinFramework.Authorization/blob/master/README.md", UriKind.Absolute);
+                case DocumentationTypes.SourceCode:
+                    return new Uri("https://github.com/Bikeman868/OwinFramework.Authorization/tree/master/OwinFramework.Authorization", UriKind.Absolute);
+            }
+            return null;
+        }
+
         IList<IEndpointDocumentation> ISelfDocumenting.Endpoints
         {
             get 
@@ -1900,54 +1940,20 @@ namespace OwinFramework.Authorization.UI
             }
         }
 
-        Uri ISelfDocumenting.GetDocumentation(DocumentationTypes documentationType)
+        private Task DocumentConfiguration(IOwinContext context)
         {
-            switch (documentationType)
-            {
-                case DocumentationTypes.Configuration:
-                    return new Uri(_configuration.DocumentationRootUrl, UriKind.Relative);
-                case DocumentationTypes.Overview:
-                    return new Uri("https://github.com/Bikeman868/OwinFramework.Authorization/blob/master/README.md", UriKind.Absolute);
-                case DocumentationTypes.SourceCode:
-                    return new Uri("https://github.com/Bikeman868/OwinFramework.Authorization/tree/master/OwinFramework.Authorization", UriKind.Absolute);
-            }
-            return null;
+            var resource = _resourceManager.GetResource(Assembly.GetExecutingAssembly(), "configuration.html");
+            var document = Encoding.UTF8.GetString(resource.Content);
+
+            document = document.Replace("{documentationRootUrl}", _configuration.DocumentationRootUrl);
+
+            var defaultConfiguration = new AuthorizationUiConfiguration();
+            document = document.Replace("{documentationRootUrl.default}", defaultConfiguration.DocumentationRootUrl);
+
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync(document);
         }
-
-        string ISelfDocumenting.LongDescription
-        {
-            get { return "Provides a REST API for managing identity groups, roles and permissionn"; }
-        }
-
-        string ISelfDocumenting.ShortDescription
-        {
-            get { return "Provides a REST API for managing identity groups, roles and permissionn"; }
-        }
-
-        #endregion
-
-        #region Embedded resources
-
-        private string GetScriptResource(string filename)
-        {
-            var scriptResourceName = Assembly.GetExecutingAssembly()
-                .GetManifestResourceNames()
-                .FirstOrDefault(n => n.Contains(filename));
-            if (scriptResourceName == null)
-                throw new Exception("Failed to find embedded resource " + filename);
-
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(scriptResourceName))
-            {
-                if (stream == null)
-                    throw new Exception("Failed to open embedded resource " + scriptResourceName);
-
-                using (var reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-
+        
         #endregion
 
         #region Api request context

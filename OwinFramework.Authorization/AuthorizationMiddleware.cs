@@ -12,10 +12,12 @@ using OwinFramework.Authorization.Core.Interfaces;
 using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
+using OwinFramework.Interfaces.Utility;
 using OwinFramework.InterfacesV1.Capability;
 using OwinFramework.InterfacesV1.Middleware;
 using OwinFramework.InterfacesV1.Upstream;
 using OwinFramework.MiddlewareHelpers.SelfDocumenting;
+using OwinFramework.MiddlewareHelpers.EmbeddedResources;
 
 namespace OwinFramework.Authorization
 {
@@ -32,12 +34,17 @@ namespace OwinFramework.Authorization
         public Action<IOwinContext, Func<string>> Trace { get; set; }
 
         private readonly IIdentityData _identityData;
+        private readonly ResourceManager _resourceManager;
 
-        public AuthorizationMiddleware(IIdentityData identityData)
+        public AuthorizationMiddleware(
+            IIdentityData identityData,
+            IHostingEnvironment hostingEnvironment)
         {
             _identityData = identityData;
 
             this.RunAfter<IIdentification>();
+
+            _resourceManager = new ResourceManager(hostingEnvironment, new MimeTypeEvaluator());
         }
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
@@ -115,7 +122,11 @@ namespace OwinFramework.Authorization
 
         private Task DocumentConfiguration(IOwinContext context)
         {
-            var document = GetScriptResource("configuration.html");
+            var resource = _resourceManager.GetResource(Assembly.GetExecutingAssembly(), "configuration.html");
+            if (resource == null || resource.Content == null)
+                throw new HttpException((int)HttpStatusCode.NotFound, "The configuration information template is missing");
+
+            var document = Encoding.UTF8.GetString(resource.Content);
             document = document.Replace("{documentationRootUrl}", _configuration.DocumentationRootUrl);
 
             var defaultConfiguration = new AuthorizationConfiguration();
@@ -166,6 +177,11 @@ namespace OwinFramework.Authorization
             return null;
         }
 
+        string ISelfDocumenting.ShortDescription
+        {
+            get { return "Provides a mechanism for defining identity groups, roles and permissions"; }
+        }
+
         string ISelfDocumenting.LongDescription
         {
             get { return 
@@ -180,35 +196,6 @@ namespace OwinFramework.Authorization
                 "the software will check before executing a request. For example if an identity makes "+
                 "an API call to retrieve an employee's salary the software will check that the calling "+
                 "identity has this permission before returning the salary information.</p>"; }
-        }
-
-        string ISelfDocumenting.ShortDescription
-        {
-            get { return "Provides a mechanism for defining identity groups, roles and permissions"; }
-        }
-
-        #endregion
-
-        #region Embedded resources
-
-        private string GetScriptResource(string filename)
-        {
-            var scriptResourceName = Assembly.GetExecutingAssembly()
-                .GetManifestResourceNames()
-                .FirstOrDefault(n => n.Contains(filename));
-            if (scriptResourceName == null)
-                throw new Exception("Failed to find embedded resource " + filename);
-
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(scriptResourceName))
-            {
-                if (stream == null)
-                    throw new Exception("Failed to open embedded resource " + scriptResourceName);
-
-                using (var reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
         }
 
         #endregion

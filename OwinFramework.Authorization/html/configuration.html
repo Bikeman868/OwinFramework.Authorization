@@ -1,0 +1,77 @@
+﻿<html>
+<head>
+    <title>Authorization middleware configuration</title>
+    <style type="text/css">
+        body {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+        }
+
+        span.code {
+            font-family: courrier;
+            font-size: 13px;
+        }
+
+        table.properties {
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+
+            table.properties th {
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #666666;
+                background-color: #dedede;
+            }
+
+            table.properties td {
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #666666;
+                background-color: #ffffff;
+            }
+
+                table.properties td.property {
+                    font-weight: bold;
+                }
+
+        span.property {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Owin Framework authorization middleware</h1>
+    <p>
+        The authorization middleware allows other middleware to specify the required permission and have
+        all of the identification and permission checking handled elsewhere. There is nothing more that
+        OWIN Framework middleware has to do beyond specifying the name of the permission that is needed
+        to execute the request.
+    </p>
+    <p>The authorization middleware in the Owin Framework supports the following configuration options:</p>
+    <table class="properties">
+        <tr>
+            <th>Property</th>
+            <th>Default</th>
+            <th>Current</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td class="property">documentationRootUrl</td>
+            <td>{documentationRootUrl.default}</td>
+            <td>{documentationRootUrl}</td>
+            <td>
+                <p>
+                    Specifies the URL within the website where documentation will be available
+                    for the Authorization middleware.
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
