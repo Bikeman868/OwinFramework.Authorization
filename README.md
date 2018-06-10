@@ -127,7 +127,7 @@ to groups.
 This package defines all of th interfaces between the other packages.
 There is no funcionallity here, but all of the other packages depend on it.
 
-### Owin.Framework.Authorization.Core
+### Owin.Framework.Authorization
 
 This package contains Owin middleware that uses the `IIdentityData` interface 
 to validate requests. Whenever a request comes into the Owin pipeline this
