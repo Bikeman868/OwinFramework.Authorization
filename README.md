@@ -139,3 +139,7 @@ not have those permissions then a 403 response is rerurned.
 This package contains an implementation of `IIdentityData` and `IAuthorizationData`
 using the Prius ORM. The Prius ORM has drivers for a number of popular relational
 database engines.
+
+### Owin.Framework.Authorization.Ui
+
+This package contains a user interface for manag8ng groups, roles and permissions.
