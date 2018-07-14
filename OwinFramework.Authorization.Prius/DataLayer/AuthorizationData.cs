@@ -60,7 +60,8 @@ namespace OwinFramework.Authorization.Prius.DataLayer
                         try
                         {
                             _repositoryWriterName = c.PriusMasterRepository;
-                            _repositoryReadonlyName = c.PriusReadonlyReplicaRepository;
+                            _repositoryReadonlyName = string.IsNullOrEmpty(c.PriusReadonlyReplicaRepository) 
+                                ? c.PriusMasterRepository : c.PriusReadonlyReplicaRepository;
                             _defaultGroupName = string.Intern(c.DefaultGroup.ToLower());
                             _administratorsGroupName = string.Intern(c.AdministratorGroup.ToLower());
                             _anonymousGroupName = string.Intern(c.AnonymousGroup.ToLower());

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization.Prius</id>
-    <version>1.0.10</version>
+    <version>1.0.12</version>
     <title>Owin.Framework.Authorization.Prius</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>
