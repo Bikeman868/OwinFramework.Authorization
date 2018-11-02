@@ -1,4 +1,3 @@
-# Owin Framework Authorization UI
 This NuGet package provides a user interface for managing groups, roles and permissions.
 It also provides a user interface for searching for users and changing their group
 membership.
