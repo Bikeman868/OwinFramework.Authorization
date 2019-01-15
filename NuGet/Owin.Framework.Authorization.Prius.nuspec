@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization.Prius</id>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
     <title>Owin.Framework.Authorization.Prius</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>
@@ -19,10 +19,11 @@
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <tags>OWIN framework middleware authorization security permissions</tags>
     <dependencies>
-      <dependency id="Owin.Framework" version="2.6.4" />
-      <dependency id="Owin.Framework.Authorization.Core" version="1.0.10" />
-      <dependency id="Ioc.Modules" version="1.3.1" />
-      <dependency id="Prius" version="2.0.5" />
+      <dependency id="Owin.Framework" version="2.6.8" />
+      <dependency id="Owin.Framework.Authorization.Core" version="1.0.13" />
+      <dependency id="Ioc.Modules" version="1.3.2" />
+      <dependency id="Prius" version="2.0.6" />
+      <dependency id="Urchin.Client" version="1.2.4" />
     </dependencies>
     <references>
     </references>

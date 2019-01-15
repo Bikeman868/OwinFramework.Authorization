@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization.Core</id>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
     <title>Owin.Framework.Authorization.Core</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>
@@ -15,7 +15,7 @@
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <tags>OWIN framework middleware authorization security permissions</tags>
     <dependencies>
-      <dependency id="Owin.Framework" version="2.6.4" />
+      <dependency id="Owin.Framework" version="2.6.8" />
     </dependencies>
     <references>
     </references>

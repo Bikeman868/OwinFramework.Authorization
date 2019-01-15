@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.Owin;
 using OwinFramework.Authorization.Core.Interfaces;
 using OwinFramework.Builder;
@@ -70,7 +68,9 @@ namespace OwinFramework.Authorization
             if (identification == null || authorization == null)
             {
                 Trace(context, () => GetType().Name + " identification middleware is missing from the owin context");
-                throw new HttpException((int)HttpStatusCode.Forbidden, "Caller identification is missing");
+                context.Response.StatusCode = (int) HttpStatusCode.Forbidden;
+                context.Response.ContentType = "text/plain";
+                return context.Response.WriteAsync("No user identification method is configured");
             }
 
             if (identification.IsAnonymous)
@@ -80,7 +80,9 @@ namespace OwinFramework.Authorization
                 if (upstreamIdentification != null && !upstreamIdentification.AllowAnonymous)
                 {
                     Trace(context, () => GetType().Name + " anonymous access is not permitted to this resource");
-                    throw new HttpException((int)HttpStatusCode.Forbidden, "Anonymous access is not permitted");
+                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    context.Response.ContentType = "text/plain";
+                    return context.Response.WriteAsync("Anonymous access to this resource is not permitted");
                 }
             }
 
@@ -92,8 +94,9 @@ namespace OwinFramework.Authorization
             else
             {
                 Trace(context, () => GetType().Name + " returning a 403 Forbidden response");
-                throw new HttpException((int)HttpStatusCode.Forbidden,
-                    "You do not have permission to perform this operation");
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                context.Response.ContentType = "text/plain";
+                return context.Response.WriteAsync("You do not have permission to perform this operation");
             }
             context.SetFeature<IAuthorization>(authorization);
 
@@ -124,7 +127,11 @@ namespace OwinFramework.Authorization
         {
             var resource = _resourceManager.GetResource(Assembly.GetExecutingAssembly(), "configuration.html");
             if (resource == null || resource.Content == null)
-                throw new HttpException((int)HttpStatusCode.NotFound, "The configuration information template is missing");
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.ContentType = "text/plain";
+                return context.Response.WriteAsync("The configuration information template is missing");
+            }
 
             var document = Encoding.UTF8.GetString(resource.Content);
             document = document.Replace("{documentationRootUrl}", _configuration.DocumentationRootUrl);

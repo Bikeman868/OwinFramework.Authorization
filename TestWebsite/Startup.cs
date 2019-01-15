@@ -11,7 +11,6 @@ using OwinFramework.Builder;
 using OwinFramework.Interfaces.Builder;
 using OwinFramework.Interfaces.Routing;
 using OwinFramework.Interfaces.Utility;
-using OwinFramework.InterfacesV1.Middleware;
 using TestWebsite;
 using TestWebsite.Middleware;
 using Urchin.Client.Sources;
