@@ -7,6 +7,7 @@
 [Oo]bj/
 _ReSharper*/
 packages/
+.vs/
 
 /TestWebsite/Content/AuthorizationUi/packages/*
 /TestWebsite/Content/AuthorizationUi/.pub/*

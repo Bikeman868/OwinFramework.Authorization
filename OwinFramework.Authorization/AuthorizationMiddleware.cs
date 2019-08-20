@@ -47,7 +47,7 @@ namespace OwinFramework.Authorization
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            var authorization = new Authorization(_identityData, s => Trace(context, () => s));
+            var authorization = new Authorization(_identityData, f => Trace(context, f));
             context.SetFeature<IUpstreamAuthorization>(authorization);
 
             return next();
@@ -75,29 +75,41 @@ namespace OwinFramework.Authorization
 
             if (identification.IsAnonymous)
             {
-                Trace(context, () => GetType().Name + " caller is anonymous");
                 var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
-                if (upstreamIdentification != null && !upstreamIdentification.AllowAnonymous)
+                if (upstreamIdentification == null)
                 {
-                    Trace(context, () => GetType().Name + " anonymous access is not permitted to this resource");
-                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                    context.Response.ContentType = "text/plain";
-                    return context.Response.WriteAsync("Anonymous access to this resource is not permitted");
+                    Trace(context, () => GetType().Name + " there is no upstream identification so this anonymous request will be permitted");
+                }
+                else
+                {
+                    if (upstreamIdentification.AllowAnonymous)
+                    {
+                        Trace(context, () => GetType().Name + " anonymous access is permitted by upstream identification");
+                    }
+                    else
+                    {
+                        Trace(context, () => GetType().Name + " anonymous access to this resource is not permitted");
+                        context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        context.Response.ContentType = "text/plain";
+                        return context.Response.WriteAsync("Anonymous access to this resource is not permitted");
+                    }
                 }
             }
 
-            authorization.Identification = identification;
-            if (authorization.IsAllowed())
+            var check = authorization.Check(identification);
+
+            if (ReferenceEquals(check, null))
             {
-                Trace(context, () => GetType().Name + " the requesting identity is permitted to make this request");
+                Trace(context, () => GetType().Name + " the requester is permitted to make this request");
             }
             else
             {
-                Trace(context, () => GetType().Name + " returning a 403 Forbidden response");
+                Trace(context, () => GetType().Name + " returning a 403 Forbidden response because " + check);
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 context.Response.ContentType = "text/plain";
-                return context.Response.WriteAsync("You do not have permission to perform this operation");
+                return context.Response.WriteAsync("Access denied because " + check);
             }
+
             context.SetFeature<IAuthorization>(authorization);
 
             return next();
@@ -210,15 +222,15 @@ namespace OwinFramework.Authorization
         private class Authorization : IUpstreamAuthorization, IAuthorization
         {
             private readonly IIdentityData _identityData;
-            private readonly Action<string> _trace;
-            public IIdentification Identification;
-
+            private readonly Action<Func<string>> _trace;
             private readonly List<string> _requiredRoles = new List<string>();
             private readonly List<string> _requiredPermissions = new List<string>();
 
+            private IIdentification _identification;
+
             public Authorization(
                 IIdentityData identityData, 
-                Action<string> trace)
+                Action<Func<string>> trace)
             {
                 _identityData = identityData;
                 _trace = trace;
@@ -226,69 +238,63 @@ namespace OwinFramework.Authorization
 
             public void AddRequiredPermission(string permissionName)
             {
-                _trace(GetType().Name + " the '" + permissionName + "' permission is required for this request");
+                _trace(() => GetType().Name + " the '" + permissionName + "' permission is required for this request");
 
-                permissionName = string.Intern(permissionName.ToLower());
-                if (_requiredPermissions.Any(p => ReferenceEquals(p, permissionName)))
+                var permission = string.Intern(permissionName.ToLower());
+                if (_requiredPermissions.Any(p => ReferenceEquals(p, permission)))
                     return;
-                _requiredPermissions.Add(permissionName);
+
+                _requiredPermissions.Add(permission);
             }
 
             public void AddRequiredRole(string roleName)
             {
-                _trace(GetType().Name + " the '" + roleName + "' role is required for this request");
+                _trace(() => GetType().Name + " the '" + roleName + "' role is required for this request");
 
-                roleName = string.Intern(roleName.ToLower());
-                if (_requiredRoles.Any(p => ReferenceEquals(p, roleName)))
+                var role = string.Intern(roleName.ToLower());
+                if (_requiredRoles.Any(r => ReferenceEquals(r, role)))
                     return;
-                _requiredRoles.Add(roleName);
+
+                _requiredRoles.Add(role);
             }
 
             public bool HasPermission(string permissionName, string resourceName)
             {
-                var result = _identityData.HasPermission(Identification, permissionName, resourceName);
+                var result = _identityData.HasPermission(_identification, permissionName, resourceName);
 
-                if (!result)
-                    _trace(
-                        GetType().Name + " '" + Identification.Identity + 
-                        "' does not have '" + permissionName + "' permission" + 
-                        (string.IsNullOrEmpty(resourceName) ? "" : " on resource '" + 
-                        resourceName + "'"));
+                _trace(() => GetType().Name + " '" + _identification.Identity + 
+                    (result ? "' has the '" : "' does not have the '") + permissionName + "' permission" + 
+                    (string.IsNullOrEmpty(resourceName) ? "" : " on resource '" + resourceName + "'"));
 
                 return result;
             }
 
             public bool IsInRole(string roleName)
             {
-                var result = _identityData.IsInRole(Identification, roleName);
+                var result = _identityData.IsInRole(_identification, roleName);
 
-                if (!result)
-                    _trace(GetType().Name + " '" + Identification.Identity + " does not have '" + roleName + "' role");
+                _trace(() => GetType().Name + " '" + _identification.Identity + (result ? "' has the '" : "' does not have the '") + roleName + "' role");
 
                 return result;
             }
 
-            public bool IsAllowed()
+            public string Check(IIdentification identification)
             {
-                if (ReferenceEquals(Identification, null))
-                {
-                    _trace(GetType().Name + " not allowed because there is no identification");
-                    return false;
-                }
+                if (_requiredPermissions.Count == 0 && _requiredRoles.Count == 0)
+                    return null;
 
-                if (!_requiredRoles.All(IsInRole))
-                {
-                    _trace(GetType().Name + " not allowed because the user does not have all of the required roles");
-                    return false;
-                }
+                if (ReferenceEquals(identification, null))
+                    return "there was no identification";
 
-                if (!_requiredPermissions.All(r => HasPermission(r, null)))
-                {
-                    _trace(GetType().Name + " not allowed because the user does not have all of the required permissions");
-                    return false;
-                }
+                _identification = identification;
 
-                return true;
+                if (_requiredRoles.Count > 0 && !_requiredRoles.All(IsInRole))
+                    return "you do not have all of the these roles: " + string.Join(", ", _requiredRoles);
+
+                if (_requiredPermissions.Count > 0 && !_requiredPermissions.All(r => HasPermission(r, null)))
+                    return "you do not have all of the these permissions: " + string.Join(", ", _requiredPermissions);
+
+                return null;
             }
         }
 
