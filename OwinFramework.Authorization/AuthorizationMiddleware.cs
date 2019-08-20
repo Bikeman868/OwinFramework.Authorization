@@ -100,7 +100,7 @@ namespace OwinFramework.Authorization
 
             if (ReferenceEquals(check, null))
             {
-                Trace(context, () => GetType().Name + " the requester is permitted to make this request");
+                Trace(context, () => GetType().Name + " the requester has all of the required roles and permissions for this request");
             }
             else
             {
