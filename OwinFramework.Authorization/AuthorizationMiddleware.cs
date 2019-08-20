@@ -280,13 +280,13 @@ namespace OwinFramework.Authorization
 
             public string Check(IIdentification identification)
             {
+                _identification = identification;
+
                 if (_requiredPermissions.Count == 0 && _requiredRoles.Count == 0)
                     return null;
 
                 if (ReferenceEquals(identification, null))
                     return "there was no identification";
-
-                _identification = identification;
 
                 if (_requiredRoles.Count > 0 && !_requiredRoles.All(IsInRole))
                     return "you do not have all of the these roles: " + string.Join(", ", _requiredRoles);
