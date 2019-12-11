@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization.Core</id>
-    <version>1.0.14</version>
+    <version>1.1.0</version>
     <title>Owin.Framework.Authorization.Core</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>
@@ -12,16 +12,24 @@
     <releaseNotes>More detailed trace information</releaseNotes>
     <summary>This package is required by other Owin Framework authorization packages</summary>
     <projectUrl>https://github.com/Bikeman868/OwinFramework.Authorization</projectUrl>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <tags>OWIN framework middleware authorization security permissions</tags>
     <dependencies>
-      <dependency id="Owin.Framework" version="2.6.8" />
+      <group targetFramework="net40">
+        <dependency id="Owin.Framework" version="2.7.0" />
+      </group>
+      <group targetFramework="net45">
+        <dependency id="Owin.Framework" version="2.7.0" />
+      </group>
     </dependencies>
     <references>
+      <reference file="OwinFramework.Authorization.Core.dll"/>
     </references>
   </metadata>
   <files>
     <file src="..\OwinFramework.Authorization.Core\bin\Net40\Release\OwinFramework.Authorization.Core.dll" target="lib\net40"/>
     <file src="..\OwinFramework.Authorization.Core\bin\Net45\Release\OwinFramework.Authorization.Core.dll" target="lib\net45"/>
+    <file src="..\OwinFramework.Authorization.Core\bin\Net40\Release\OwinFramework.Authorization.Core.dll" target="ref\net40"/>
+    <file src="..\OwinFramework.Authorization.Core\bin\Net45\Release\OwinFramework.Authorization.Core.dll" target="ref\net45"/>
   </files>
 </package>
