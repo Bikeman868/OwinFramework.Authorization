@@ -16,10 +16,10 @@
     <tags>OWIN framework middleware authorization security permissions</tags>
     <dependencies>
       <group targetFramework="net40">
-        <dependency id="Owin.Framework" version="2.7.0" />
+        <dependency id="Owin.Framework" version="2.7.1" />
       </group>
       <group targetFramework="net45">
-        <dependency id="Owin.Framework" version="2.7.0" />
+        <dependency id="Owin.Framework" version="2.7.1" />
       </group>
     </dependencies>
     <references>
