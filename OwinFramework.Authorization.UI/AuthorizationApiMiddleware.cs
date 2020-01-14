@@ -24,6 +24,7 @@ using OwinFramework.MiddlewareHelpers.SelfDocumenting;
 using OwinFramework.Authorization.Core.DataContracts;
 using OwinFramework.Interfaces.Utility;
 using OwinFramework.MiddlewareHelpers.EmbeddedResources;
+using OwinFramework.MiddlewareHelpers.Traceable;
 
 namespace OwinFramework.Authorization.UI
 {
@@ -37,7 +38,9 @@ namespace OwinFramework.Authorization.UI
         private readonly IList<IDependency> _dependencies = new List<IDependency>();
         IList<IDependency> IMiddleware.Dependencies { get { return _dependencies; } }
         string IMiddleware.Name { get; set; }
+
         public Action<IOwinContext, Func<string>> Trace { get; set; }
+        private readonly TraceFilter _traceFilter;
 
         private readonly IIdentityDirectory _identityDirectory;
         private readonly IAuthorizationData _authorizationData;
@@ -75,6 +78,7 @@ namespace OwinFramework.Authorization.UI
         {
             _identityDirectory = identityDirectory;
             _authorizationData = authorizationData;
+            _traceFilter = new TraceFilter(null, this);
 
             this.RunAfter<IAuthorization>(null, false);
             this.RunAfter<IIdentification>(null, false);
@@ -90,7 +94,7 @@ namespace OwinFramework.Authorization.UI
         {
             if (!context.Request.Path.StartsWithSegments(_rootPath))
             {
-                Trace(context, () => GetType().Name + " this is not a request for the authorization API");
+                _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " this is not a request for the authorization API");
                 return next();
             }
 
@@ -117,66 +121,66 @@ namespace OwinFramework.Authorization.UI
                 if (path.Equals(_documentationPath))
                 {
                     apiContext.Handler = DocumentConfiguration;
-                    Trace(context, () => GetType().Name + " routing request to document configuration handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to document configuration handler");
                 }
                 else if (path.StartsWithSegments(_searchIdentityListPath))
                 {
                     apiContext.Handler = SearchIdentitiesHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToViewIdentities);
-                    Trace(context, () => GetType().Name + " routing request to GET identity search handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET identity search handler");
                 }
                 else if (path.StartsWithSegments(_identityPath))
                 {
                     apiContext.Handler = GetIdentityHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToViewIdentities);
-                    Trace(context, () => GetType().Name + " routing request to GET identity handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET identity handler");
                 }
                 else if (path.StartsWithSegments(_groupRoleListPath))
                 {
                     apiContext.Handler = GetGroupRoleListHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET group role list handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET group role list handler");
                 }
                 else if (path.StartsWithSegments(_groupPath))
                 {
                     apiContext.Handler = GetGroupHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET group handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET group handler");
                 }
                 else if (path.StartsWithSegments(_groupListPath))
                 {
                     apiContext.Handler = GetGroupListHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET group list handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET group list handler");
                 }
                 else if (path.StartsWithSegments(_rolePermissionListPath))
                 {
                     apiContext.Handler = GetRolePermissionListHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET role permission list handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET role permission list handler");
                 }
                 else if (path.StartsWithSegments(_rolePath))
                 {
                     apiContext.Handler = GetRoleHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET role handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET role handler");
                 }
                 else if (path.StartsWithSegments(_roleListPath))
                 {
                     apiContext.Handler = GetRoleListHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET role list handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET role list handler");
                 }
                 else if (path.StartsWithSegments(_permissionPath))
                 {
                     apiContext.Handler = GetPermissionHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET group permission handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET group permission handler");
                 }
                 else if (path.StartsWithSegments(_permissionListPath))
                 {
                     apiContext.Handler = GetPermissionListHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET permission list handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET permission list handler");
                 }
                 else if (path.Equals(_configurationPath))
                 {
                     apiContext.Handler = GetConfigurationHandler;
-                    Trace(context, () => GetType().Name + " routing request to GET configuration handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to GET configuration handler");
                 }
             }
             else if (context.Request.Method == "POST")
@@ -186,42 +190,42 @@ namespace OwinFramework.Authorization.UI
                     apiContext.Handler = NewGroupHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
-                    Trace(context, () => GetType().Name + " routing request to POST new group handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to POST new group handler");
                 }
                 else if (path.StartsWithSegments(_roleListPath))
                 {
                     apiContext.Handler = NewRoleHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
-                    Trace(context, () => GetType().Name + " routing request to POST new role handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to POST new role handler");
                 }
                 else if (path.StartsWithSegments(_permissionListPath))
                 {
                     apiContext.Handler = NewPermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
-                    Trace(context, () => GetType().Name + " routing request to POST new permission handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to POST new permission handler");
                 }
                 else if (path.StartsWithSegments(_validateGroupPath))
                 {
                     apiContext.Handler = ValidateGroupHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
-                    Trace(context, () => GetType().Name + " routing request to POST validate group handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to POST validate group handler");
                 }
                 else if (path.StartsWithSegments(_validateRolePath))
                 {
                     apiContext.Handler = ValidateRoleHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
-                    Trace(context, () => GetType().Name + " routing request to POST validate role handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to POST validate role handler");
                 }
                 else if (path.StartsWithSegments(_validatePermissionPath))
                 {
                     apiContext.Handler = ValidatePermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
-                    Trace(context, () => GetType().Name + " routing request to POST validate permission handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to POST validate permission handler");
                 }
             }
             else if (context.Request.Method == "PUT")
@@ -231,42 +235,42 @@ namespace OwinFramework.Authorization.UI
                     apiContext.Handler = UpdateIdentityHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignUserToGroup);
-                    Trace(context, () => GetType().Name + " routing request to PUT identity group handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to PUT identity group handler");
                 }
                 else if (path.StartsWithSegments(_rolePermissionListPath))
                 {
                     apiContext.Handler = UpdateRolePermissionListHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignPermissionToRole);
-                    Trace(context, () => GetType().Name + " routing request to PUT role permission list handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to PUT role permission list handler");
                 }
                 else if (path.StartsWithSegments(_groupRoleListPath))
                 {
                     apiContext.Handler = UpdateGroupRoleListHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignRoleToGroup);
-                    Trace(context, () => GetType().Name + " routing request to PUT group role list handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to PUT group role list handler");
                 }
                 else if (path.StartsWithSegments(_groupPath))
                 {
                     apiContext.Handler = UpdateGroupHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
-                    Trace(context, () => GetType().Name + " routing request to PUT group update handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to PUT group update handler");
                 }
                 else if (path.StartsWithSegments(_rolePath))
                 {
                     apiContext.Handler = UpdateRoleHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
-                    Trace(context, () => GetType().Name + " routing request to PUT role update handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to PUT role update handler");
                 }
                 else if (path.StartsWithSegments(_permissionPath))
                 {
                     apiContext.Handler = UpdatePermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
-                    Trace(context, () => GetType().Name + " routing request to PUT permission update handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to PUT permission update handler");
                 }
             }
             else if (context.Request.Method == "DELETE")
@@ -276,28 +280,28 @@ namespace OwinFramework.Authorization.UI
                     apiContext.Handler = DeleteIdentityHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignUserToGroup);
-                    Trace(context, () => GetType().Name + " routing request to DELETE identity handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to DELETE identity handler");
                 }
                 else if (path.StartsWithSegments(_groupPath))
                 {
                     apiContext.Handler = DeleteGroupHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditGroups);
-                    Trace(context, () => GetType().Name + " routing request to DELETE group handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to DELETE group handler");
                 }
                 else if (path.StartsWithSegments(_rolePath))
                 {
                     apiContext.Handler = DeleteRoleHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditRoles);
-                    Trace(context, () => GetType().Name + " routing request to DELETE role handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to DELETE role handler");
                 }
                 else if (path.StartsWithSegments(_permissionPath))
                 {
                     apiContext.Handler = DeletePermissionHandler;
                     if (upstreamAuthorization != null)
                         upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToEditPermissions);
-                    Trace(context, () => GetType().Name + " routing request to DELETE permission handler");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to DELETE permission handler");
                 }
             }
             return next();
@@ -308,11 +312,11 @@ namespace OwinFramework.Authorization.UI
             var apiContext = context.GetFeature<ApiContext>();
             if (apiContext == null || apiContext.Handler == null)
             {
-                Trace(context, () => GetType().Name + " this is not  arequest for the authorization API");
+                _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " this is not  a request for the authorization API");
                 return next();
             }
 
-            Trace(context, () => GetType().Name + " executing handler " + apiContext.Handler.Method.Name);
+            _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " executing handler " + apiContext.Handler.Method.Name);
             try
             {
                 return apiContext.Handler(context);
@@ -682,7 +686,7 @@ namespace OwinFramework.Authorization.UI
 
         private Task UpdateGroupRoleListHandler(IOwinContext context)
         {
-            Trace(context, () => GetType().Name + " updating group roles");
+            _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " updating group roles");
 
             var response = new ApiResponse();
             var updatedGroupRoles = GetBody<List<RelationDto>>(context);
@@ -708,7 +712,7 @@ namespace OwinFramework.Authorization.UI
 
             if (groupId.HasValue)
             {
-                Trace(context, () => GetType().Name + " only updating roles for group #" + groupId.Value);
+                _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " only updating roles for group #" + groupId.Value);
 
                 updatedGroupRoles = updatedGroupRoles.Where(r => r.ParentId == groupId.Value).ToList();
                 var currentRoles = _authorizationData.GetGroupRoles(groupId.Value);
@@ -748,8 +752,8 @@ namespace OwinFramework.Authorization.UI
                 }
             }
 
-            Trace(context, () => GetType().Name + " request contains " + rolesToAdd.Count + " roles to assign");
-            Trace(context, () => GetType().Name + " request contains " + rolesToRemove.Count + " roles to remove");
+            _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " request contains " + rolesToAdd.Count + " roles to assign");
+            _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " request contains " + rolesToRemove.Count + " roles to remove");
 
             var authorization = context.GetFeature<IAuthorization>();
             if (authorization != null)
@@ -779,7 +783,7 @@ namespace OwinFramework.Authorization.UI
                 }
             }
 
-            Trace(context, () => GetType().Name + " the requesting user is authorized to make these changes");
+            _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " the requesting user is authorized to make these changes");
 
             foreach (var roleToAdd in rolesToAdd)
                 _authorizationData.AddRoleToGroup(roleToAdd.ChildId, roleToAdd.ParentId);
@@ -988,7 +992,7 @@ namespace OwinFramework.Authorization.UI
 
         private Task UpdateRolePermissionListHandler(IOwinContext context)
         {
-            Trace(context, () => GetType().Name + " updating role permissions");
+            _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " updating role permissions");
 
             var response = new ApiResponse();
             var updatedPermissions = GetBody<List<RelationDto>>(context);
@@ -1014,7 +1018,7 @@ namespace OwinFramework.Authorization.UI
 
             if (roleId.HasValue)
             {
-                Trace(context, () => GetType().Name + " only updating permissions for role #" + roleId.Value);
+                _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " only updating permissions for role #" + roleId.Value);
 
                 updatedPermissions = updatedPermissions.Where(r => r.ParentId == roleId.Value).ToList();
                 var currentPermissions = _authorizationData.GetRolePermissions(roleId.Value);
@@ -1054,8 +1058,8 @@ namespace OwinFramework.Authorization.UI
                 }
             }
 
-            Trace(context, () => GetType().Name + " request contains " + permissionsToAdd.Count + " permissions to grant");
-            Trace(context, () => GetType().Name + " request contains " + permissionsToRemove.Count + " permissions to revoke");
+            _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " request contains " + permissionsToAdd.Count + " permissions to grant");
+            _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " request contains " + permissionsToRemove.Count + " permissions to revoke");
 
             var authorization = context.GetFeature<IAuthorization>();
             if (authorization != null)
@@ -1085,7 +1089,7 @@ namespace OwinFramework.Authorization.UI
                 }
             }
 
-            Trace(context, () => GetType().Name + " the requesting user is authorized to make these changes");
+            _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " the requesting user is authorized to make these changes");
 
             foreach (var permissionToAdd in permissionsToAdd)
                 _authorizationData.AddPermissionToRole(permissionToAdd.ChildId, permissionToAdd.ParentId);
@@ -1318,6 +1322,8 @@ namespace OwinFramework.Authorization.UI
 
         void IConfigurable.Configure(IConfiguration configuration, string path)
         {
+            _traceFilter.ConfigureWith(configuration);
+
             _configurationRegistration = configuration.Register(
                 path,
                 ConfigurationChanged,

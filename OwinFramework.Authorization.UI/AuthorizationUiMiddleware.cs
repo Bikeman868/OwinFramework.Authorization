@@ -15,6 +15,7 @@ using OwinFramework.InterfacesV1.Middleware;
 using OwinFramework.InterfacesV1.Upstream;
 using OwinFramework.MiddlewareHelpers.EmbeddedResources;
 using OwinFramework.MiddlewareHelpers.SelfDocumenting;
+using OwinFramework.MiddlewareHelpers.Traceable;
 
 namespace OwinFramework.Authorization.UI
 {
@@ -35,12 +36,13 @@ namespace OwinFramework.Authorization.UI
         public Action<IOwinContext, Func<string>> Trace { get; set; }
 
         private readonly ResourceManager _resourceManager;
-
+        private readonly TraceFilter _traceFilter;
         private PathString _uiRootPath;
 
         public AuthorizationUiMiddleware(IHostingEnvironment hostingEnvironment)
         {
             _resourceManager = new ResourceManager(hostingEnvironment, new MimeTypeEvaluator());
+            _traceFilter = new TraceFilter(null, this);
 
             this.RunAfter<IAuthorization>(null, false);
             this.RunAfter<IIdentification>(null, false);
@@ -67,7 +69,7 @@ namespace OwinFramework.Authorization.UI
             }
             else
             {
-                Trace(context, () => GetType().Name + " this is not a request for the authorization UI");
+                _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " this is not a request for the authorization UI");
             }
 
             return next();
@@ -79,15 +81,23 @@ namespace OwinFramework.Authorization.UI
             if (!context.Request.Path.StartsWithSegments(_uiRootPath, out remaining) || 
                 !remaining.HasValue)
             {
-                Trace(context, () => GetType().Name + " this is not a request for the authorization UI");
+                _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " this is not a request for the authorization UI");
                 return next();
             }
 
+            _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " retrieving UI resource " + remaining.Value);
             var resource = GetResource(remaining.Value);
-            if (resource == null)
-                throw new HttpException((int)HttpStatusCode.NotFound, "No resource '" + remaining.Value + "'");
 
+            if (resource == null)
+            {
+                _traceFilter.Trace(context, TraceLevel.Error, () => GetType().Name + " UI resource " + remaining.Value + " was not found");
+                context.Response.StatusCode = (int) HttpStatusCode.NotFound;
+                return context.Response.WriteAsync("");
+            }
+
+            _traceFilter.Trace(context, TraceLevel.Debug, () => GetType().Name + " UI resource '" + resource.FileName + "' has mime type " + resource.MimeType);
             context.Response.ContentType = resource.MimeType;
+
             return context.Response.WriteAsync(resource.Content);
         }
 
@@ -96,6 +106,8 @@ namespace OwinFramework.Authorization.UI
 
         void IConfigurable.Configure(IConfiguration configuration, string path)
         {
+            _traceFilter.ConfigureWith(configuration);
+
             _configurationRegistration = configuration.Register(
                 path,
                 ConfigurationChanged,

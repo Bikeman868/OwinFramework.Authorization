@@ -34,18 +34,17 @@ namespace OwinFramework.Authorization
 
         private readonly IIdentityData _identityData;
         private readonly ResourceManager _resourceManager;
-        private TraceFilter _traceFilter;
+        private readonly TraceFilter _traceFilter;
 
         public AuthorizationMiddleware(
             IIdentityData identityData,
             IHostingEnvironment hostingEnvironment)
         {
             _identityData = identityData;
-
-            this.RunAfter<IIdentification>();
-
             _resourceManager = new ResourceManager(hostingEnvironment, new MimeTypeEvaluator());
             _traceFilter = new TraceFilter(null, this);
+
+            this.RunAfter<IIdentification>();
         }
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
