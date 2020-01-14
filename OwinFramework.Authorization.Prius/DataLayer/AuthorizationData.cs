@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -55,6 +56,7 @@ namespace OwinFramework.Authorization.Prius.DataLayer
                 ("/OwinFramework/Authorization/Data",
                     c =>
                     {
+                        Trace.WriteLine(GetType().FullName + " configuration changed");
                         var oldWriterName = _repositoryWriterName;
                         var oldReadonlyName = _repositoryReadonlyName;
                         try
@@ -65,10 +67,15 @@ namespace OwinFramework.Authorization.Prius.DataLayer
                             _defaultGroupName = string.Intern(c.DefaultGroup.ToLower());
                             _administratorsGroupName = string.Intern(c.AdministratorGroup.ToLower());
                             _anonymousGroupName = string.Intern(c.AnonymousGroup.ToLower());
+
+                            Trace.WriteLine(GetType().FullName + " reloading with new configuration " + _repositoryWriterName + " " + _repositoryReadonlyName);
+
                             Reload();
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            Trace.WriteLine(GetType().FullName + " reload failed with exception: " + ex.Message);
+
                             _repositoryWriterName = oldWriterName;
                             _repositoryReadonlyName = oldReadonlyName;
                         }
@@ -88,8 +95,9 @@ namespace OwinFramework.Authorization.Prius.DataLayer
                     {
                         return;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Trace.WriteLine(GetType().FullName + " reload failed with exception: " + ex.Message);
                         Thread.Sleep(TimeSpan.FromMinutes(5));
                     }
                 }
