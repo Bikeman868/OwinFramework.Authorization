@@ -76,8 +76,8 @@ namespace OwinFramework.Authorization.Prius.DataLayer
                         {
                             Trace.WriteLine(GetType().FullName + " reload failed with exception: " + ex.Message);
 
-                            _repositoryWriterName = oldWriterName;
-                            _repositoryReadonlyName = oldReadonlyName;
+                            if (!string.IsNullOrEmpty(oldWriterName)) _repositoryWriterName = oldWriterName;
+                            if (!string.IsNullOrEmpty(oldReadonlyName)) _repositoryReadonlyName = oldReadonlyName;
                         }
                     },
                 new DataLayerConfiguration());

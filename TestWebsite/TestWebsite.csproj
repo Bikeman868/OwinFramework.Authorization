@@ -83,7 +83,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OwinFramework, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.Framework.2.7.0\lib\net40\OwinFramework.dll</HintPath>
+      <HintPath>..\packages\Owin.Framework.2.7.1\lib\net40\OwinFramework.dll</HintPath>
     </Reference>
     <Reference Include="OwinFramework.Configuration.Urchin, Version=2.6.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.Framework.Urchin.2.6.8\lib\net40\OwinFramework.Configuration.Urchin.dll</HintPath>

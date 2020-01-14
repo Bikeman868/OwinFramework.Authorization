@@ -16,6 +16,7 @@ using OwinFramework.InterfacesV1.Middleware;
 using OwinFramework.InterfacesV1.Upstream;
 using OwinFramework.MiddlewareHelpers.SelfDocumenting;
 using OwinFramework.MiddlewareHelpers.EmbeddedResources;
+using OwinFramework.MiddlewareHelpers.Traceable;
 
 namespace OwinFramework.Authorization
 {
@@ -33,6 +34,7 @@ namespace OwinFramework.Authorization
 
         private readonly IIdentityData _identityData;
         private readonly ResourceManager _resourceManager;
+        private TraceFilter _traceFilter;
 
         public AuthorizationMiddleware(
             IIdentityData identityData,
@@ -43,11 +45,12 @@ namespace OwinFramework.Authorization
             this.RunAfter<IIdentification>();
 
             _resourceManager = new ResourceManager(hostingEnvironment, new MimeTypeEvaluator());
+            _traceFilter = new TraceFilter(null, this);
         }
 
         Task IRoutingProcessor.RouteRequest(IOwinContext context, Func<Task> next)
         {
-            var authorization = new Authorization(_identityData, f => Trace(context, f));
+            var authorization = new Authorization(_identityData, msg => _traceFilter.Trace(context, TraceLevel.Information, msg));
             context.SetFeature<IUpstreamAuthorization>(authorization);
 
             return next();
@@ -58,7 +61,7 @@ namespace OwinFramework.Authorization
             if (!string.IsNullOrEmpty(_configuration.DocumentationRootUrl) &&
                 context.Request.Path.Value.Equals(_configuration.DocumentationRootUrl, StringComparison.OrdinalIgnoreCase))
             {
-                Trace(context, () => GetType().Name + " returning configuration documentation");
+                _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " returning configuration documentation");
                 return DocumentConfiguration(context);
             }
 
@@ -67,7 +70,7 @@ namespace OwinFramework.Authorization
 
             if (identification == null || authorization == null)
             {
-                Trace(context, () => GetType().Name + " identification middleware is missing from the owin context");
+                _traceFilter.Trace(context, TraceLevel.Error, () => GetType().Name + " identification middleware is missing from the owin context");
                 context.Response.StatusCode = (int) HttpStatusCode.Forbidden;
                 context.Response.ContentType = "text/plain";
                 return context.Response.WriteAsync("No user identification method is configured");
@@ -78,17 +81,17 @@ namespace OwinFramework.Authorization
                 var upstreamIdentification = context.GetFeature<IUpstreamIdentification>();
                 if (upstreamIdentification == null)
                 {
-                    Trace(context, () => GetType().Name + " there is no upstream identification so this anonymous request will be permitted");
+                    _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " there is no upstream identification so this anonymous request will be permitted");
                 }
                 else
                 {
                     if (upstreamIdentification.AllowAnonymous)
                     {
-                        Trace(context, () => GetType().Name + " anonymous access is permitted by upstream identification");
+                        _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " anonymous access is permitted by upstream identification");
                     }
                     else
                     {
-                        Trace(context, () => GetType().Name + " anonymous access to this resource is not permitted");
+                        _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " anonymous access to this resource is not permitted");
                         context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                         context.Response.ContentType = "text/plain";
                         return context.Response.WriteAsync("Anonymous access to this resource is not permitted");
@@ -100,11 +103,11 @@ namespace OwinFramework.Authorization
 
             if (ReferenceEquals(check, null))
             {
-                Trace(context, () => GetType().Name + " the requester has all of the required roles and permissions for this request");
+                _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " the requester has all of the required roles and permissions for this request");
             }
             else
             {
-                Trace(context, () => GetType().Name + " returning a 403 Forbidden response because " + check);
+                _traceFilter.Trace(context, TraceLevel.Error, () => GetType().Name + " returning a 403 Forbidden response because " + check);
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 context.Response.ContentType = "text/plain";
                 return context.Response.WriteAsync("Access denied because " + check);
@@ -122,6 +125,7 @@ namespace OwinFramework.Authorization
 
         void IConfigurable.Configure(IConfiguration configuration, string path)
         {
+            _traceFilter.ConfigureWith(configuration);
             _configurationRegistration = configuration.Register(
                 path,
                 cfg =>
@@ -229,7 +233,7 @@ namespace OwinFramework.Authorization
             private IIdentification _identification;
 
             public Authorization(
-                IIdentityData identityData, 
+                IIdentityData identityData,
                 Action<Func<string>> trace)
             {
                 _identityData = identityData;

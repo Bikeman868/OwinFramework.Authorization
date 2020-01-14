@@ -2,13 +2,13 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization</id>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <title>Owin.Framework.Authorization</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Owin Framework authorization middleware that checks if the identity making the request has permission to do so and returns a 403 response if it does not</description>
-    <copyright>Copyright Martin Halliday 2015-2019</copyright>
+    <copyright>Copyright Martin Halliday 2015-2020</copyright>
     <releaseNotes>More detailed trace information</releaseNotes>
     <summary>Adding this package to your project will allow you to block access to features that the requesting identity does not have permission for</summary>
     <projectUrl>https://github.com/Bikeman868/OwinFramework.Authorization</projectUrl>
@@ -17,12 +17,12 @@
     <dependencies>
       <group targetFramework="net40">
         <dependency id="Owin.Framework" version="2.7.0" />
-        <dependency id="Owin.Framework.Authorization.Core" version="1.1.0" />
+        <dependency id="Owin.Framework.Authorization.Core" version="1.1.1" />
         <dependency id="Ioc.Modules.Contract" version="1.4.1" />
       </group>
       <group targetFramework="net45">
         <dependency id="Owin.Framework" version="2.7.0" />
-        <dependency id="Owin.Framework.Authorization.Core" version="1.1.0" />
+        <dependency id="Owin.Framework.Authorization.Core" version="1.1.1" />
         <dependency id="Ioc.Modules.Contract" version="1.4.1" />
       </group>
     </dependencies>
