@@ -233,8 +233,6 @@ namespace OwinFramework.Authorization.UI
                 if (path.StartsWithSegments(_identityPath))
                 {
                     apiContext.Handler = UpdateIdentityHandler;
-                    if (upstreamAuthorization != null)
-                        upstreamAuthorization.AddRequiredPermission(_configuration.PermissionToAssignUserToGroup);
                     _traceFilter.Trace(context, TraceLevel.Information, () => GetType().Name + " routing request to PUT identity group handler");
                 }
                 else if (path.StartsWithSegments(_rolePermissionListPath))
@@ -449,7 +447,29 @@ namespace OwinFramework.Authorization.UI
                 return Json(context, response);
             }
 
-            _authorizationData.ChangeGroup(new Identification { Identity = identityDto.Identity }, identityDto.GroupId);
+            var authorization = context.GetFeature<IAuthorization>();
+            
+            if (authorization.HasPermission(_configuration.PermissionToAssignUserToGroup, identityDto.GroupId?.ToString()))
+                _authorizationData.ChangeGroup(new Identification { Identity = identityDto.Identity }, identityDto.GroupId);
+
+            if (identityDto.Claims != null && authorization.HasPermission(_configuration.PermissionToEditIdentity, identityDto.Identity))
+            {
+                var priorClaims = _identityDirectory.GetClaims(identityDto.Identity);
+
+                try
+                {
+                    foreach (var claim in priorClaims)
+                        _identityDirectory.DeleteClaim(identityDto.Identity, claim.Name);
+
+                    foreach (var claim in identityDto.Claims)
+                        _identityDirectory.UpdateClaim(identityDto.Identity, claim);
+                }
+                catch
+                {
+                    foreach (var claim in priorClaims)
+                        _identityDirectory.UpdateClaim(identityDto.Identity, claim);
+                }
+            }
 
             return Json(context, response);
         }
