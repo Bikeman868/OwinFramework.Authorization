@@ -269,6 +269,24 @@ namespace OwinFramework.Authorization
                     (result ? "' has the '" : "' does not have the '") + permissionName + "' permission" + 
                     (string.IsNullOrEmpty(resourceName) ? "" : " on resource '" + resourceName + "'"));
 
+                if (!result)
+                {
+                    var group = _identityData.GetGroup(_identification);
+                    var roles = _identityData.GetRoles(_identification);
+                    var permissions = _identityData.GetPermissions(_identification);
+
+                    if (group == null)
+                    {
+                        _trace(() => GetType().Name + " '" + _identification.Identity + "' is not assigned to an authorization group");
+                    }
+                    else
+                    {
+                        _trace(() => GetType().Name + " '" + _identification.Identity + "' is in the '" + group.CodeName + "' group" +
+                            " which has the '" + string.Join(", ", roles.Select(r => r.CodeName)) + "' roles granting them '" +
+                            string.Join(", ", permissions.Select(p => string.IsNullOrEmpty(p.Resource) ? p.CodeName : p.CodeName + " on " + p.Resource)) + "' permissions");
+                    }
+                }
+
                 return result;
             }
 

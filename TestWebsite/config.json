@@ -113,12 +113,12 @@
             {
                 "name":"Identity", 
                 "type":"MySql", 
-                "connectionString":"Server=localhost;Database=identity;Uid=test;Pwd=;"
+                "connectionString":"Server=localhost;Database=identity;Uid=svc_test;Pwd=password;"
             },
             {
                 "name":"Authorization", 
                 "type":"MySql", 
-                "connectionString":"Server=localhost;Database=authorization;Uid=test;Pwd=;"
+                "connectionString":"Server=localhost;Database=authorization;Uid=svc_test;Pwd=password;"
             }
         ],
         "fallbackPolicies":[

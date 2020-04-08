@@ -207,15 +207,11 @@
     <Content Include="Content\AuthorizationUI\web\MVVM\ViewModelList.dart" />
     <None Include="Content\AuthorizationUI\web\styles.less" />
     <Content Include="Content\AuthorizationUI\build\web\styles.less" />
-    <Content Include="Content\AuthorizationUI\web\MVVM\BoundContainer.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundElement.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundFormatter.dart" />
-    <Content Include="Content\AuthorizationUI\web\MVVM\BoundGrid.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundIframe.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundImage.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundLabel.dart" />
-    <Content Include="Content\AuthorizationUI\web\MVVM\BoundList.dart" />
-    <Content Include="Content\AuthorizationUI\web\MVVM\BoundRepeater.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundTextArea.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\BoundTextInput.dart" />
     <Content Include="Content\AuthorizationUI\web\MVVM\Events.dart" />

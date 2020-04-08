@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>Owin.Framework.Authorization.Prius</id>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <title>Owin.Framework.Authorization.Prius</title>
     <authors>Martin Halliday</authors>
     <owners>Martin Halliday</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Data access layer for the Owin Framework authorization middleware that uses the Prius ORM</description>
     <copyright>Copyright Martin Halliday 2015-2020</copyright>
-    <releaseNotes>Published in separate Nuget package</releaseNotes>
+    <releaseNotes>When access is denied, trace information includes a list of roles and permissions</releaseNotes>
     <summary>
 		Adding this package to your project will provide an implementation of IAuthorizationData and IIdentityData 
 		using the Prius ORM to store authorization data in a relational database. The Owin Framework authorization
@@ -21,14 +21,14 @@
     <dependencies>
       <group targetFramework="net40">
         <dependency id="Owin.Framework" version="2.7.1" />
-        <dependency id="Owin.Framework.Authorization.Core" version="1.1.1" />
+        <dependency id="Owin.Framework.Authorization.Core" version="1.1.2" />
         <dependency id="Ioc.Modules.Contract" version="1.4.1" />
         <dependency id="Prius" version="2.1.0" />
         <dependency id="Urchin.Client" version="1.3.0" />
       </group>
       <group targetFramework="net45">
         <dependency id="Owin.Framework" version="2.7.1" />
-        <dependency id="Owin.Framework.Authorization.Core" version="1.1.1" />
+        <dependency id="Owin.Framework.Authorization.Core" version="1.1.2" />
         <dependency id="Ioc.Modules.Contract" version="1.4.1" />
         <dependency id="Prius" version="2.1.0" />
         <dependency id="Urchin.Client" version="1.3.0" />
